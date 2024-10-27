@@ -42,7 +42,7 @@ export default function RootLayout({
       >
         <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
           <div className="relative flex h-full w-full flex-col scrollbar-hide">
-            <header className="z-10 flex md:justify-center w-full justify-start absolute md:top-10 bottom-5 p-4">
+            <header className="z-10 flex w-full justify-start absolute top-4 p-4">
               <FloatingNavbar />
             </header>
             <main className="w-[100dvw] h-[100dvh]">{children}</main>

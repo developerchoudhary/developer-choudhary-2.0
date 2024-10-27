@@ -17,39 +17,20 @@ import { FloatingDock } from "@/components/ui/floating-dock";
 export default function FloatingNavbar() {
   const links = [
     {
-      title: "Home",
+      title: "GitHub",
       icon: (
-        <IconHome className="h-full w-full text-neutral-500 dark:text-neutral-300" />
+        <IconBrandGithub className="h-full w-full text-neutral-500 dark:text-neutral-300" />
       ),
-      href: "/",
+      href: "https://github.com/amanchoudhary9230",
     },
     {
-      title: "Showcase",
+      title: "Theme",
       icon: (
-        <IconTerminal2 className="h-full w-full text-neutral-500 dark:text-neutral-300" />
+        <div className="h-5 w-5 transform -scale-[0.8] rotate-180 -translate-x-[2px] -translate-y-[2px] flex justify-center items-center rounded-full">
+          <ThemeSwitch />
+        </div>
       ),
-      href: "/showcase",
-    },
-    {
-      title: "Study",
-      icon: (
-        <IconVocabulary className="h-full w-full text-neutral-500 dark:text-neutral-300" />
-      ),
-      href: "/study",
-    },
-    {
-      title: "Skills",
-      icon: (
-        <IconSitemap className="h-full w-full text-neutral-500 dark:text-neutral-300" />
-      ),
-      href: "/skills",
-    },
-    {
-      title: "About",
-      icon: (
-        <IconUserFilled className="h-full w-full text-neutral-500 dark:text-neutral-300" />
-      ),
-      href: "/about",
+      href: "#",
     },
     {
       title: "Contact",
@@ -59,20 +40,39 @@ export default function FloatingNavbar() {
       href: "/contact",
     },
     {
-      title: "Theme",
+      title: "About",
       icon: (
-        <div className="h-5 w-5 max-md:pr-1 max-md:pb-1 flex justify-center items-center rounded-full">
-          <ThemeSwitch />
-        </div>
+        <IconUserFilled className="h-full w-full text-neutral-500 dark:text-neutral-300" />
       ),
-      href: "#",
+      href: "/about",
     },
     {
-      title: "GitHub",
+      title: "Skills",
       icon: (
-        <IconBrandGithub className="h-full w-full text-neutral-500 dark:text-neutral-300" />
+        <IconSitemap className="h-full w-full text-neutral-500 dark:text-neutral-300" />
       ),
-      href: "https://github.com/amanchoudhary9230",
+      href: "/skills",
+    },
+    {
+      title: "Study",
+      icon: (
+        <IconVocabulary className="h-full w-full text-neutral-500 dark:text-neutral-300" />
+      ),
+      href: "/study",
+    },
+    {
+      title: "Showcase",
+      icon: (
+        <IconTerminal2 className="h-full w-full text-neutral-500 dark:text-neutral-300" />
+      ),
+      href: "/showcase",
+    },
+    {
+      title: "Home",
+      icon: (
+        <IconHome className="h-full w-full text-neutral-500 dark:text-neutral-300" />
+      ),
+      href: "/",
     },
   ];
 
