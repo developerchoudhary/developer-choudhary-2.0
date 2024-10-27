@@ -7,6 +7,8 @@ import { Providers } from "./providers";
 import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
 import FloatingNavbar from "@/components/FloatingNavbar";
+import { ShootingStars } from "@/components/ui/shooting-stars";
+import { StarsBackground } from "@/components/ui/stars-background";
 
 export const metadata: Metadata = {
   title: {
@@ -17,6 +19,10 @@ export const metadata: Metadata = {
   icons: {
     icon: "/favicon.ico",
   },
+  keywords: siteConfig.keywords,
+  authors: [
+    { name: "Developer Choudhary", url: "https://developerchoudhary.com" },
+  ],
 };
 
 export const viewport: Viewport = {
@@ -37,7 +43,7 @@ export default function RootLayout({
       <body
         className={clsx(
           "overflow-x-hidden scrollbar-hide bg-background font-sans antialiased scroll-smooth",
-          fontSans.variable,
+          fontSans.variable
         )}
       >
         <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
@@ -48,6 +54,8 @@ export default function RootLayout({
             <main className="w-[100dvw] h-[100dvh]">{children}</main>
           </div>
         </Providers>
+        <ShootingStars />
+        <StarsBackground />
       </body>
     </html>
   );

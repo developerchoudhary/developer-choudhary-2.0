@@ -2,9 +2,6 @@
 
 import Link from "next/link";
 
-import { ShootingStars } from "@/components/ui/shooting-stars";
-import { StarsBackground } from "@/components/ui/stars-background";
-
 export default function Home() {
   return (
     <div className="flex flex-col items-center h-full px-10 w-full">
@@ -38,8 +35,6 @@ export default function Home() {
           Hire Me
         </Link>
       </div>
-      <ShootingStars />
-      <StarsBackground />
     </div>
   );
 }
