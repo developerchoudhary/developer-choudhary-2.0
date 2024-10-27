@@ -1,3 +1,4 @@
+"use client";
 /**
  * Note: Use position fixed according to your needs
  * Desktop navbar is better positioned at the bottom
@@ -103,8 +104,8 @@ const FloatingDockDesktop = ({
   return (
     <motion.div
       className={cn(
-        "mx-auto hidden md:flex h-16 gap-4 items-end  rounded-2xl bg-gray-50 dark:bg-neutral-900 px-4 pb-3",
-        className,
+        "mx-auto hidden md:flex h-16 gap-2 items-end  rounded-2xl bg-gray-50 dark:bg-neutral-900 px-4 pb-3",
+        className
       )}
       onMouseLeave={() => mouseX.set(Infinity)}
       onMouseMove={(e) => mouseX.set(e.pageX)}
@@ -135,14 +136,14 @@ function IconContainer({
     return val - bounds.x - bounds.width / 2;
   });
 
-  let widthTransform = useTransform(distance, [-150, 0, 150], [40, 80, 40]);
-  let heightTransform = useTransform(distance, [-150, 0, 150], [40, 80, 40]);
+  let widthTransform = useTransform(distance, [-150, 0, 150], [40, 60, 40]);
+  let heightTransform = useTransform(distance, [-150, 0, 150], [40, 60, 40]);
 
-  let widthTransformIcon = useTransform(distance, [-150, 0, 150], [20, 40, 20]);
+  let widthTransformIcon = useTransform(distance, [-150, 0, 150], [40, 60, 40]);
   let heightTransformIcon = useTransform(
     distance,
     [-150, 0, 150],
-    [20, 40, 20],
+    [20, 30, 20]
   );
 
   let width = useSpring(widthTransform, {
