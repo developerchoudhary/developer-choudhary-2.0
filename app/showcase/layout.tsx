@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 
 import { siteConfig } from "@/config/site";
+import React from "react";
 
 export const metadata: Metadata = {
   description: siteConfig.showcaseDescription,
