@@ -2,13 +2,14 @@ import "@/styles/globals.css";
 import { Metadata, Viewport } from "next";
 import clsx from "clsx";
 
-import { Providers } from "./providers";
-
 import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
 import FloatingNavbar from "@/components/FloatingNavbar";
 import { ShootingStars } from "@/components/ui/shooting-stars";
 import { StarsBackground } from "@/components/ui/stars-background";
+import Footer from "@/components/Footer";
+
+import { Providers } from "./providers";
 
 export const metadata: Metadata = {
   title: {
@@ -43,15 +44,16 @@ export default function RootLayout({
       <body
         className={clsx(
           "overflow-x-hidden scrollbar-hide bg-background font-sans antialiased scroll-smooth",
-          fontSans.variable
+          fontSans.variable,
         )}
       >
         <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
           <div className="relative flex h-full w-full flex-col scrollbar-hide">
-            <header className="z-10 flex w-full justify-start absolute top-4 p-4">
+            <header className="z-20 flex w-full justify-start absolute top-4 p-4">
               <FloatingNavbar />
             </header>
-            <main className="w-[100dvw] h-[100dvh]">{children}</main>
+            <main>{children}</main>
+            <Footer />
           </div>
         </Providers>
         <ShootingStars />

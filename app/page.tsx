@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="flex flex-col items-center h-full px-10 w-full">
+    <div className="h-[100dvh] w-[100dvw] min-h-[600px] overflow-x-hidden overflow-y-auto flex flex-col items-center px-10">
       <div className="flex items-center md:h-full h-[90%] justify-center w-full gap-2 flex-col px-4">
         <h2 className="bg-clip-text text-transparent text-center bg-gradient-to-b from-neutral-900 to-neutral-700 dark:from-neutral-600 dark:to-white text-2xl md:text-4xl lg:text-7xl font-sans py-2 md:py-10 relative font-bold tracking-tight">
           From Idea to Launch: <br /> Complete Web Solutions

@@ -1,13 +1,22 @@
+import { Metadata } from "next";
+
+import { siteConfig } from "@/config/site";
+
+export const metadata: Metadata = {
+  description: siteConfig.showcaseDescription,
+  keywords: siteConfig.showcaseKeywords,
+  authors: [
+    {
+      name: "Developer Choudhary",
+      url: "https://developerchoudhary.com/showcase",
+    },
+  ],
+};
+
 export default function ShowcaseLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <section className="flex h-full w-full flex-col items-center justify-center gap-4 py-8 md:py-10">
-      <div className="inline-block max-w-lg text-center justify-center">
-        {children}
-      </div>
-    </section>
-  );
+  return <div className="h-full w-full">{children}</div>;
 }
