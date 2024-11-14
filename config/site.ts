@@ -31,7 +31,7 @@ export const products = [
   },
   {
     title: "Portfolio Website",
-    link: "https://developerchoudhary.vercel.app/",
+    link: "https://ex-developerchoudhary.vercel.app/",
     thumbnail:
       "https://res.cloudinary.com/dh7b09yai/image/upload/v1730052029/rsyftif6jynnsulq5kaw.png",
     video:
