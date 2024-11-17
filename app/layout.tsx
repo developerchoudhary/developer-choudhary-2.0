@@ -44,21 +44,23 @@ export default function RootLayout({
       <head />
       <body
         className={clsx(
-          "overflow-x-hidden scrollbar-hide bg-background font-sans antialiased scroll-smooth",
+          "bg-background font-sans antialiased scroll-smooth",
           fontSans.variable,
         )}
       >
         <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
-          <div className="relative flex h-full w-full flex-col scrollbar-hide">
+          <div className="h-[100vh] min-h-screen overflow-y-scroll overflow-x-hidden z-10 max-h-fit w-[100vw] relative flex justify-between flex-col">
             <header className="z-20 flex w-full justify-start absolute top-4 p-4">
               <FloatingNavbar />
             </header>
-            <main>{children}</main>
+            <main className="h-full flex min-h-fit justify-center items-center">
+              {children}
+            </main>
             <Footer />
           </div>
         </Providers>
-        <ShootingStars />
         <StarsBackground />
+        <ShootingStars />
       </body>
     </html>
   );

@@ -40,7 +40,7 @@ export default function ContactPage() {
   }, [sending, setValue]);
 
   return (
-    <div className="h-[100dvh] w-11/12 mx-auto mt-10 overflow-x-hidden">
+    <div className="w-11/12 h-full mx-auto">
       <div className="flex w-full items-center justify-center h-full">
         <div
           id="contact-form"
@@ -91,8 +91,8 @@ export default function ContactPage() {
             </div>
             <div className="z-10">
               <Textarea
-                label="Description"
-                placeholder="Enter your description"
+                label="Query"
+                placeholder="Enter your query"
                 minRows={20}
                 {...register("query")}
               />
