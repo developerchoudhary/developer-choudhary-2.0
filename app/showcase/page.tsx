@@ -6,7 +6,7 @@ import { products } from "@/config/site";
 
 export default function ShowcasePage() {
   return (
-    <div className="lg:mx-20 sm:mx-10 mx-2 mb-20">
+    <div className="md:mb-20 mb-8">
       <div className="mb-10 mx-auto py-20 md:py-40 px-4 w-full left-0 top-0">
         <h1 className="text-2xl md:text-7xl font-bold dark:text-white">
           A Small Collection of My Best Work

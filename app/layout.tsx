@@ -53,7 +53,7 @@ export default function RootLayout({
             <header className="z-20 flex w-full justify-start absolute top-4 p-4">
               <FloatingNavbar />
             </header>
-            <main className="h-full flex min-h-fit justify-center items-center">
+            <main className="h-full flex min-h-fit justify-center items-center lg:mx-20 sm:mx-10 mx-2 ">
               {children}
             </main>
             <Footer />

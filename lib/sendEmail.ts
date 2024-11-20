@@ -11,7 +11,7 @@ export const sendEmail = async (email: string, title: string, body: string) => {
     });
 
     const mailOptions = {
-      from: "Jai Shree Equipment Dairy",
+      from: "Developer Choudhary",
       to: email,
       subject: title,
       html: body,

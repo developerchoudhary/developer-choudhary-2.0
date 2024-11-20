@@ -7,7 +7,6 @@ import {
   IconSitemap,
   IconTerminal2,
   IconUserFilled,
-  IconVocabulary,
 } from "@tabler/icons-react";
 
 import { ThemeSwitch } from "./theme-switch";
@@ -52,13 +51,6 @@ export default function FloatingNavbar() {
         <IconSitemap className="h-full w-full text-neutral-500 dark:text-neutral-300" />
       ),
       href: "/skills",
-    },
-    {
-      title: "Study",
-      icon: (
-        <IconVocabulary className="h-full w-full text-neutral-500 dark:text-neutral-300" />
-      ),
-      href: "/study",
     },
     {
       title: "Showcase",
