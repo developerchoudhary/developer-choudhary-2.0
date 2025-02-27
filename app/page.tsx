@@ -2,6 +2,7 @@
 
 import About from "@/components/About";
 import Contact from "@/components/Contact";
+import Experience from "@/components/Experience";
 import Hero from "@/components/Hero";
 import ProjectShowcase from "@/components/Showcase";
 import SkillsShowcase from "@/components/Skills";
@@ -31,7 +32,13 @@ export default function Home() {
       <section id="about" className="max-w-7xl mx-auto w-full my-10 lg:my-20">
         <About />
       </section>
-
+      {/* Work Experienc */}
+      <section
+        id="experience"
+        className="max-w-7xl mx-auto w-full my-10 lg:my-20"
+      >
+        <Experience />
+      </section>
       {/* Contact Section */}
       <section id="contact" className="max-w-7xl mx-auto w-full my-10 lg:my-20">
         <Contact />
