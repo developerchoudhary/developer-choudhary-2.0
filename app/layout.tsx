@@ -41,7 +41,7 @@ export default function RootLayout({
       <head />
       <body className="bg-background font-sans antialiased scroll-smooth">
         <Providers themeProps={{ attribute: "class", defaultTheme: "system" }}>
-          <div className="h-[100dvh] min-h-[100dvh] overflow-y-auto overflow-x-hidden z-10 max-h-fit relative flex justify-between flex-col">
+          <div className="h-screen min-h-screen overflow-y-auto overflow-x-hidden z-10 max-h-fit relative flex justify-between flex-col">
             <main>{children}</main>
             <Footer />
           </div>
