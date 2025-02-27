@@ -65,7 +65,7 @@ export default function Hero() {
 
       {/* Call to Action Button */}
       <motion.div
-        initial={{ opacity: 0, y: 100 }}
+        initial={{ opacity: 0, y: 50 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: "easeOut", delay: 1.2 }}
         viewport={{ once: true, amount: 0.5 }}
