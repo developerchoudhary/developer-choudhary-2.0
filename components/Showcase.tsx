@@ -91,15 +91,15 @@ export default function ProjectShowcase() {
               </video>
             </div>
             <div className="absolute bottom-0 left-0 z-10 right-0 h-24 bg-gradient-to-t from-black/80 to-transparent"></div>
-            <div className="absolute bottom-2 z-10 left-4 right-4 flex items-center justify-between">
+            <div className="absolute bottom-2 z-20 left-4 right-4 flex items-center justify-between">
               <span className="text-white text-sm font-semibold">
                 {product.title}
               </span>
-              <Button className="h-8 px-4 rounded-md bg-neutral-800 text-white hover:bg-neutral-700">
-                <Link href={product.link} target="_blank">
+              <Link href={product.link} target="_blank">
+                <Button className="h-8 px-4 rounded-md bg-neutral-800 text-white hover:bg-neutral-700">
                   Visit
-                </Link>
-              </Button>
+                </Button>
+              </Link>
             </div>
           </motion.div>
         ))}
