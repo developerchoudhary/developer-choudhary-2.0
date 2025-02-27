@@ -65,22 +65,19 @@ export default function SkillsShowcase() {
       >
         <motion.div
           className="flex whitespace-nowrap"
-          animate={{ x: ["0%", "-100%"] }}
-          transition={{ repeat: Infinity, duration: 15, ease: "linear" }}
+          animate={{ x: ["0%", "-500%"] }}
+          transition={{ repeat: Infinity, duration: 40, ease: "linear" }}
         >
-          {[...skills, ...skills].map((skill, index) => (
-            <motion.div
+          {[...skills, ...skills, ...skills, ...skills].map((skill, index) => (
+            <div
               key={index}
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.6, ease: "easeOut" }}
               className="flex flex-col items-center justify-center p-6 bg-white dark:bg-gray-900 rounded-xl shadow-lg dark:shadow-gray-800 mx-4 min-w-[150px]"
             >
               <div className="text-5xl">{skill.icon}</div>
               <p className="mt-3 text-lg font-semibold text-gray-800 dark:text-gray-200">
                 {skill.name}
               </p>
-            </motion.div>
+            </div>
           ))}
         </motion.div>
       </motion.div>
