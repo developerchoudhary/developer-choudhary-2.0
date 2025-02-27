@@ -20,14 +20,13 @@ export default function AboutPage() {
       </motion.h1>
       <div className="flex flex-col md:flex-row items-center justify-center gap-12 mt-10 w-full">
         {/* Text Section */}
-        <motion.div
-          initial={{ opacity: 0, x: 50 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
-          viewport={{ once: true, amount: 0.5 }}
-          className="flex flex-col gap-6 text-left text-neutral-700 dark:text-neutral-300"
-        >
-          <p>
+        <div className="flex flex-col gap-6 text-left text-neutral-700 dark:text-neutral-300">
+          <motion.p
+            initial={{ opacity: 0, y: 100 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
+            viewport={{ once: true, amount: 0.5 }}
+          >
             Hi, I&apos;m{" "}
             <span className="font-bold text-gray-900 dark:text-white">
               Aman
@@ -43,8 +42,14 @@ export default function AboutPage() {
               React.js, Next.js, Tailwind CSS, and Node.js
             </span>
             .
-          </p>
-          <p className="text-lg">
+          </motion.p>
+          <motion.p
+            initial={{ opacity: 0, y: 100 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut", delay: 0.3 }}
+            viewport={{ once: true, amount: 0.5 }}
+            className="sm:text-lg"
+          >
             My journey began in Anupgarh, where I developed a passion for
             coding. Later, I earned my{" "}
             <span className="font-semibold">
@@ -52,26 +57,81 @@ export default function AboutPage() {
               (2021-2024)
             </span>
             , which laid a strong foundation for my career.
-          </p>
+          </motion.p>
           <div>
-            <h2 className="text-xl font-semibold">What I Do:</h2>
+            <motion.h2
+              initial={{ opacity: 0, y: 100 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: "easeOut", delay: 0.4 }}
+              viewport={{ once: true, amount: 0.5 }}
+              className="text-lg sm:text-xl font-semibold"
+            >
+              What I Do:
+            </motion.h2>
             <ul className="list-disc pl-6 text-lg">
-              <li>Build dynamic, responsive websites.</li>
-              <li>Develop powerful admin panels.</li>
-              <li>Design and implement seamless UI/UX.</li>
-              <li>Integrate payment systems and OTP features.</li>
-              <li>Build scalable backends with Node.js & Express.js.</li>
+              <motion.li
+                initial={{ opacity: 0, y: 100 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, ease: "easeOut", delay: 0.5 }}
+                viewport={{ once: true, amount: 0.5 }}
+              >
+                Build dynamic, responsive websites.
+              </motion.li>
+              <motion.li
+                initial={{ opacity: 0, y: 100 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, ease: "easeOut", delay: 0.6 }}
+                viewport={{ once: true, amount: 0.5 }}
+              >
+                Develop powerful admin panels.
+              </motion.li>
+              <motion.li
+                initial={{ opacity: 0, y: 100 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, ease: "easeOut", delay: 0.7 }}
+                viewport={{ once: true, amount: 0.5 }}
+              >
+                Design and implement seamless UI/UX.
+              </motion.li>
+              <motion.li
+                initial={{ opacity: 0, y: 100 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, ease: "easeOut", delay: 0.8 }}
+                viewport={{ once: true, amount: 0.5 }}
+              >
+                Integrate payment systems and OTP features.
+              </motion.li>
+              <motion.li
+                initial={{ opacity: 0, y: 100 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, ease: "easeOut", delay: 0.9 }}
+                viewport={{ once: true, amount: 0.5 }}
+              >
+                Build scalable backends with Node.js & Express.js.
+              </motion.li>
             </ul>
           </div>
-          <p className="text-lg">
+          <motion.p
+            initial={{ opacity: 0, y: 100 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut", delay: 1 }}
+            viewport={{ once: true, amount: 0.5 }}
+            className="text-lg"
+          >
             Passionate about learning, I mastered{" "}
             <span className="font-semibold">Next.js in just three days</span>,
             showcasing my dedication to growth and innovation.
-          </p>
-          <p className="text-lg">
+          </motion.p>
+          <motion.p
+            initial={{ opacity: 0, y: 100 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut", delay: 1.1 }}
+            viewport={{ once: true, amount: 0.5 }}
+            className="text-lg"
+          >
             Let&apos;s connect and build something amazing!
-          </p>
-        </motion.div>
+          </motion.p>
+        </div>
       </div>
     </motion.div>
   );

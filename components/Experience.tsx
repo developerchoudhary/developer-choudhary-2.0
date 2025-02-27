@@ -20,45 +20,88 @@ const Experience = () => {
 
       <div className="flex flex-col md:flex-row items-center justify-center gap-12 mt-10 w-full">
         {/* Experience Details */}
-        <motion.div
-          initial={{ opacity: 0, x: 50 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
-          viewport={{ once: true, amount: 0.5 }}
-          className="flex flex-col gap-6 text-left text-neutral-700 dark:text-neutral-300 rounded-2xl w-full"
-        >
-          <h3 className="text-2xl font-bold text-gray-800 dark:text-white">
+        <div className="flex flex-col gap-6 text-left text-neutral-700 dark:text-neutral-300 rounded-2xl w-full">
+          <motion.h3
+            initial={{ opacity: 0, y: 100 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
+            viewport={{ once: true, amount: 0.5 }}
+            className="text-2xl font-bold text-gray-800 dark:text-white"
+          >
             Website Developer
-          </h3>
-          <p className="text-gray-600 dark:text-gray-300">
+          </motion.h3>
+          <motion.p
+            initial={{ opacity: 0, y: 100 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut", delay: 0.3 }}
+            viewport={{ once: true, amount: 0.5 }}
+            className="text-gray-600 dark:text-gray-300"
+          >
             <span className="font-semibold text-gray-900 dark:text-white">
               Seth G.L. Bihani Shiksha Trust, Sri Ganganagar
             </span>{" "}
             | First Job
-          </p>
-          <p className="mt-2 sm:text-lg text-gray-700 dark:text-gray-300">
+          </motion.p>
+          <motion.p
+            initial={{ opacity: 0, y: 100 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut", delay: 0.4 }}
+            viewport={{ once: true, amount: 0.5 }}
+            className="mt-2 sm:text-lg text-gray-700 dark:text-gray-300"
+          >
             I am responsible for maintaining six existing .NET-based websites
             while developing seven new dynamic websites with advanced features
             for the trust, which manages multiple colleges and schools.
-          </p>
+          </motion.p>
           <ul className="mt-3 space-y-2 sm:text-lg text-gray-700 dark:text-gray-300 list-disc pl-6">
-            <li>⚡ Maintaining and updating six .NET-based websites.</li>
-            <li>
+            <motion.li
+              initial={{ opacity: 0, y: 100 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: "easeOut", delay: 0.5 }}
+              viewport={{ once: true, amount: 0.5 }}
+            >
+              ⚡ Maintaining and updating six .NET-based websites.
+            </motion.li>
+            <motion.li
+              initial={{ opacity: 0, y: 100 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: "easeOut", delay: 0.6 }}
+              viewport={{ once: true, amount: 0.5 }}
+            >
               ⚡ Creating seven new dynamic websites with enhanced functionality
               using{" "}
               <span className="font-semibold">
                 Next.js, MongoDB, Cloudinary
               </span>
               , etc.
-            </li>
-            <li>
+            </motion.li>
+            <motion.li
+              initial={{ opacity: 0, y: 100 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: "easeOut", delay: 0.7 }}
+              viewport={{ once: true, amount: 0.5 }}
+            >
               ⚡ Implementing modern UI/UX principles for better user
               experience.
-            </li>
-            <li>⚡ Optimizing website performance and security.</li>
-            <li>⚡ Managing databases and backend integrations.</li>
+            </motion.li>
+            <motion.li
+              initial={{ opacity: 0, y: 100 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: "easeOut", delay: 0.8 }}
+              viewport={{ once: true, amount: 0.5 }}
+            >
+              ⚡ Optimizing website performance and security.
+            </motion.li>
+            <motion.li
+              initial={{ opacity: 0, y: 100 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: "easeOut", delay: 0.9 }}
+              viewport={{ once: true, amount: 0.5 }}
+            >
+              ⚡ Managing databases and backend integrations.
+            </motion.li>
           </ul>
-        </motion.div>
+        </div>
       </div>
     </motion.div>
   );
