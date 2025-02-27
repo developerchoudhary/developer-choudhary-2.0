@@ -11,9 +11,10 @@ export default function Hero() {
     <div className="flex flex-col items-center gap-4 justify-center h-full min-h-[100dvh] w-full text-center relative overflow-hidden">
       {/* Profile Image */}
       <motion.div
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
+        initial={{ opacity: 0, scale: 0.1 }}
+        whileInView={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.8, ease: "easeOut", delay: 0.1 }}
+        viewport={{ once: true, amount: 0.5 }}
         className="relative w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden border-4 border-black dark:border-white shadow-lg"
       >
         <Image
@@ -28,9 +29,10 @@ export default function Hero() {
 
       {/* Name */}
       <motion.h2
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: "easeOut", delay: 0.1 }}
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut", delay: 0.3 }}
+        viewport={{ once: true, amount: 0.5 }}
         className="text-2xl md:text-3xl mb-10 font-semibold text-black dark:text-white mt-4"
       >
         Aman Choudhary
@@ -38,9 +40,10 @@ export default function Hero() {
 
       {/* Heading with Animation */}
       <motion.h1
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
+        initial={{ opacity: 0, y: 70 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut", delay: 0.6 }}
+        viewport={{ once: true, amount: 0.5 }}
         className="bg-clip-text text-transparent bg-gradient-to-b from-neutral-500 to-neutral-600 dark:from-neutral-50 dark:to-neutral-300 text-4xl md:text-6xl font-bold tracking-wide leading-tight mt-2"
       >
         From Idea to Launch:
@@ -49,9 +52,9 @@ export default function Hero() {
 
       {/* Description */}
       <motion.p
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 90 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.9, ease: "easeOut", delay: 0.3 }}
+        transition={{ duration: 0.8, ease: "easeOut", delay: 0.9 }}
         className="max-w-4xl mt-4 text-base md:text-xl text-neutral-700 dark:text-neutral-300"
       >
         I specialize in transforming your ideas into fully functional,
@@ -62,9 +65,10 @@ export default function Hero() {
 
       {/* Call to Action Button */}
       <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 1, ease: "easeOut", delay: 0.4 }}
+        initial={{ opacity: 0, y: 100 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut", delay: 1.2 }}
+        viewport={{ once: true, amount: 0.5 }}
         className="mt-6"
       >
         <Button

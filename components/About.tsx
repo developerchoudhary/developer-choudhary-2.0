@@ -4,17 +4,11 @@ import { FaQuoteLeft, FaQuoteRight } from "react-icons/fa";
 
 export default function AboutPage() {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 50 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8 }}
-      viewport={{ once: true, amount: 0.5 }}
-      className="relative flex flex-col items-center w-full justify-center text-center"
-    >
+    <motion.div className="relative flex flex-col items-center w-full justify-center text-center">
       <motion.h1
-        initial={{ opacity: 0, scale: 1.1 }}
-        whileInView={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 1 }}
+        initial={{ opacity: 0, y: 100 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut", delay: 0.1 }}
         viewport={{ once: true, amount: 0.5 }}
         className="flex items-center gap-2 text-4xl md:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-gray-800 to-gray-500 dark:from-gray-200 dark:to-gray-400"
       >
@@ -29,7 +23,7 @@ export default function AboutPage() {
         <motion.div
           initial={{ opacity: 0, x: 50 }}
           whileInView={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
+          transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
           viewport={{ once: true, amount: 0.5 }}
           className="flex flex-col gap-6 text-left text-neutral-700 dark:text-neutral-300"
         >

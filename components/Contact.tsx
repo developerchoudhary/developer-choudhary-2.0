@@ -31,24 +31,34 @@ export default function Contact() {
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, x: 50 }}
-      whileInView={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.8 }}
-      viewport={{ once: true, amount: 0.5 }}
-      className="w-full flex h-full mx-auto items-center justify-center"
-    >
+    <motion.div className="w-full flex h-full mx-auto items-center justify-center">
       <div className="w-full">
         <div className="mb-6 max-md:text-center">
-          <h1 className="bg-clip-text text-transparent bg-gradient-to-b from-neutral-500 to-neutral-600 dark:from-neutral-50 dark:to-neutral-300 text-4xl md:text-6xl font-bold tracking-wide leading-tight">
+          <motion.h1
+            initial={{ opacity: 0, y: 100 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut", delay: 0.1 }}
+            viewport={{ once: true, amount: 0.5 }}
+            className="bg-clip-text text-transparent bg-gradient-to-b from-neutral-500 to-neutral-600 dark:from-neutral-50 dark:to-neutral-300 text-4xl md:text-6xl font-bold tracking-wide leading-tight"
+          >
             Let&apos;s Connect
-          </h1>
-          <p className="text-neutral-700 dark:text-neutral-300 mt-2">
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, y: 100 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut", delay: 0.4 }}
+            viewport={{ once: true, amount: 0.5 }}
+            className="text-neutral-700 dark:text-neutral-300 mt-2"
+          >
             Feel free to reach out for collaborations, inquiries, or just to say
             hi!
-          </p>
+          </motion.p>
         </div>
-        <form
+        <motion.form
+          initial={{ opacity: 0, y: 100 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut", delay: 0.5 }}
+          viewport={{ once: true, amount: 0.5 }}
           className="flex flex-col gap-6"
           onSubmit={handleSubmit(handleOnSubmit)}
         >
@@ -93,7 +103,7 @@ export default function Contact() {
               Send Message
             </Button>
           </motion.div>
-        </form>
+        </motion.form>
       </div>
     </motion.div>
   );

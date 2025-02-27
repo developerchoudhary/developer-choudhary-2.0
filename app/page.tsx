@@ -18,29 +18,29 @@ export default function Home() {
       {/* Projects Section */}
       <section
         id="project-showcase"
-        className="max-w-7xl mx-auto w-full mb-10 lg:mb-20"
+        className="max-w-7xl mx-auto w-full pb-10 lg:pb-20"
       >
         <ProjectShowcase />
       </section>
 
       {/* Skills Section */}
-      <section id="skills" className="max-w-7xl mx-auto w-full my-10 lg:my-20">
+      <section id="skills" className="max-w-7xl mx-auto w-full py-10 lg:py-20">
         <SkillsShowcase />
       </section>
 
       {/* About Section */}
-      <section id="about" className="max-w-7xl mx-auto w-full my-10 lg:my-20">
+      <section id="about" className="max-w-7xl mx-auto w-full py-10 lg:py-20">
         <About />
       </section>
       {/* Work Experienc */}
       <section
         id="experience"
-        className="max-w-7xl mx-auto w-full my-10 lg:my-20"
+        className="max-w-7xl mx-auto w-full py-10 lg:py-20"
       >
         <Experience />
       </section>
       {/* Contact Section */}
-      <section id="contact" className="max-w-7xl mx-auto w-full my-10 lg:my-20">
+      <section id="contact" className="max-w-7xl mx-auto w-full py-10 lg:py-20">
         <Contact />
       </section>
     </div>

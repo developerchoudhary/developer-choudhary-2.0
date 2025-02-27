@@ -14,6 +14,7 @@ export const siteConfig = {
 
 export const products = [
   {
+    id: 1,
     title: "About - Studynexaa",
     link: "https://studynexaa.vercel.app/about",
     thumbnail:
@@ -22,6 +23,7 @@ export const products = [
       "https://res.cloudinary.com/dh7b09yai/video/upload/v1730097257/ai0w4xphnzvf6khyuq0n.mp4",
   },
   {
+    id: 2,
     title: "About - Jai Shree Equipment Dairy",
     link: "https://jaishreeequipmentdairy.in/about",
     thumbnail:
@@ -30,6 +32,7 @@ export const products = [
       "https://res.cloudinary.com/dh7b09yai/video/upload/v1730099322/lyuhd4vl0p0lv5qzp0mu.mp4",
   },
   {
+    id: 3,
     title: "Portfolio Website",
     link: "https://ex-developerchoudhary.vercel.app/",
     thumbnail:
@@ -39,6 +42,7 @@ export const products = [
   },
 
   {
+    id: 4,
     title: "Contact Form - Jai Shree Equipment Dairy",
     link: "https://jaishreeequipmentdairy.in/contact",
     thumbnail:
@@ -47,6 +51,7 @@ export const products = [
       "https://res.cloudinary.com/dh7b09yai/video/upload/v1730099726/efc1lspwip7athmxdagp.mp4",
   },
   {
+    id: 5,
     title: "StudyNexaa",
     link: "https://studynexaa.vercel.app/",
     thumbnail:
@@ -55,6 +60,7 @@ export const products = [
       "https://res.cloudinary.com/dh7b09yai/video/upload/v1730089888/frfmrxcm5e241nadmrsq.mp4",
   },
   {
+    id: 6,
     title: "IndianMarket",
     link: "https://indianmarket.online/",
     thumbnail:
@@ -63,6 +69,7 @@ export const products = [
       "https://res.cloudinary.com/dh7b09yai/video/upload/v1730089884/skyvnumlb8djxem94dhm.mp4",
   },
   {
+    id: 7,
     title: "Secure real time chating website - Hthai",
     link: "https://hthai.vercel.app/register",
     thumbnail:
@@ -71,6 +78,7 @@ export const products = [
       "https://res.cloudinary.com/dh7b09yai/video/upload/v1730099025/ibow7jbguoexdcgwrdvt.mp4",
   },
   {
+    id: 8,
     title: "About - Jai Shree Equipment Dairy",
     link: "https://jaishreeequipmentdairy.in/about",
     thumbnail:
@@ -79,6 +87,7 @@ export const products = [
       "https://res.cloudinary.com/dh7b09yai/video/upload/v1730099512/y5k83xpmcjexyc6bnala.mp4",
   },
   {
+    id: 9,
     title: "Automatic Milk Collection System - Jai Shree Equipment Dairy",
     link: "https://jaishreeequipmentdairy.in/automatic-milk-collection-system",
     thumbnail:
@@ -87,6 +96,7 @@ export const products = [
       "https://res.cloudinary.com/dh7b09yai/video/upload/v1730100600/mkzzqcrcq1t358eknqis.mp4",
   },
   {
+    id: 10,
     title: "Admin Dashboard - StudyNexaa",
     link: "https://studynexaa.vercel.app/",
     thumbnail:
@@ -95,6 +105,7 @@ export const products = [
       "https://res.cloudinary.com/dh7b09yai/video/upload/v1730100884/stxrf9aglhxjwfsjitwt.mp4",
   },
   {
+    id: 11,
     title: "Feed - StudyNexaa",
     link: "https://studynexaa.vercel.app/about",
     thumbnail:
@@ -103,6 +114,7 @@ export const products = [
       "https://res.cloudinary.com/dh7b09yai/video/upload/v1730101300/vvsp1nxkm1kdzfuk1ows.mp4",
   },
   {
+    id: 12,
     title: "Services - Jai Shree Equipment Dairy",
     link: "https://jaishreeequipmentdairy.in/services",
     thumbnail:

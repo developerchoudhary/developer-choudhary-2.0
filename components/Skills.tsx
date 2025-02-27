@@ -36,21 +36,33 @@ const skills = [
 
 export default function SkillsShowcase() {
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 1.1 }}
-      whileInView={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.8 }}
-      viewport={{ once: true, amount: 0.5 }}
-      className="flex flex-col items-center justify-center w-full overflow-hidden"
-    >
-      <motion.h2 className="bg-clip-text text-transparent bg-gradient-to-b from-neutral-500 to-neutral-600 dark:from-neutral-50 dark:to-neutral-300 text-4xl md:text-6xl text-center font-bold tracking-wide leading-tight">
+    <motion.div className="flex flex-col items-center justify-center w-full overflow-hidden">
+      <motion.h2
+        initial={{ opacity: 0, y: 100 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut", delay: 0.1 }}
+        viewport={{ once: true, amount: 0.5 }}
+        className="bg-clip-text text-transparent bg-gradient-to-b from-neutral-500 to-neutral-600 dark:from-neutral-50 dark:to-neutral-300 text-4xl md:text-6xl text-center font-bold tracking-wide leading-tight"
+      >
         My Tech Stack & Expertise
       </motion.h2>
-      <motion.p className="max-w-4xl text-center mt-4 text-base md:text-xl text-neutral-700 dark:text-neutral-300">
+      <motion.p
+        initial={{ opacity: 0, y: 100 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
+        viewport={{ once: true, amount: 0.5 }}
+        className="max-w-4xl text-center mt-4 text-base md:text-xl text-neutral-700 dark:text-neutral-300"
+      >
         A collection of tools and technologies that I specialize in, ensuring
         high-performance, scalable, and visually stunning web applications.
       </motion.p>
-      <motion.div className="relative w-full mt-10 overflow-x-hidden py-4">
+      <motion.div
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut", delay: 0.3 }}
+        viewport={{ once: true, amount: 0.5 }}
+        className="relative w-full mt-10 overflow-x-hidden py-4"
+      >
         <motion.div
           className="flex whitespace-nowrap"
           animate={{ x: ["0%", "-100%"] }}
