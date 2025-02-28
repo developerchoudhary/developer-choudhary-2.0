@@ -22,6 +22,37 @@ export const metadata: Metadata = {
   authors: [
     { name: "Developer Choudhary", url: "https://developerchoudhary.com" },
   ],
+  openGraph: {
+    title: siteConfig.name,
+    description: siteConfig.description,
+    url: "https://developerchoudhary.com",
+    siteName: siteConfig.name,
+    type: "website",
+    images: [
+      {
+        url: "/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: siteConfig.name,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: siteConfig.name,
+    description: siteConfig.description,
+    images: ["/og-image.jpg"],
+    creator: "https://x.com/developer_jaat",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+  themeColor: "#0000",
+  other: {
+    "og:locale": "en_US",
+    "og:type": "website",
+  },
 };
 
 export const viewport: Viewport = {

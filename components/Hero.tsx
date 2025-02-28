@@ -8,7 +8,7 @@ export default function Hero() {
     document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
   };
   return (
-    <div className="flex flex-col items-center gap-4 justify-center h-full min-h-[100dvh] w-full text-center relative overflow-hidden">
+    <div className="flex flex-col items-center gap-4 justify-center h-full min-h-[100dvh] py-4 w-full text-center relative overflow-hidden">
       {/* Profile Image */}
       <motion.div
         initial={{ opacity: 0, scale: 0.1 }}
