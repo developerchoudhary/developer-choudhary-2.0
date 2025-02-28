@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
 
     // Send Email
     await sendEmail(
-      "amanjaat7668@gmail.com",
+      "aman@developerchoudhary.com",
       "New user contacted",
       adminNotification(firstName, lastName, email, mobileNumber, query),
     );
