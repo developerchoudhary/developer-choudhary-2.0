@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
 
     // Send email notification to admin
     await sendEmail(
-      "aman@developerchoudhary.com", // Admin email recipient
+      "amanjaat7668@gmail.com", // Admin email recipient
       "New user contacted", // Email subject
       adminNotification(firstName, lastName, email, mobileNumber, query), // Email content
     );
