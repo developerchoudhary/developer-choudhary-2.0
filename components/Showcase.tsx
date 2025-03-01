@@ -1,31 +1,35 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Button, Image } from "@nextui-org/react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { products } from "@/config/site";
 
 export default function ProjectShowcase() {
+  // State to track pagination
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(6);
 
-  useEffect(() => {
-    const updateItemsPerPage = () => {
-      if (window.innerWidth >= 1024) {
-        setItemsPerPage(6);
-      } else if (window.innerWidth >= 768) {
-        setItemsPerPage(4);
-      } else {
-        setItemsPerPage(2);
-      }
-      setCurrentPage(1); // Reset to page 1 on resize to prevent empty state
-    };
-
-    updateItemsPerPage();
-    window.addEventListener("resize", updateItemsPerPage);
-    return () => window.removeEventListener("resize", updateItemsPerPage);
+  // Function to update the number of items per page based on screen width
+  const updateItemsPerPage = useCallback(() => {
+    if (window.innerWidth >= 1024) {
+      setItemsPerPage(6);
+    } else if (window.innerWidth >= 768) {
+      setItemsPerPage(4);
+    } else {
+      setItemsPerPage(2);
+    }
+    setCurrentPage(1); // Reset to page 1 when resizing to prevent empty state
   }, []);
 
+  // Effect to listen for screen resizing
+  useEffect(() => {
+    updateItemsPerPage(); // Set initial value
+    window.addEventListener("resize", updateItemsPerPage);
+    return () => window.removeEventListener("resize", updateItemsPerPage);
+  }, [updateItemsPerPage]);
+
+  // Calculate pagination
   const totalPages = Math.ceil(products.length / itemsPerPage);
   const paginatedProducts = products.slice(
     (currentPage - 1) * itemsPerPage,
@@ -34,6 +38,7 @@ export default function ProjectShowcase() {
 
   return (
     <motion.div className="flex flex-col items-center w-full text-center relative overflow-hidden">
+      {/* Heading Section */}
       <motion.h1
         initial={{ opacity: 0, y: 100 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -44,6 +49,7 @@ export default function ProjectShowcase() {
         A Small Collection of My Best Work
       </motion.h1>
 
+      {/* Description */}
       <motion.p
         initial={{ opacity: 0, y: 100 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -55,6 +61,7 @@ export default function ProjectShowcase() {
         modern, responsive, and user-friendly solutions.
       </motion.p>
 
+      {/* Project Grid */}
       <motion.div
         initial={{ opacity: 0, y: 100 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -64,39 +71,51 @@ export default function ProjectShowcase() {
       >
         {paginatedProducts.map((product, idx) => (
           <motion.div
-            key={product.id || idx} // Ensure a unique key
+            key={product.id || idx} // Ensures a unique key
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 * idx }}
+            transition={{
+              duration: 0.8,
+              ease: "easeOut",
+              delay: 0.2 + idx * 0.1,
+            }}
             viewport={{ once: true, amount: 0.5 }}
             className="relative group overflow-hidden rounded-xl shadow-lg bg-neutral-900 dark:bg-white/10 backdrop-blur-md border border-neutral-900 dark:border-white/10"
           >
-            <div className="relative overflow-hidden">
+            {/* Thumbnail Image */}
+            <div className="relative w-full h-56">
               <Image
                 alt={product.title}
                 src={product.thumbnail}
-                width="100%"
-                height="14rem"
-                className="h-full w-full object-cover transition-opacity duration-300 group-hover:opacity-0"
+                className="object-cover transition-opacity duration-300 group-hover:opacity-0"
               />
-              <video
-                autoPlay
-                loop
-                muted
-                playsInline // Ensures proper mobile playback
-                aria-label={product.title}
-                className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-              >
-                <source src={product.video} type="video/mp4" />
-              </video>
             </div>
+
+            {/* Video Preview (Shows on Hover) */}
+            <video
+              autoPlay
+              loop
+              muted
+              playsInline
+              aria-label={`Video preview of ${product.title}`} // Accessibility Improvement
+              className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+            >
+              <source src={product.video} type="video/mp4" />
+            </video>
+
+            {/* Gradient Overlay */}
             <div className="absolute bottom-0 left-0 z-10 right-0 h-24 bg-gradient-to-t from-black/80 to-transparent"></div>
+
+            {/* Project Title & Visit Button */}
             <div className="absolute bottom-2 z-20 left-4 right-4 flex items-center justify-between">
               <span className="text-white text-sm font-semibold">
                 {product.title}
               </span>
               <Link href={product.link} target="_blank">
-                <Button className="h-8 px-4 rounded-md bg-neutral-800 text-white hover:bg-neutral-700">
+                <Button
+                  variant="flat"
+                  className="h-8 px-4 rounded-md bg-neutral-800 text-white hover:bg-neutral-700"
+                >
                   Visit
                 </Button>
               </Link>
@@ -105,6 +124,7 @@ export default function ProjectShowcase() {
         ))}
       </motion.div>
 
+      {/* Pagination Controls */}
       <motion.div
         initial={{ opacity: 0, x: 100 }}
         whileInView={{ opacity: 1, x: 0 }}
@@ -113,16 +133,20 @@ export default function ProjectShowcase() {
         className="flex justify-center mt-6 space-x-4"
       >
         <Button
-          disabled={currentPage === 1}
+          variant="flat"
+          isDisabled={currentPage === 1}
           onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
         >
           Previous
         </Button>
-        <span className="dark:text-white text-black">
+
+        <span className="dark:text-white text-black" aria-live="polite">
           Page {currentPage} of {totalPages}
         </span>
+
         <Button
-          disabled={currentPage === totalPages}
+          variant="flat"
+          isDisabled={currentPage === totalPages}
           onClick={() =>
             setCurrentPage((prev) => Math.min(prev + 1, totalPages))
           }

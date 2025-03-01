@@ -1,0 +1,14 @@
+{
+    "name": "Aman Choudhary - Web Developer",
+    "short_name": "Developer Choudhary",
+    "description": "A skilled website developer specializing in Next.js and modern web technologies. Check out innovative projects, seamless UI designs, and dynamic web solutions.",
+    "start_url": "/",
+    "display": "standalone",
+    "icons": [
+        {
+            "src": "/icon.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        }
+    ]
+}

@@ -17,6 +17,7 @@ import {
   SiExpress,
 } from "react-icons/si";
 
+// Array of skills with corresponding icons
 const skills = [
   { name: "React.js", icon: <FaReact className="text-blue-400" /> },
   {
@@ -36,7 +37,11 @@ const skills = [
 
 export default function SkillsShowcase() {
   return (
-    <motion.div className="flex flex-col items-center justify-center w-full overflow-hidden">
+    <motion.div
+      className="flex flex-col items-center justify-center w-full overflow-hidden"
+      aria-label="Skills Showcase"
+    >
+      {/* Heading */}
       <motion.h2
         initial={{ opacity: 0, y: 100 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -46,6 +51,8 @@ export default function SkillsShowcase() {
       >
         My Tech Stack & Expertise
       </motion.h2>
+
+      {/* Description */}
       <motion.p
         initial={{ opacity: 0, y: 100 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -56,6 +63,8 @@ export default function SkillsShowcase() {
         A collection of tools and technologies that I specialize in, ensuring
         high-performance, scalable, and visually stunning web applications.
       </motion.p>
+
+      {/* Scrolling Skills Section */}
       <motion.div
         initial={{ opacity: 0, y: 50 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -72,6 +81,7 @@ export default function SkillsShowcase() {
             <div
               key={index}
               className="flex flex-col items-center justify-center p-6 bg-white dark:bg-gray-900 rounded-xl shadow-lg dark:shadow-gray-800 mx-4 min-w-[150px]"
+              role="listitem"
             >
               <div className="text-5xl">{skill.icon}</div>
               <p className="mt-3 text-lg font-semibold text-gray-800 dark:text-gray-200">
