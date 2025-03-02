@@ -33,7 +33,7 @@ export default function Hero() {
           className="w-full h-full object-cover"
           width={200}
           height={200}
-          loading="lazy"
+          priority={true}
         />
       </motion.div>
 

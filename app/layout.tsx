@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     icon: "/favicon.ico",
   },
   keywords: siteConfig.keywords,
-  authors: [{ name: "Amandeep Kumar", url: "https://developerchoudhary.com" }],
+  authors: [{ name: "Aman Choudhary", url: "https://developerchoudhary.com" }],
   manifest: "/site.webmanifest",
   alternates: {
     canonical: "https://developerchoudhary.com/",
@@ -98,7 +98,20 @@ export default function RootLayout({
 }) {
   return (
     <html suppressHydrationWarning lang="en">
-      <head />
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Person",
+              name: "Aman Choudhary",
+              url: "https://developerchoudhary.com",
+              jobTitle: "Web Developer",
+            }),
+          }}
+        />
+      </head>
       <body className="bg-background font-sans antialiased scroll-smooth">
         {/* Theme provider for global styling and theme management */}
         <Providers themeProps={{ attribute: "class", defaultTheme: "system" }}>
