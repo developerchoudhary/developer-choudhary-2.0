@@ -1,9 +1,9 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
 import { Button, Image } from "@nextui-org/react";
-import Link from "next/link";
 import { motion } from "framer-motion";
 import { products } from "@/config/site";
+import { Link } from "@nextui-org/link";
 
 export default function ProjectShowcase() {
   // State to track pagination
@@ -33,7 +33,7 @@ export default function ProjectShowcase() {
   const totalPages = Math.ceil(products.length / itemsPerPage);
   const paginatedProducts = products.slice(
     (currentPage - 1) * itemsPerPage,
-    Math.min(currentPage * itemsPerPage, products.length),
+    Math.min(currentPage * itemsPerPage, products.length)
   );
 
   return (
