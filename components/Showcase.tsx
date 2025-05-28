@@ -33,7 +33,7 @@ export default function ProjectShowcase() {
   const totalPages = Math.ceil(products.length / itemsPerPage);
   const paginatedProducts = products.slice(
     (currentPage - 1) * itemsPerPage,
-    Math.min(currentPage * itemsPerPage, products.length)
+    Math.min(currentPage * itemsPerPage, products.length),
   );
 
   return (
@@ -111,7 +111,11 @@ export default function ProjectShowcase() {
               <span className="text-white text-sm font-semibold">
                 {product.title}
               </span>
-              <Link href={product.link} target="_blank">
+              <Link
+                className="h-8 px-4 rounded-md bg-neutral-800 text-white hover:bg-neutral-700"
+                href={product.link}
+                target="_blank"
+              >
                 Visit
               </Link>
             </div>
