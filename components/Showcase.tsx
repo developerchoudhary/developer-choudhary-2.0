@@ -33,7 +33,7 @@ export default function ProjectShowcase() {
   const totalPages = Math.ceil(products.length / itemsPerPage);
   const paginatedProducts = products.slice(
     (currentPage - 1) * itemsPerPage,
-    Math.min(currentPage * itemsPerPage, products.length)
+    Math.min(currentPage * itemsPerPage, products.length),
   );
 
   return (
