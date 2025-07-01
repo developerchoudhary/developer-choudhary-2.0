@@ -8,6 +8,9 @@ import {
   FaCss3Alt,
   FaJs,
   FaGitAlt,
+  FaDatabase,
+  FaServer,
+  FaPalette,
 } from "react-icons/fa";
 import {
   SiNextdotjs,
@@ -15,82 +18,204 @@ import {
   SiTypescript,
   SiMongodb,
   SiExpress,
+  SiFigma,
+  SiVercel,
+  SiFirebase,
 } from "react-icons/si";
 
-// Array of skills with corresponding icons
-const skills = [
-  { name: "React.js", icon: <FaReact className="text-blue-400" /> },
+// Skill categories and additional skills for the Skills section
+const skillCategories = [
   {
-    name: "Next.js",
-    icon: <SiNextdotjs className="text-black dark:text-white" />,
+    name: 'Frontend Development',
+    icon: FaPalette,
+    description: 'Building beautiful, responsive user interfaces',
+    skills: [
+      { name: "React.js", icon: FaReact, color: "text-blue-500", proficiency: 90 },
+      { name: "Next.js", icon: SiNextdotjs, color: "text-black dark:text-white", proficiency: 85 },
+      { name: "JavaScript", icon: FaJs, color: "text-yellow-500", proficiency: 95 },
+      { name: "TypeScript", icon: SiTypescript, color: "text-blue-600", proficiency: 80 },
+      { name: "HTML5", icon: FaHtml5, color: "text-orange-500", proficiency: 95 },
+      { name: "CSS3", icon: FaCss3Alt, color: "text-blue-500", proficiency: 90 },
+      { name: "Tailwind CSS", icon: SiTailwindcss, color: "text-cyan-500", proficiency: 85 },
+    ]
   },
-  { name: "Node.js", icon: <FaNodeJs className="text-green-500" /> },
-  { name: "Express.js", icon: <SiExpress className="text-gray-500" /> },
-  { name: "MongoDB", icon: <SiMongodb className="text-green-700" /> },
-  { name: "JavaScript", icon: <FaJs className="text-yellow-500" /> },
-  { name: "TypeScript", icon: <SiTypescript className="text-blue-500" /> },
-  { name: "HTML5", icon: <FaHtml5 className="text-orange-500" /> },
-  { name: "CSS3", icon: <FaCss3Alt className="text-blue-500" /> },
-  { name: "Tailwind CSS", icon: <SiTailwindcss className="text-blue-400" /> },
-  { name: "Git", icon: <FaGitAlt className="text-red-500" /> },
+  {
+    name: 'Backend Development',
+    icon: FaServer,
+    description: 'Creating robust server-side applications',
+    skills: [
+      { name: "Node.js", icon: FaNodeJs, color: "text-green-500", proficiency: 85 },
+      { name: "Express.js", icon: SiExpress, color: "text-gray-600", proficiency: 80 },
+      { name: "MongoDB", icon: SiMongodb, color: "text-green-600", proficiency: 75 },
+      { name: "Firebase", icon: SiFirebase, color: "text-orange-500", proficiency: 70 },
+    ]
+  },
+  {
+    name: 'Development Tools',
+    icon: FaDatabase,
+    description: 'Essential tools for modern development',
+    skills: [
+      { name: "Git", icon: FaGitAlt, color: "text-red-500", proficiency: 85 },
+      { name: "Figma", icon: SiFigma, color: "text-purple-500", proficiency: 75 },
+      { name: "Vercel", icon: SiVercel, color: "text-black dark:text-white", proficiency: 80 },
+    ]
+  }
 ];
 
+const additionalSkills = [
+  "REST APIs", "GraphQL", "JWT", "OAuth",
+  "Responsive Design", "Progressive Web Apps", "SEO", "Performance Optimization",
+  "Testing (Jest)", "CI/CD", "Docker", "AWS",
+  "UI/UX Design", "Wireframing", "Prototyping", "User Research"
+];
+
+// Animated progress bar for skill proficiency
+const SkillProgressBar = ({ proficiency }: { proficiency: number }) => (
+  <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 overflow-hidden">
+    <motion.div
+      initial={{ width: 0 }}
+      whileInView={{ width: `${proficiency}%` }}
+      transition={{ duration: 1, ease: "easeOut" }}
+      viewport={{ once: true }}
+      className="h-full bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full"
+    />
+  </div>
+);
+
+// Skills Section: Categories, additional skills, and call-to-action
 export default function SkillsShowcase() {
   return (
-    <motion.div
-      className="flex flex-col items-center justify-center w-full overflow-hidden"
-      aria-label="Skills Showcase"
-    >
-      {/* Heading */}
-      <motion.h2
-        initial={{ opacity: 0, y: 100 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: "easeOut", delay: 0.1 }}
-        viewport={{ once: true, amount: 0.5 }}
-        className="bg-clip-text text-transparent bg-gradient-to-b from-neutral-500 to-neutral-600 dark:from-neutral-50 dark:to-neutral-300 text-4xl md:text-6xl text-center font-bold tracking-wide leading-tight"
-      >
-        My Tech Stack & Expertise
-      </motion.h2>
-
-      {/* Description */}
-      <motion.p
-        initial={{ opacity: 0, y: 100 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
-        viewport={{ once: true, amount: 0.5 }}
-        className="max-w-4xl text-center mt-4 text-base md:text-xl text-neutral-700 dark:text-neutral-300"
-      >
-        A collection of tools and technologies that I specialize in, ensuring
-        high-performance, scalable, and visually stunning web applications.
-      </motion.p>
-
-      {/* Scrolling Skills Section */}
-      <motion.div
-        initial={{ opacity: 0, y: 50 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: "easeOut", delay: 0.3 }}
-        viewport={{ once: true, amount: 0.5 }}
-        className="relative w-full mt-10 overflow-x-hidden py-4"
-      >
+    <section id="skills" className="py-10 px-4 md:px-6 relative">
+      <div className="max-w-6xl mx-auto">
+        {/* Section Header */}
         <motion.div
-          className="flex whitespace-nowrap"
-          animate={{ x: ["0%", "-500%"] }}
-          transition={{ repeat: Infinity, duration: 40, ease: "linear" }}
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+          className="text-center mb-16"
         >
-          {[...skills, ...skills, ...skills, ...skills].map((skill, index) => (
-            <div
-              key={index}
-              className="flex flex-col items-center justify-center p-6 bg-white dark:bg-gray-900 rounded-xl shadow-lg dark:shadow-gray-800 mx-4 min-w-[150px]"
-              role="listitem"
-            >
-              <div className="text-5xl">{skill.icon}</div>
-              <p className="mt-3 text-lg font-semibold text-gray-800 dark:text-gray-200">
-                {skill.name}
-              </p>
-            </div>
-          ))}
+          <h2 className="text-4xl md:text-5xl font-bold mb-4">
+            <span className="text-gray-900 dark:text-white">Technical</span>
+            <span className="bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent"> Skills</span>
+          </h2>
+          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+            A comprehensive collection of technologies and tools I use to create 
+            exceptional digital experiences
+          </p>
         </motion.div>
-      </motion.div>
-    </motion.div>
+
+        {/* Skills Categories: Responsive grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {skillCategories.map((category, categoryIndex) => (
+            <motion.div
+              key={category.name}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: categoryIndex * 0.2 }}
+              viewport={{ once: true }}
+              className="glass p-8 hover:transform hover:scale-105 transition-all duration-300"
+            >
+              {/* Category Header */}
+              <div className="flex items-center gap-4 mb-6">
+                <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+                  <category.icon className="w-6 h-6 text-blue-600 dark:text-cyan-400" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white">
+                    {category.name}
+                  </h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    {category.description}
+                  </p>
+                </div>
+              </div>
+
+              {/* Skills List */}
+              <div className="space-y-4">
+                {category.skills.map((skill, skillIndex) => (
+                  <motion.div
+                    key={skill.name}
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.5, delay: 0.3 + skillIndex * 0.1 }}
+                    viewport={{ once: true }}
+                    className="group"
+                  >
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-3">
+                        <skill.icon className={`w-5 h-5 ${skill.color}`} />
+                        <span className="font-medium text-gray-700 dark:text-gray-300 group-hover:text-blue-600 dark:group-hover:text-cyan-400 transition-colors">
+                          {skill.name}
+                        </span>
+                      </div>
+                      <span className="text-sm font-semibold text-blue-600 dark:text-cyan-400">
+                        {skill.proficiency}%
+                      </span>
+                    </div>
+                    <SkillProgressBar proficiency={skill.proficiency} />
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Additional Skills: Responsive grid */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.8 }}
+          viewport={{ once: true }}
+          className="mt-16"
+        >
+          <div className="glass p-8">
+            <h3 className="text-2xl font-bold mb-6 text-center text-gray-900 dark:text-white">
+              Additional Skills & Tools
+            </h3>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {additionalSkills.map((skill, index) => (
+                <motion.div
+                  key={skill}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.3, delay: 1.0 + index * 0.05 }}
+                  viewport={{ once: true }}
+                  className="flex items-center gap-2 p-3 bg-white/50 dark:bg-gray-800/50 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
+                >
+                  <div className="w-2 h-2 bg-blue-600 dark:bg-cyan-400 rounded-full"></div>
+                  <span className="text-sm text-gray-700 dark:text-gray-300">{skill}</span>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Call to Action: Centered and responsive */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 1.2 }}
+          viewport={{ once: true }}
+          className="text-center mt-16"
+        >
+          <div className="glass p-8 max-w-2xl mx-auto">
+            <h3 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">
+              Always Learning & Growing
+            </h3>
+            <p className="text-gray-600 dark:text-gray-300 mb-6">
+              I'm constantly exploring new technologies and best practices to deliver 
+              cutting-edge solutions for my clients.
+            </p>
+            <a
+              href="#projects"
+              className="inline-block px-8 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-semibold rounded-full hover:shadow-lg transform hover:scale-105 transition-all duration-300"
+            >
+              View My Work
+            </a>
+          </div>
+        </motion.div>
+      </div>
+    </section>
   );
 }

@@ -19,33 +19,30 @@ export default function Home() {
       </section>
 
       {/* Projects Section - Showcases work and completed projects */}
-      <section
-        id="project-showcase"
-        className="max-w-7xl mx-auto w-full pb-10 lg:pb-20"
-      >
+      <section id="project-showcase" className="max-w-7xl mx-auto w-full">
         <ProjectShowcase />
       </section>
 
       {/* Skills Section - Displays technical skills */}
-      <section id="skills" className="max-w-7xl mx-auto w-full py-10 lg:py-20">
+      <section id="skills" className="max-w-7xl mx-auto w-full">
         <SkillsShowcase />
       </section>
 
       {/* About Section - Personal and professional background */}
-      <section id="about" className="max-w-7xl mx-auto w-full py-10 lg:py-20">
+      <section id="about" className="max-w-7xl mx-auto w-full">
         <About />
       </section>
 
       {/* Experience Section - Work history and experience details */}
       <section
         id="experience"
-        className="max-w-7xl mx-auto w-full py-10 lg:py-20"
+        className="max-w-7xl mx-auto w-full"
       >
         <Experience />
       </section>
 
       {/* Contact Section - Contact details and form */}
-      <section id="contact" className="max-w-7xl mx-auto w-full py-10 lg:py-20">
+      <section id="contact" className="max-w-7xl mx-auto w-full">
         <Contact />
       </section>
     </div>

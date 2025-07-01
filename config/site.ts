@@ -8,114 +8,76 @@ export const siteConfig = {
     "Leading Website Developer in India | Specialized in React.js, Next.js, Tailwind CSS, Node.js, and Express.js Experienced web developer with a strong command of JavaScript, TypeScript, HTML, and CSS. Proficient in building dynamic, high-performance websites and applications. Expertise includes admin panel development, payment gateway integration, email/OTP authentication, and crafting seamless user experiences. Passionate about delivering innovative and scalable digital solutions.",
 };
 
-export const products = [
+export interface Project {
+  id: number;
+  title: string;
+  subtitle: string;
+  description: string;
+  link: string;
+  github?: string;
+  img: string;
+  category: 'frontend' | 'fullstack' | 'backend' | 'other';
+  technologies: string[];
+  featured?: boolean;
+}
+
+export const products: Project[] = [
   {
     id: 1,
-    title: "About - Studynexaa",
-    link: "https://studynexaa.vercel.app/about",
-    thumbnail:
-      "https://res.cloudinary.com/dh7b09yai/image/upload/v1730052029/fug7sf2fvzaxeslazrpc.png",
-    video:
-      "https://res.cloudinary.com/dh7b09yai/video/upload/v1730097257/ai0w4xphnzvf6khyuq0n.mp4",
+    title: "StudyNexaa",
+    subtitle: "E-Learning Platform",
+    description: "A comprehensive e-learning platform built with Next.js and TypeScript, featuring course management, student progress tracking, and interactive learning materials.",
+    link: "https://studynexaa.vercel.app/",
+    github: "https://github.com/developerchoudhary/studynexaa",
+    img: "https://res.cloudinary.com/dh7b09yai/image/upload/v1730052031/duzrubbu4pb5kjz68lp6.png",
+    category: "fullstack",
+    technologies: ["Next.js", "TypeScript", "Tailwind CSS", "MongoDB", "Node.js"],
+    featured: true
   },
   {
     id: 2,
-    title: "About - Jai Shree Equipment Dairy",
-    link: "https://jaishreeequipmentdairy.in/about",
-    thumbnail:
-      "https://res.cloudinary.com/dh7b09yai/image/upload/v1730052035/ktn8avmr3wfhjogruxuz.png",
-    video:
-      "https://res.cloudinary.com/dh7b09yai/video/upload/v1730099322/lyuhd4vl0p0lv5qzp0mu.mp4",
+    title: "Jai Shree Equipment Dairy",
+    subtitle: "Dairy Equipment E-commerce",
+    description: "A full-featured e-commerce platform for dairy equipment with product catalog, order management, and automated milk collection system integration.",
+    link: "https://jaishreeequipmentdairy.in",
+    img: "https://res.cloudinary.com/dh7b09yai/image/upload/v1730052035/ktn8avmr3wfhjogruxuz.png",
+    category: "fullstack",
+    technologies: ["React.js", "Node.js", "Express", "MongoDB", "Stripe"],
+    featured: true
   },
   {
     id: 3,
     title: "Portfolio Website",
+    subtitle: "Personal Portfolio",
+    description: "Modern portfolio website showcasing my projects and skills, built with Next.js 14 and NextUI for a seamless user experience.",
     link: "https://ex-developerchoudhary.vercel.app/",
-    thumbnail:
-      "https://res.cloudinary.com/dh7b09yai/image/upload/v1730052029/rsyftif6jynnsulq5kaw.png",
-    video:
-      "https://res.cloudinary.com/dh7b09yai/video/upload/v1730097617/aqim5c7kgofj6gzwizna.mp4",
+    github: "https://github.com/developerchoudhary/portfolio",
+    img: "https://res.cloudinary.com/dh7b09yai/image/upload/v1730052029/rsyftif6jynnsulq5kaw.png",
+    category: "frontend",
+    technologies: ["Next.js", "NextUI", "Tailwind CSS", "Framer Motion"],
+    featured: true
   },
-
   {
     id: 4,
-    title: "Contact Form - Jai Shree Equipment Dairy",
-    link: "https://jaishreeequipmentdairy.in/contact",
-    thumbnail:
-      "https://res.cloudinary.com/dh7b09yai/image/upload/v1730052031/xinhgv8epp51rimd0zls.png",
-    video:
-      "https://res.cloudinary.com/dh7b09yai/video/upload/v1730099726/efc1lspwip7athmxdagp.mp4",
+    title: "IndianMarket",
+    subtitle: "Online Marketplace",
+    description: "A feature-rich online marketplace connecting local sellers with customers, including real-time chat and secure payment processing.",
+    link: "https://indianmarket.online/",
+    img: "https://res.cloudinary.com/dh7b09yai/image/upload/v1730052035/rj8vvweaabfdmv6tczbt.png",
+    category: "fullstack",
+    technologies: ["React.js", "Node.js", "Socket.io", "MongoDB", "Redux"],
+    featured: true
   },
   {
     id: 5,
-    title: "StudyNexaa",
-    link: "https://studynexaa.vercel.app/",
-    thumbnail:
-      "https://res.cloudinary.com/dh7b09yai/image/upload/v1730052031/duzrubbu4pb5kjz68lp6.png",
-    video:
-      "https://res.cloudinary.com/dh7b09yai/video/upload/v1730089888/frfmrxcm5e241nadmrsq.mp4",
-  },
-  {
-    id: 6,
-    title: "IndianMarket",
-    link: "https://indianmarket.online/",
-    thumbnail:
-      "https://res.cloudinary.com/dh7b09yai/image/upload/v1730052035/rj8vvweaabfdmv6tczbt.png",
-    video:
-      "https://res.cloudinary.com/dh7b09yai/video/upload/v1730089884/skyvnumlb8djxem94dhm.mp4",
-  },
-  {
-    id: 7,
-    title: "Secure real time chating website - Hthai",
+    title: "Hthai Chat",
+    subtitle: "Real-time Chat Application",
+    description: "Secure real-time chat application with end-to-end encryption, user authentication, and message history.",
     link: "https://hthai.vercel.app/register",
-    thumbnail:
-      "https://res.cloudinary.com/dh7b09yai/image/upload/v1730052034/hyenoikem7br65fqgjo3.png",
-    video:
-      "https://res.cloudinary.com/dh7b09yai/video/upload/v1730099025/ibow7jbguoexdcgwrdvt.mp4",
-  },
-  {
-    id: 8,
-    title: "About - Jai Shree Equipment Dairy",
-    link: "https://jaishreeequipmentdairy.in/about",
-    thumbnail:
-      "https://res.cloudinary.com/dh7b09yai/image/upload/v1730052030/uyf6huydmlq7cblk9pjh.png",
-    video:
-      "https://res.cloudinary.com/dh7b09yai/video/upload/v1730099512/y5k83xpmcjexyc6bnala.mp4",
-  },
-  {
-    id: 9,
-    title: "Automatic Milk Collection System - Jai Shree Equipment Dairy",
-    link: "https://jaishreeequipmentdairy.in/automatic-milk-collection-system",
-    thumbnail:
-      "https://res.cloudinary.com/dh7b09yai/image/upload/v1730052038/uubsc0gwlevitv0w6d6x.png",
-    video:
-      "https://res.cloudinary.com/dh7b09yai/video/upload/v1730100600/mkzzqcrcq1t358eknqis.mp4",
-  },
-  {
-    id: 10,
-    title: "Admin Dashboard - StudyNexaa",
-    link: "https://studynexaa.vercel.app/",
-    thumbnail:
-      "https://res.cloudinary.com/dh7b09yai/image/upload/v1730100886/bzjcm0vdul0222vk2gic.png",
-    video:
-      "https://res.cloudinary.com/dh7b09yai/video/upload/v1730100884/stxrf9aglhxjwfsjitwt.mp4",
-  },
-  {
-    id: 11,
-    title: "Feed - StudyNexaa",
-    link: "https://studynexaa.vercel.app/about",
-    thumbnail:
-      "https://res.cloudinary.com/dh7b09yai/image/upload/v1730101277/gziqeoq575zj6pgofn3v.png",
-    video:
-      "https://res.cloudinary.com/dh7b09yai/video/upload/v1730101300/vvsp1nxkm1kdzfuk1ows.mp4",
-  },
-  {
-    id: 12,
-    title: "Services - Jai Shree Equipment Dairy",
-    link: "https://jaishreeequipmentdairy.in/services",
-    thumbnail:
-      "https://res.cloudinary.com/dh7b09yai/image/upload/v1730053062/qwmhzogbiime7c0uudge.png",
-    video:
-      "https://res.cloudinary.com/dh7b09yai/video/upload/v1730100433/sr8gpra8a6lbxrizjoon.mp4",
-  },
-];
+    github: "https://github.com/developerchoudhary/hthai",
+    img: "https://res.cloudinary.com/dh7b09yai/image/upload/v1730052034/hyenoikem7br65fqgjo3.png",
+    category: "fullstack",
+    technologies: ["Next.js", "Socket.io", "MongoDB", "JWT", "Tailwind CSS"],
+    featured: false
+  }
+ ];

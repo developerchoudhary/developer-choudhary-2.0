@@ -2,6 +2,39 @@
 @tailwind components;
 @tailwind utilities;
 
+
+html {
+  font-family: 'Inter', system-ui, sans-serif;
+  scroll-behavior: smooth;
+}
+
+body {
+  background: linear-gradient(135deg, #f8fafc 0%, #e0e7ef 100%);
+  color: #1a202c;
+  transition: background 0.3s, color 0.3s;
+}
+
+.dark body {
+  background: linear-gradient(135deg, #18181b 0%, #23272f 100%);
+  color: #f3f4f6;
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
+  backdrop-filter: blur(8px);
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.soft-shadow {
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08), 0 1.5px 4px rgba(0,0,0,0.04);
+}
+
+.transition {
+  transition: all 0.2s cubic-bezier(.4,0,.2,1);
+}
+
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
@@ -9,4 +42,18 @@ input:-webkit-autofill:active {
     transition-delay: 99999s;
     -webkit-box-shadow: 0 0 0 1000px rgb(0 0 0 0.7) !important;
     background: transparent;
+}
+
+@keyframes gradient-slow {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.animate-gradient-slow {
+  background-size: 200% 200%;
+  animation: gradient-slow 12s ease-in-out infinite;
 }

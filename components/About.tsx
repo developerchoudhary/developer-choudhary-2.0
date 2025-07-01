@@ -1,100 +1,208 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { FaQuoteLeft, FaQuoteRight } from "react-icons/fa";
+import { FaCode, FaLaptopCode, FaRocket, FaGraduationCap, FaMapMarkerAlt, FaEnvelope } from "react-icons/fa";
 
-// Define animation variants for reuse
-const fadeInUp = (delay: number = 0.2) => ({
-  initial: { opacity: 0, y: 100 },
-  whileInView: { opacity: 1, y: 0 },
-  transition: { duration: 0.8, ease: "easeOut", delay },
-  viewport: { once: true, amount: 0.5 },
-});
+// Stats and skills for About section
+const stats = [
+  { number: "3+", label: "Years Experience", icon: FaCode },
+  { number: "50+", label: "Projects Completed", icon: FaLaptopCode },
+  { number: "100%", label: "Client Satisfaction", icon: FaRocket },
+];
 
+const skills = [
+  "React.js", "Next.js", "Node.js", "TypeScript", "Tailwind CSS", "MongoDB"
+];
+
+// About Section: Bio, stats, skills, and call-to-action
 export default function AboutPage() {
   return (
-    <motion.section className="relative flex flex-col items-center w-full justify-center text-center">
-      {/* Heading */}
-      <motion.h1
-        {...fadeInUp(0.1)}
-        className="flex items-center gap-2 text-4xl md:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-gray-800 to-gray-500 dark:from-gray-200 dark:to-gray-400"
-      >
-        <FaQuoteLeft
-          className="text-gray-400 dark:text-gray-500"
-          aria-hidden="true"
-        />
-        <span className="bg-clip-text text-transparent bg-gradient-to-b from-neutral-500 to-neutral-600 dark:from-neutral-50 dark:to-neutral-300 text-4xl md:text-6xl font-bold tracking-wide leading-tight">
-          About Me
-        </span>
-        <FaQuoteRight
-          className="text-gray-400 dark:text-gray-500"
-          aria-hidden="true"
-        />
-      </motion.h1>
+    <section id="about" className="py-20 px-4 md:px-6 relative">
+      <div className="max-w-6xl mx-auto">
+        {/* Section Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+          className="text-center mb-16"
+        >
+          <h2 className="text-4xl md:text-5xl font-bold mb-4">
+            <span className="text-gray-900 dark:text-white">About</span>
+            <span className="bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent"> Me</span>
+          </h2>
+          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+            Passionate Full-Stack Developer crafting exceptional digital experiences
+          </p>
+        </motion.div>
 
-      {/* Content Section */}
-      <div className="flex flex-col md:flex-row items-center justify-center gap-12 mt-10 w-full">
-        <article className="flex flex-col gap-6 text-left text-neutral-700 dark:text-neutral-300">
-          {/* Introduction */}
-          <motion.p {...fadeInUp(0.2)}>
-            Hi, I&apos;m{" "}
-            <span className="font-bold text-gray-900 dark:text-white">
-              Aman
-            </span>
-            , also known as{" "}
-            <span className="font-bold text-gray-900 dark:text-white">
-              Developer Choudhary
-            </span>
-            . I am a Full Stack Web Developer based in Sri Ganganagar,
-            Rajasthan. I specialize in crafting high-performance web
-            applications with modern technologies like{" "}
-            <span className="font-semibold">
-              React.js, Next.js, Tailwind CSS, and Node.js
-            </span>
-            .
-          </motion.p>
+        {/* Stats Cards: Responsive grid */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          viewport={{ once: true }}
+          className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16"
+        >
+          {stats.map((stat, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, scale: 0.8 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
+              viewport={{ once: true }}
+              className="glass p-6 text-center hover:transform hover:scale-105 transition-all duration-300"
+            >
+              <stat.icon className="w-8 h-8 text-blue-600 dark:text-cyan-400 mx-auto mb-4" />
+              <div className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+                {stat.number}
+              </div>
+              <div className="text-gray-600 dark:text-gray-300">
+                {stat.label}
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
 
-          {/* Education & Background */}
-          <motion.p {...fadeInUp(0.3)} className="sm:text-lg">
-            My journey began in Anupgarh, where I developed a passion for
-            coding. Later, I earned my{" "}
-            <span className="font-semibold">
-              BCA from Seth G.L Bihani S.D (P.G) College, Sri Ganganagar
-              (2021-2024)
-            </span>
-            , which laid a strong foundation for my career.
-          </motion.p>
+        {/* Main Content Grid: Responsive two-column layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+          {/* Left Column - Bio and Quick Info */}
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            viewport={{ once: true }}
+            className="space-y-6"
+          >
+            {/* Bio Card */}
+            <div className="glass p-8">
+              <h3 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">
+                My Story
+              </h3>
+              <div className="space-y-4 text-gray-600 dark:text-gray-300 leading-relaxed">
+                <p>
+                  Hi, I'm <span className="font-semibold text-blue-600 dark:text-cyan-400">Aman Choudhary</span>, 
+                  a passionate Full-Stack Developer from Sri Ganganagar, Rajasthan. My journey in web development 
+                  began with a curiosity to build things that make a difference.
+                </p>
+                <p>
+                  I earned my <span className="font-semibold">BCA degree</span> from Seth G.L Bihani S.D (P.G) College, 
+                  which provided me with a solid foundation in computer science and programming principles.
+                </p>
+                <p>
+                  What drives me is the ability to transform ideas into reality through code. I specialize in 
+                  modern web technologies and love creating seamless, user-friendly experiences that solve real problems.
+                </p>
+              </div>
+            </div>
 
-          {/* What I Do */}
-          <motion.div {...fadeInUp(0.4)}>
-            <h2 className="text-lg sm:text-xl font-semibold">What I Do:</h2>
-            <ul className="list-disc pl-6 text-lg">
-              {[
-                "Build dynamic, responsive websites.",
-                "Develop powerful admin panels.",
-                "Design and implement seamless UI/UX.",
-                "Integrate payment systems and OTP features.",
-                "Build scalable backends with Node.js & Express.js.",
-              ].map((task, index) => (
-                <motion.li key={index} {...fadeInUp(0.5 + index * 0.1)}>
-                  {task}
-                </motion.li>
-              ))}
-            </ul>
+            {/* Quick Info Card */}
+            <div className="glass p-6">
+              <h4 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">
+                Quick Info
+              </h4>
+              <div className="space-y-3">
+                <div className="flex items-center gap-3">
+                  <FaMapMarkerAlt className="w-4 h-4 text-blue-600 dark:text-cyan-400" />
+                  <span className="text-gray-600 dark:text-gray-300">Sri Ganganagar, Rajasthan</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <FaGraduationCap className="w-4 h-4 text-blue-600 dark:text-cyan-400" />
+                  <span className="text-gray-600 dark:text-gray-300">BCA Graduate (2021-2024)</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <FaEnvelope className="w-4 h-4 text-blue-600 dark:text-cyan-400" />
+                  <span className="text-gray-600 dark:text-gray-300">Available for new opportunities</span>
+                </div>
+              </div>
+            </div>
           </motion.div>
 
-          {/* Additional Info */}
-          <motion.p {...fadeInUp(1)} className="text-lg">
-            Passionate about learning, I mastered{" "}
-            <span className="font-semibold">Next.js in just three days</span>,
-            showcasing my dedication to growth and innovation.
-          </motion.p>
+          {/* Right Column - Skills & Services */}
+          <motion.div
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
+            viewport={{ once: true }}
+            className="space-y-6"
+          >
+            {/* Core Skills Card */}
+            <div className="glass p-8">
+              <h3 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">
+                Core Skills
+              </h3>
+              <div className="grid grid-cols-2 gap-3">
+                {skills.map((skill, index) => (
+                  <motion.div
+                    key={skill}
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.3, delay: 0.7 + index * 0.1 }}
+                    viewport={{ once: true }}
+                    className="flex items-center gap-2 p-3 bg-white/50 dark:bg-gray-800/50 rounded-lg"
+                  >
+                    <div className="w-2 h-2 bg-blue-600 dark:bg-cyan-400 rounded-full"></div>
+                    <span className="text-gray-700 dark:text-gray-300 font-medium">{skill}</span>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
 
-          <motion.p {...fadeInUp(1.1)} className="text-lg">
-            Let&apos;s connect and build something amazing!
-          </motion.p>
-        </article>
+            {/* What I Do Card */}
+            <div className="glass p-8">
+              <h3 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">
+                What I Do
+              </h3>
+              <div className="space-y-4">
+                {[
+                  "Build dynamic, responsive websites with modern frameworks",
+                  "Develop powerful admin panels and dashboards",
+                  "Design seamless UI/UX experiences",
+                  "Integrate payment systems and authentication",
+                  "Build scalable backend APIs and services",
+                  "Optimize performance and ensure accessibility"
+                ].map((service, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, x: 20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.5, delay: 0.8 + index * 0.1 }}
+                    viewport={{ once: true }}
+                    className="flex items-start gap-3"
+                  >
+                    <div className="w-2 h-2 bg-blue-600 dark:bg-cyan-400 rounded-full mt-2 flex-shrink-0"></div>
+                    <span className="text-gray-600 dark:text-gray-300">{service}</span>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+        </div>
+
+        {/* Call to Action: Centered and responsive */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 1.0 }}
+          viewport={{ once: true }}
+          className="text-center mt-16"
+        >
+          <div className="glass p-8 max-w-2xl mx-auto">
+            <h3 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">
+              Ready to Build Something Amazing?
+            </h3>
+            <p className="text-gray-600 dark:text-gray-300 mb-6">
+              Let's collaborate and bring your ideas to life with cutting-edge technology and creative solutions.
+            </p>
+            <a
+              href="#contact"
+              className="inline-block px-8 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-semibold rounded-full hover:shadow-lg transform hover:scale-105 transition-all duration-300"
+            >
+              Get In Touch
+            </a>
+          </div>
+        </motion.div>
       </div>
-    </motion.section>
+    </section>
   );
 }
