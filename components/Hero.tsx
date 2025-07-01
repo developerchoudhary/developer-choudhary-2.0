@@ -114,7 +114,7 @@ export default function Hero() {
             onClick={scrollToContact}
             className="px-8 py-4 bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-semibold rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 w-full sm:w-auto"
           >
-            Let's Work Together
+            Let&apos;s Work Together
           </Button>
           <a
             href="/resume.pdf"

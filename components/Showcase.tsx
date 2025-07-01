@@ -2,7 +2,13 @@
 import { useState, useEffect, useCallback } from "react";
 import { Button, Card, CardHeader, CardBody } from "@nextui-org/react";
 import { motion, AnimatePresence } from "framer-motion";
-import { FaAngleLeft, FaAngleRight, FaExternalLinkAlt, FaGithub, FaTimes } from "react-icons/fa";
+import {
+  FaAngleLeft,
+  FaAngleRight,
+  FaExternalLinkAlt,
+  FaGithub,
+  FaTimes,
+} from "react-icons/fa";
 import { Project, products } from "@/config/site";
 import Image from "next/image";
 
@@ -75,10 +81,14 @@ export default function ProjectShowcase() {
         >
           <h2 className="text-4xl md:text-5xl font-bold mb-4">
             <span className="text-gray-900 dark:text-white">Featured</span>
-            <span className="bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent"> Projects</span>
+            <span className="bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
+              {" "}
+              Projects
+            </span>
           </h2>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-            A showcase of my best work, demonstrating creativity, technical skills, and problem-solving abilities
+            A showcase of my best work, demonstrating creativity, technical
+            skills, and problem-solving abilities
           </p>
         </motion.div>
 
@@ -148,8 +158,12 @@ export default function ProjectShowcase() {
                 <CardHeader className="pb-0 pt-4 px-4 flex-col items-start">
                   <div className="flex justify-between items-start w-full">
                     <div className="flex flex-col items-start">
-                      <h4 className="font-bold text-lg text-gray-900 dark:text-white">{project.title}</h4>
-                      <small className="text-gray-600 dark:text-gray-400">{project.subtitle}</small>
+                      <h4 className="font-bold text-lg text-gray-900 dark:text-white">
+                        {project.title}
+                      </h4>
+                      <small className="text-gray-600 dark:text-gray-400">
+                        {project.subtitle}
+                      </small>
                     </div>
                     <span className="px-3 py-1 text-xs rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 font-medium">
                       {project.category}
@@ -164,7 +178,7 @@ export default function ProjectShowcase() {
                       src={project.img}
                       width={270}
                       height={180}
-                      style={{ width: '100%', height: 'auto' }}
+                      style={{ width: "100%", height: "auto" }}
                     />
                     {/* Hover overlay with action buttons */}
                     <AnimatePresence>
@@ -179,7 +193,7 @@ export default function ProjectShowcase() {
                             isIconOnly
                             variant="flat"
                             className="bg-white/20 backdrop-blur-lg"
-                            onPress={(e) => {
+                            onPress={() => {
                               window.open(project.link, "_blank");
                             }}
                           >
@@ -253,7 +267,9 @@ export default function ProjectShowcase() {
                     <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
                       {selectedProject.title}
                     </h3>
-                    <p className="text-gray-600 dark:text-gray-400">{selectedProject.subtitle}</p>
+                    <p className="text-gray-600 dark:text-gray-400">
+                      {selectedProject.subtitle}
+                    </p>
                   </div>
                   <Button
                     isIconOnly
@@ -276,11 +292,17 @@ export default function ProjectShowcase() {
                   </div>
                   <div className="space-y-4">
                     <div>
-                      <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Description</h4>
-                      <p className="text-gray-600 dark:text-gray-300">{selectedProject.description}</p>
+                      <h4 className="font-semibold text-gray-900 dark:text-white mb-2">
+                        Description
+                      </h4>
+                      <p className="text-gray-600 dark:text-gray-300">
+                        {selectedProject.description}
+                      </p>
                     </div>
                     <div>
-                      <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Technologies</h4>
+                      <h4 className="font-semibold text-gray-900 dark:text-white mb-2">
+                        Technologies
+                      </h4>
                       <div className="flex flex-wrap gap-2">
                         {selectedProject.technologies?.map((tech, index) => (
                           <span
@@ -297,7 +319,9 @@ export default function ProjectShowcase() {
                         <Button
                           variant="flat"
                           className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white"
-                          onPress={() => window.open(selectedProject.github, "_blank")}
+                          onPress={() =>
+                            window.open(selectedProject.github, "_blank")
+                          }
                         >
                           <FaGithub className="mr-2" />
                           View Code
@@ -306,7 +330,9 @@ export default function ProjectShowcase() {
                       <Button
                         variant="flat"
                         className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white"
-                        onPress={() => window.open(selectedProject.link, "_blank")}
+                        onPress={() =>
+                          window.open(selectedProject.link, "_blank")
+                        }
                       >
                         <FaExternalLinkAlt className="mr-2" />
                         Live Demo

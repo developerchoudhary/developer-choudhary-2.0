@@ -1,7 +1,14 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { FaCode, FaLaptopCode, FaRocket, FaGraduationCap, FaMapMarkerAlt, FaEnvelope } from "react-icons/fa";
+import {
+  FaCode,
+  FaLaptopCode,
+  FaRocket,
+  FaGraduationCap,
+  FaMapMarkerAlt,
+  FaEnvelope,
+} from "react-icons/fa";
 
 // Stats and skills for About section
 const stats = [
@@ -11,7 +18,12 @@ const stats = [
 ];
 
 const skills = [
-  "React.js", "Next.js", "Node.js", "TypeScript", "Tailwind CSS", "MongoDB"
+  "React.js",
+  "Next.js",
+  "Node.js",
+  "TypeScript",
+  "Tailwind CSS",
+  "MongoDB",
 ];
 
 // About Section: Bio, stats, skills, and call-to-action
@@ -29,10 +41,14 @@ export default function AboutPage() {
         >
           <h2 className="text-4xl md:text-5xl font-bold mb-4">
             <span className="text-gray-900 dark:text-white">About</span>
-            <span className="bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent"> Me</span>
+            <span className="bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
+              {" "}
+              Me
+            </span>
           </h2>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            Passionate Full-Stack Developer crafting exceptional digital experiences
+            Passionate Full-Stack Developer crafting exceptional digital
+            experiences
           </p>
         </motion.div>
 
@@ -81,17 +97,25 @@ export default function AboutPage() {
               </h3>
               <div className="space-y-4 text-gray-600 dark:text-gray-300 leading-relaxed">
                 <p>
-                  Hi, I'm <span className="font-semibold text-blue-600 dark:text-cyan-400">Aman Choudhary</span>, 
-                  a passionate Full-Stack Developer from Sri Ganganagar, Rajasthan. My journey in web development 
-                  began with a curiosity to build things that make a difference.
+                  Hi, I'm{" "}
+                  <span className="font-semibold text-blue-600 dark:text-cyan-400">
+                    Aman Choudhary
+                  </span>
+                  , a passionate Full-Stack Developer from Sri Ganganagar,
+                  Rajasthan. My journey in web development began with a
+                  curiosity to build things that make a difference.
                 </p>
                 <p>
-                  I earned my <span className="font-semibold">BCA degree</span> from Seth G.L Bihani S.D (P.G) College, 
-                  which provided me with a solid foundation in computer science and programming principles.
+                  I earned my <span className="font-semibold">BCA degree</span>{" "}
+                  from Seth G.L Bihani S.D (P.G) College, which provided me with
+                  a solid foundation in computer science and programming
+                  principles.
                 </p>
                 <p>
-                  What drives me is the ability to transform ideas into reality through code. I specialize in 
-                  modern web technologies and love creating seamless, user-friendly experiences that solve real problems.
+                  What drives me is the ability to transform ideas into reality
+                  through code. I specialize in modern web technologies and love
+                  creating seamless, user-friendly experiences that solve real
+                  problems.
                 </p>
               </div>
             </div>
@@ -104,15 +128,21 @@ export default function AboutPage() {
               <div className="space-y-3">
                 <div className="flex items-center gap-3">
                   <FaMapMarkerAlt className="w-4 h-4 text-blue-600 dark:text-cyan-400" />
-                  <span className="text-gray-600 dark:text-gray-300">Sri Ganganagar, Rajasthan</span>
+                  <span className="text-gray-600 dark:text-gray-300">
+                    Sri Ganganagar, Rajasthan
+                  </span>
                 </div>
                 <div className="flex items-center gap-3">
                   <FaGraduationCap className="w-4 h-4 text-blue-600 dark:text-cyan-400" />
-                  <span className="text-gray-600 dark:text-gray-300">BCA Graduate (2021-2024)</span>
+                  <span className="text-gray-600 dark:text-gray-300">
+                    BCA Graduate (2021-2024)
+                  </span>
                 </div>
                 <div className="flex items-center gap-3">
                   <FaEnvelope className="w-4 h-4 text-blue-600 dark:text-cyan-400" />
-                  <span className="text-gray-600 dark:text-gray-300">Available for new opportunities</span>
+                  <span className="text-gray-600 dark:text-gray-300">
+                    Available for new opportunities
+                  </span>
                 </div>
               </div>
             </div>
@@ -142,7 +172,9 @@ export default function AboutPage() {
                     className="flex items-center gap-2 p-3 bg-white/50 dark:bg-gray-800/50 rounded-lg"
                   >
                     <div className="w-2 h-2 bg-blue-600 dark:bg-cyan-400 rounded-full"></div>
-                    <span className="text-gray-700 dark:text-gray-300 font-medium">{skill}</span>
+                    <span className="text-gray-700 dark:text-gray-300 font-medium">
+                      {skill}
+                    </span>
                   </motion.div>
                 ))}
               </div>
@@ -160,7 +192,7 @@ export default function AboutPage() {
                   "Design seamless UI/UX experiences",
                   "Integrate payment systems and authentication",
                   "Build scalable backend APIs and services",
-                  "Optimize performance and ensure accessibility"
+                  "Optimize performance and ensure accessibility",
                 ].map((service, index) => (
                   <motion.div
                     key={index}
@@ -171,7 +203,9 @@ export default function AboutPage() {
                     className="flex items-start gap-3"
                   >
                     <div className="w-2 h-2 bg-blue-600 dark:bg-cyan-400 rounded-full mt-2 flex-shrink-0"></div>
-                    <span className="text-gray-600 dark:text-gray-300">{service}</span>
+                    <span className="text-gray-600 dark:text-gray-300">
+                      {service}
+                    </span>
                   </motion.div>
                 ))}
               </div>
@@ -192,7 +226,8 @@ export default function AboutPage() {
               Ready to Build Something Amazing?
             </h3>
             <p className="text-gray-600 dark:text-gray-300 mb-6">
-              Let's collaborate and bring your ideas to life with cutting-edge technology and creative solutions.
+              Let's collaborate and bring your ideas to life with cutting-edge
+              technology and creative solutions.
             </p>
             <a
               href="#contact"

@@ -2,7 +2,15 @@
 
 import { Button } from "@nextui-org/button";
 import { IoMdSend } from "react-icons/io";
-import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaLinkedin, FaGithub, FaTwitter, FaWhatsapp } from "react-icons/fa";
+import {
+  FaEnvelope,
+  FaPhone,
+  FaMapMarkerAlt,
+  FaLinkedin,
+  FaGithub,
+  FaTwitter,
+  FaWhatsapp,
+} from "react-icons/fa";
 import axios from "axios";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -20,30 +28,39 @@ export interface ContactFormData {
 // Validation rules for the contact form
 const formValidation = {
   firstName: {
-    required: 'First name is required',
-    minLength: { value: 2, message: 'First name must be at least 2 characters' },
-    pattern: { value: /^[A-Za-z]+$/, message: 'First name must contain only letters' }
+    required: "First name is required",
+    minLength: {
+      value: 2,
+      message: "First name must be at least 2 characters",
+    },
+    pattern: {
+      value: /^[A-Za-z]+$/,
+      message: "First name must contain only letters",
+    },
   },
   lastName: {},
   email: {
-    required: 'Email is required',
+    required: "Email is required",
     pattern: {
       value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-      message: 'Invalid email address'
-    }
+      message: "Invalid email address",
+    },
   },
   mobileNumber: {
-    required: 'Mobile number is required',
+    required: "Mobile number is required",
     pattern: {
       value: /^[0-9]{10}$/,
-      message: 'Please enter a valid 10-digit mobile number'
-    }
+      message: "Please enter a valid 10-digit mobile number",
+    },
   },
   query: {
-    required: 'Please enter your message',
-    minLength: { value: 10, message: 'Message must be at least 10 characters' },
-    maxLength: { value: 500, message: 'Message must not exceed 500 characters' }
-  }
+    required: "Please enter your message",
+    minLength: { value: 10, message: "Message must be at least 10 characters" },
+    maxLength: {
+      value: 500,
+      message: "Message must not exceed 500 characters",
+    },
+  },
 };
 
 // Contact info and social links
@@ -52,20 +69,20 @@ const contactInfo = [
     icon: FaEnvelope,
     title: "Email",
     value: "aman@developerchoudhary.com",
-    link: "mailto:aman@developerchoudhary.com"
+    link: "mailto:aman@developerchoudhary.com",
   },
   {
     icon: FaPhone,
     title: "Phone",
     value: "+91 95303 63236",
-    link: "tel:+919530363236"
+    link: "tel:+919530363236",
   },
   {
     icon: FaMapMarkerAlt,
     title: "Location",
     value: "Sri Ganganagar, Rajasthan",
-    link: null
-  }
+    link: null,
+  },
 ];
 
 const socialLinks = [
@@ -73,26 +90,27 @@ const socialLinks = [
     icon: FaLinkedin,
     name: "LinkedIn",
     url: "https://linkedin.com/in/developerchoudhary",
-    color: "text-blue-600 hover:text-blue-700"
+    color: "text-blue-600 hover:text-blue-700",
   },
   {
     icon: FaGithub,
     name: "GitHub",
     url: "https://github.com/developerchoudhary",
-    color: "text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white"
+    color:
+      "text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white",
   },
   {
     icon: FaTwitter,
     name: "Twitter",
     url: "https://twitter.com/developer_jaat",
-    color: "text-blue-400 hover:text-blue-500"
+    color: "text-blue-400 hover:text-blue-500",
   },
   {
     icon: FaWhatsapp,
     name: "WhatsApp",
     url: "https://wa.me/919530363236",
-    color: "text-green-500 hover:text-green-600"
-  }
+    color: "text-green-500 hover:text-green-600",
+  },
 ];
 
 // Contact Section: Info cards, social links, and contact form
@@ -102,12 +120,12 @@ export default function Contact() {
     handleSubmit,
     reset,
     formState: { errors, isSubmitting },
-    watch
+    watch,
   } = useForm<ContactFormData>();
 
   const [serverError, setServerError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
-  const queryLength = watch('query')?.length || 0;
+  const queryLength = watch("query")?.length || 0;
 
   // Remove messages after a delay
   const removeMessages = () => {
@@ -122,7 +140,9 @@ export default function Contact() {
     setServerError(null);
     try {
       await axios.post("/api/contact", data);
-      setSuccessMessage("Thank you for your message! I'll get back to you soon.");
+      setSuccessMessage(
+        "Thank you for your message! I'll get back to you soon."
+      );
       removeMessages();
       reset();
     } catch (error) {
@@ -133,14 +153,14 @@ export default function Contact() {
   };
 
   // Custom input component for form fields
-  const FormInput = ({ 
-    name, 
-    label, 
-    type = "text", 
+  const FormInput = ({
+    name,
+    label,
+    type = "text",
     placeholder,
     register: registerField,
     error,
-    className = ""
+    className = "",
   }: {
     name: keyof ContactFormData;
     label: string;
@@ -159,14 +179,12 @@ export default function Contact() {
         placeholder={placeholder}
         {...registerField(name, formValidation[name])}
         className={`w-full px-4 py-3 rounded-lg border glass ${
-          error 
-            ? 'border-red-500 focus:ring-red-500' 
-            : 'border-gray-300 dark:border-gray-600 focus:ring-blue-500'
+          error
+            ? "border-red-500 focus:ring-red-500"
+            : "border-gray-300 dark:border-gray-600 focus:ring-blue-500"
         } focus:outline-none focus:ring-2 dark:bg-gray-800/50 dark:text-white transition-all duration-300`}
       />
-      {error && (
-        <p className="mt-1 text-sm text-red-500">{error}</p>
-      )}
+      {error && <p className="mt-1 text-sm text-red-500">{error}</p>}
     </div>
   );
 
@@ -183,10 +201,14 @@ export default function Contact() {
         >
           <h2 className="text-4xl md:text-5xl font-bold mb-4">
             <span className="text-gray-900 dark:text-white">Let's</span>
-            <span className="bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent"> Connect</span>
+            <span className="bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
+              {" "}
+              Connect
+            </span>
           </h2>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-            Ready to start a project or just want to chat? I'd love to hear from you!
+            Ready to start a project or just want to chat? I'd love to hear from
+            you!
           </p>
         </motion.div>
 
@@ -307,7 +329,10 @@ export default function Contact() {
                 </motion.div>
               )}
 
-              <form onSubmit={handleSubmit(handleOnSubmit)} className="space-y-6">
+              <form
+                onSubmit={handleSubmit(handleOnSubmit)}
+                className="space-y-6"
+              >
                 {/* Name Fields: Responsive grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <FormInput
@@ -353,14 +378,16 @@ export default function Contact() {
                     placeholder="Tell me about your project or what you'd like to discuss..."
                     {...register("query", formValidation.query)}
                     className={`w-full px-4 py-3 rounded-lg border glass min-h-[150px] resize-y ${
-                      errors.query 
-                        ? 'border-red-500 focus:ring-red-500' 
-                        : 'border-gray-300 dark:border-gray-600 focus:ring-blue-500'
+                      errors.query
+                        ? "border-red-500 focus:ring-red-500"
+                        : "border-gray-300 dark:border-gray-600 focus:ring-blue-500"
                     } focus:outline-none focus:ring-2 dark:bg-gray-800/50 dark:text-white transition-all duration-300`}
                   />
                   <div className="flex justify-between items-center mt-2">
                     {errors.query && (
-                      <p className="text-sm text-red-500">{errors.query.message}</p>
+                      <p className="text-sm text-red-500">
+                        {errors.query.message}
+                      </p>
                     )}
                     <span className="text-sm text-gray-500">
                       {queryLength}/500

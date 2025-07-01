@@ -1,7 +1,14 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { FaBriefcase, FaCalendarAlt, FaMapMarkerAlt, FaTrophy, FaCode, FaUsers } from "react-icons/fa";
+import {
+  FaBriefcase,
+  FaCalendarAlt,
+  FaMapMarkerAlt,
+  FaTrophy,
+  FaCode,
+  FaUsers,
+} from "react-icons/fa";
 
 // Experience data structure
 interface Experience {
@@ -30,7 +37,14 @@ const experiences: Experience[] = [
       "Collaborated with stakeholders to gather requirements and deliver solutions",
       "Managed multiple projects simultaneously while maintaining high code quality",
     ],
-    technologies: ["Next.js", "React", "TypeScript", "Tailwind CSS", "Node.js", "MongoDB"],
+    technologies: [
+      "Next.js",
+      "React",
+      "TypeScript",
+      "Tailwind CSS",
+      "Node.js",
+      "MongoDB",
+    ],
     achievements: [
       "Reduced page load time by 40% through optimization techniques",
       "Implemented SEO best practices resulting in improved search rankings",
@@ -55,10 +69,14 @@ const Experience = () => {
         >
           <h2 className="text-4xl md:text-5xl font-bold mb-4">
             <span className="text-gray-900 dark:text-white">Work</span>
-            <span className="bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent"> Experience</span>
+            <span className="bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
+              {" "}
+              Experience
+            </span>
           </h2>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-            My professional journey in web development, showcasing growth, achievements, and technical expertise
+            My professional journey in web development, showcasing growth,
+            achievements, and technical expertise
           </p>
         </motion.div>
 
@@ -94,13 +112,15 @@ const Experience = () => {
                   </div>
                 </div>
                 <div className="mt-4 lg:mt-0">
-                  <span className={`px-4 py-2 rounded-full text-sm font-medium ${
-                    exp.type === 'full-time' 
-                      ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200'
-                      : exp.type === 'freelance'
-                      ? 'bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-200'
-                      : 'bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-200'
-                  }`}>
+                  <span
+                    className={`px-4 py-2 rounded-full text-sm font-medium ${
+                      exp.type === "full-time"
+                        ? "bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200"
+                        : exp.type === "freelance"
+                          ? "bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-200"
+                          : "bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-200"
+                    }`}
+                  >
                     {exp.type.charAt(0).toUpperCase() + exp.type.slice(1)}
                   </span>
                 </div>
@@ -146,7 +166,9 @@ const Experience = () => {
                       className="flex items-start gap-3 p-3 bg-white/50 dark:bg-gray-800/50 rounded-lg"
                     >
                       <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
-                      <span className="text-sm text-gray-600 dark:text-gray-300">{achievement}</span>
+                      <span className="text-sm text-gray-600 dark:text-gray-300">
+                        {achievement}
+                      </span>
                     </motion.div>
                   ))}
                 </div>
@@ -191,7 +213,9 @@ const Experience = () => {
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <h4 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white">Website Maintenance</h4>
+                <h4 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white">
+                  Website Maintenance
+                </h4>
                 <ul className="space-y-2 text-gray-600 dark:text-gray-300">
                   <li className="flex items-center gap-2">
                     <div className="w-2 h-2 bg-blue-600 dark:bg-cyan-400 rounded-full"></div>
@@ -208,7 +232,9 @@ const Experience = () => {
                 </ul>
               </div>
               <div>
-                <h4 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white">New Development</h4>
+                <h4 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white">
+                  New Development
+                </h4>
                 <ul className="space-y-2 text-gray-600 dark:text-gray-300">
                   <li className="flex items-center gap-2">
                     <div className="w-2 h-2 bg-green-500 rounded-full"></div>
@@ -241,7 +267,8 @@ const Experience = () => {
               Ready to Bring My Experience to Your Project?
             </h3>
             <p className="text-gray-600 dark:text-gray-300 mb-6">
-              With years of experience in modern web development, I'm ready to help you create exceptional digital solutions.
+              With years of experience in modern web development, I'm ready to
+              help you create exceptional digital solutions.
             </p>
             <a
               href="#contact"

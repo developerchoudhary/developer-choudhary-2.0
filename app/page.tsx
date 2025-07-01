@@ -34,10 +34,7 @@ export default function Home() {
       </section>
 
       {/* Experience Section - Work history and experience details */}
-      <section
-        id="experience"
-        className="max-w-7xl mx-auto w-full"
-      >
+      <section id="experience" className="max-w-7xl mx-auto w-full">
         <Experience />
       </section>
 

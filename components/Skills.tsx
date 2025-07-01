@@ -26,47 +26,124 @@ import {
 // Skill categories and additional skills for the Skills section
 const skillCategories = [
   {
-    name: 'Frontend Development',
+    name: "Frontend Development",
     icon: FaPalette,
-    description: 'Building beautiful, responsive user interfaces',
+    description: "Building beautiful, responsive user interfaces",
     skills: [
-      { name: "React.js", icon: FaReact, color: "text-blue-500", proficiency: 90 },
-      { name: "Next.js", icon: SiNextdotjs, color: "text-black dark:text-white", proficiency: 85 },
-      { name: "JavaScript", icon: FaJs, color: "text-yellow-500", proficiency: 95 },
-      { name: "TypeScript", icon: SiTypescript, color: "text-blue-600", proficiency: 80 },
-      { name: "HTML5", icon: FaHtml5, color: "text-orange-500", proficiency: 95 },
-      { name: "CSS3", icon: FaCss3Alt, color: "text-blue-500", proficiency: 90 },
-      { name: "Tailwind CSS", icon: SiTailwindcss, color: "text-cyan-500", proficiency: 85 },
-    ]
+      {
+        name: "React.js",
+        icon: FaReact,
+        color: "text-blue-500",
+        proficiency: 90,
+      },
+      {
+        name: "Next.js",
+        icon: SiNextdotjs,
+        color: "text-black dark:text-white",
+        proficiency: 85,
+      },
+      {
+        name: "JavaScript",
+        icon: FaJs,
+        color: "text-yellow-500",
+        proficiency: 95,
+      },
+      {
+        name: "TypeScript",
+        icon: SiTypescript,
+        color: "text-blue-600",
+        proficiency: 80,
+      },
+      {
+        name: "HTML5",
+        icon: FaHtml5,
+        color: "text-orange-500",
+        proficiency: 95,
+      },
+      {
+        name: "CSS3",
+        icon: FaCss3Alt,
+        color: "text-blue-500",
+        proficiency: 90,
+      },
+      {
+        name: "Tailwind CSS",
+        icon: SiTailwindcss,
+        color: "text-cyan-500",
+        proficiency: 85,
+      },
+    ],
   },
   {
-    name: 'Backend Development',
+    name: "Backend Development",
     icon: FaServer,
-    description: 'Creating robust server-side applications',
+    description: "Creating robust server-side applications",
     skills: [
-      { name: "Node.js", icon: FaNodeJs, color: "text-green-500", proficiency: 85 },
-      { name: "Express.js", icon: SiExpress, color: "text-gray-600", proficiency: 80 },
-      { name: "MongoDB", icon: SiMongodb, color: "text-green-600", proficiency: 75 },
-      { name: "Firebase", icon: SiFirebase, color: "text-orange-500", proficiency: 70 },
-    ]
+      {
+        name: "Node.js",
+        icon: FaNodeJs,
+        color: "text-green-500",
+        proficiency: 85,
+      },
+      {
+        name: "Express.js",
+        icon: SiExpress,
+        color: "text-gray-600",
+        proficiency: 80,
+      },
+      {
+        name: "MongoDB",
+        icon: SiMongodb,
+        color: "text-green-600",
+        proficiency: 75,
+      },
+      {
+        name: "Firebase",
+        icon: SiFirebase,
+        color: "text-orange-500",
+        proficiency: 70,
+      },
+    ],
   },
   {
-    name: 'Development Tools',
+    name: "Development Tools",
     icon: FaDatabase,
-    description: 'Essential tools for modern development',
+    description: "Essential tools for modern development",
     skills: [
       { name: "Git", icon: FaGitAlt, color: "text-red-500", proficiency: 85 },
-      { name: "Figma", icon: SiFigma, color: "text-purple-500", proficiency: 75 },
-      { name: "Vercel", icon: SiVercel, color: "text-black dark:text-white", proficiency: 80 },
-    ]
-  }
+      {
+        name: "Figma",
+        icon: SiFigma,
+        color: "text-purple-500",
+        proficiency: 75,
+      },
+      {
+        name: "Vercel",
+        icon: SiVercel,
+        color: "text-black dark:text-white",
+        proficiency: 80,
+      },
+    ],
+  },
 ];
 
 const additionalSkills = [
-  "REST APIs", "GraphQL", "JWT", "OAuth",
-  "Responsive Design", "Progressive Web Apps", "SEO", "Performance Optimization",
-  "Testing (Jest)", "CI/CD", "Docker", "AWS",
-  "UI/UX Design", "Wireframing", "Prototyping", "User Research"
+  "REST APIs",
+  "GraphQL",
+  "JWT",
+  "OAuth",
+  "Responsive Design",
+  "Progressive Web Apps",
+  "SEO",
+  "Performance Optimization",
+  "Testing (Jest)",
+  "CI/CD",
+  "Docker",
+  "AWS",
+  "UI/UX Design",
+  "Wireframing",
+  "Prototyping",
+  "User Research",
 ];
 
 // Animated progress bar for skill proficiency
@@ -97,10 +174,13 @@ export default function SkillsShowcase() {
         >
           <h2 className="text-4xl md:text-5xl font-bold mb-4">
             <span className="text-gray-900 dark:text-white">Technical</span>
-            <span className="bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent"> Skills</span>
+            <span className="bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
+              {" "}
+              Skills
+            </span>
           </h2>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-            A comprehensive collection of technologies and tools I use to create 
+            A comprehensive collection of technologies and tools I use to create
             exceptional digital experiences
           </p>
         </motion.div>
@@ -138,7 +218,10 @@ export default function SkillsShowcase() {
                     key={skill.name}
                     initial={{ opacity: 0, x: -20 }}
                     whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.5, delay: 0.3 + skillIndex * 0.1 }}
+                    transition={{
+                      duration: 0.5,
+                      delay: 0.3 + skillIndex * 0.1,
+                    }}
                     viewport={{ once: true }}
                     className="group"
                   >
@@ -184,7 +267,9 @@ export default function SkillsShowcase() {
                   className="flex items-center gap-2 p-3 bg-white/50 dark:bg-gray-800/50 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
                 >
                   <div className="w-2 h-2 bg-blue-600 dark:bg-cyan-400 rounded-full"></div>
-                  <span className="text-sm text-gray-700 dark:text-gray-300">{skill}</span>
+                  <span className="text-sm text-gray-700 dark:text-gray-300">
+                    {skill}
+                  </span>
                 </motion.div>
               ))}
             </div>
@@ -204,8 +289,8 @@ export default function SkillsShowcase() {
               Always Learning & Growing
             </h3>
             <p className="text-gray-600 dark:text-gray-300 mb-6">
-              I'm constantly exploring new technologies and best practices to deliver 
-              cutting-edge solutions for my clients.
+              I&apos;m constantly exploring new technologies and best practices
+              to deliver cutting-edge solutions for my clients.
             </p>
             <a
               href="#projects"
