@@ -97,7 +97,7 @@ export default function AboutPage() {
               </h3>
               <div className="space-y-4 text-gray-600 dark:text-gray-300 leading-relaxed">
                 <p>
-                  Hi, I'm{" "}
+                  Hi, I&apos;m
                   <span className="font-semibold text-blue-600 dark:text-cyan-400">
                     Aman Choudhary
                   </span>
@@ -106,7 +106,7 @@ export default function AboutPage() {
                   curiosity to build things that make a difference.
                 </p>
                 <p>
-                  I earned my <span className="font-semibold">BCA degree</span>{" "}
+                  I earned my <span className="font-semibold">BCA degree</span>
                   from Seth G.L Bihani S.D (P.G) College, which provided me with
                   a solid foundation in computer science and programming
                   principles.
@@ -226,8 +226,8 @@ export default function AboutPage() {
               Ready to Build Something Amazing?
             </h3>
             <p className="text-gray-600 dark:text-gray-300 mb-6">
-              Let's collaborate and bring your ideas to life with cutting-edge
-              technology and creative solutions.
+              Let&apos;s collaborate and bring your ideas to life with
+              cutting-edge technology and creative solutions.
             </p>
             <a
               href="#contact"

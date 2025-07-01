@@ -11,7 +11,7 @@ import {
 } from "react-icons/fa";
 
 // Experience data structure
-interface Experience {
+interface IExperience {
   title: string;
   company: string;
   period: string;
@@ -23,7 +23,7 @@ interface Experience {
 }
 
 // Experience entries
-const experiences: Experience[] = [
+const experiences: IExperience[] = [
   {
     title: "Full-Stack Web Developer",
     company: "Seth G.L. Bihani Shiksha Trust",
@@ -32,7 +32,7 @@ const experiences: Experience[] = [
 
     type: "full-time",
     description: [
-      "Led the development and maintenance of the institution's comprehensive web presence",
+      "Led the development and maintenance of the institution&apos;s comprehensive web presence",
       "Implemented responsive design principles for optimal viewing across all devices",
       "Collaborated with stakeholders to gather requirements and deliver solutions",
       "Managed multiple projects simultaneously while maintaining high code quality",
@@ -267,14 +267,14 @@ const Experience = () => {
               Ready to Bring My Experience to Your Project?
             </h3>
             <p className="text-gray-600 dark:text-gray-300 mb-6">
-              With years of experience in modern web development, I'm ready to
-              help you create exceptional digital solutions.
+              With years of experience in modern web development, I&apos;m ready
+              to help you create exceptional digital solutions.
             </p>
             <a
               href="#contact"
               className="inline-block px-8 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-semibold rounded-full hover:shadow-lg transform hover:scale-105 transition-all duration-300"
             >
-              Let's Work Together
+              Let&apos;s Work Together
             </a>
           </div>
         </motion.div>

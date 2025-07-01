@@ -65,7 +65,7 @@ export default function ProjectShowcase() {
   }, [filter, searchTerm]);
   const paginatedProjects = filteredProjects.slice(
     (currentPage - 1) * itemsPerPage,
-    Math.min(currentPage * itemsPerPage, filteredProjects.length)
+    Math.min(currentPage * itemsPerPage, filteredProjects.length),
   );
 
   return (

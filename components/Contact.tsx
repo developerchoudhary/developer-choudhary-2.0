@@ -141,7 +141,7 @@ export default function Contact() {
     try {
       await axios.post("/api/contact", data);
       setSuccessMessage(
-        "Thank you for your message! I'll get back to you soon."
+        "Thank you for your message! I&apos;ll get back to you soon."
       );
       removeMessages();
       reset();
@@ -171,7 +171,10 @@ export default function Contact() {
     className?: string;
   }) => (
     <div className={`w-full ${className}`}>
-      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+      <label
+        htmlFor={name}
+        className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+      >
         {label}
       </label>
       <input
@@ -200,15 +203,15 @@ export default function Contact() {
           className="text-center mb-16"
         >
           <h2 className="text-4xl md:text-5xl font-bold mb-4">
-            <span className="text-gray-900 dark:text-white">Let's</span>
+            <span className="text-gray-900 dark:text-white">Let&apos;s</span>
             <span className="bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
               {" "}
               Connect
             </span>
           </h2>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-            Ready to start a project or just want to chat? I'd love to hear from
-            you!
+            Ready to start a project or just want to chat? I&apos;d love to hear
+            from you!
           </p>
         </motion.div>
 
@@ -371,7 +374,10 @@ export default function Contact() {
 
                 {/* Message Field: Responsive textarea */}
                 <div className="w-full">
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <label
+                    htmlFor="query"
+                    className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                  >
                     Your Message
                   </label>
                   <textarea
