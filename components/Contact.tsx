@@ -141,7 +141,7 @@ export default function Contact() {
     try {
       await axios.post("/api/contact", data);
       setSuccessMessage(
-        "Thank you for your message! I&apos;ll get back to you soon."
+        "Thank you for your message! I&apos;ll get back to you soon.",
       );
       removeMessages();
       reset();
