@@ -142,7 +142,7 @@ export default function Contact() {
     try {
       await axios.post("/api/contact", data);
       setSuccessMessage(
-        "Thank you for your message! I&apos;ll get back to you soon."
+        "Thank you for your message! I will get back to you soon.",
       );
       removeMessages();
       reset();
@@ -313,27 +313,6 @@ export default function Contact() {
                 Send Me a Message
               </h3>
 
-              {/* Success/Error Messages */}
-              {successMessage && (
-                <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="mb-6 p-4 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 rounded-lg"
-                >
-                  {successMessage}
-                </motion.div>
-              )}
-
-              {serverError && (
-                <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="mb-6 p-4 bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-200 rounded-lg"
-                >
-                  {serverError}
-                </motion.div>
-              )}
-
               <form
                 onSubmit={handleSubmit(handleOnSubmit)}
                 className="space-y-6"
@@ -402,6 +381,27 @@ export default function Contact() {
                     </span>
                   </div>
                 </div>
+
+                {/* Success/Error Messages */}
+                {successMessage && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="mb-6 p-4 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 rounded-lg"
+                  >
+                    {successMessage}
+                  </motion.div>
+                )}
+
+                {serverError && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="mb-6 p-4 bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-200 rounded-lg"
+                  >
+                    {serverError}
+                  </motion.div>
+                )}
 
                 {/* Submit Button: Responsive and accessible */}
                 <Button

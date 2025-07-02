@@ -5,7 +5,6 @@ import { FcLike } from "react-icons/fc";
 import {
   FaInstagram,
   FaGithub,
-  FaTwitter,
   FaWhatsapp,
   FaArrowUp,
   FaFacebook,
