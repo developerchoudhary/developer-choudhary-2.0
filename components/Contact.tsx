@@ -322,14 +322,14 @@ export default function Contact() {
                   <FormInput
                     name="firstName"
                     label="First Name"
-                    placeholder="John"
+                    placeholder="Aman"
                     register={register}
                     error={errors.firstName?.message}
                   />
                   <FormInput
                     name="lastName"
                     label="Last Name (Optional)"
-                    placeholder="Doe"
+                    placeholder="Choudhary"
                     register={register}
                   />
                 </div>
@@ -339,7 +339,7 @@ export default function Contact() {
                   name="email"
                   label="Email Address"
                   type="email"
-                  placeholder="john@example.com"
+                  placeholder="aman@developerchoudhary.com"
                   register={register}
                   error={errors.email?.message}
                 />
@@ -348,7 +348,7 @@ export default function Contact() {
                   name="mobileNumber"
                   label="Mobile Number"
                   type="tel"
-                  placeholder="1234567890"
+                  placeholder="+91 95303 63236"
                   register={register}
                   error={errors.mobileNumber?.message}
                 />
