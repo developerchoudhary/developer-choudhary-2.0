@@ -52,7 +52,7 @@ export const metadata: Metadata = {
     title: siteConfig.name,
     description:
       "A skilled website developer specializing in Next.js and modern web technologies. Check out innovative projects, seamless UI designs, and dynamic web solutions.",
-    images: ["/og-image.jpg"],
+    images: ["/og-image.png"],
     creator: "@developer_jaat",
   },
   robots: {
