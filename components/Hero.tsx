@@ -15,7 +15,7 @@ export default function Hero() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.8 }}
-      className="w-full min-h-screen flex flex-col gap-x-10 md:flex-row items-center justify-between px-4 md:px-16 py-8"
+      className="w-full min-h-screen flex flex-col gap-x-10 md:flex-row items-center justify-center px-4 py-8"
     >
       {/* Left Side */}
       <motion.div
