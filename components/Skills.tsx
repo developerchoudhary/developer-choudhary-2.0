@@ -20,8 +20,8 @@ import {
   SiExpress,
   SiFigma,
   SiVercel,
-  SiFirebase,
 } from "react-icons/si";
+import Link from "next/link";
 
 // Skill categories and additional skills for the Skills section
 const skillCategories = [
@@ -96,12 +96,6 @@ const skillCategories = [
         icon: SiMongodb,
         color: "text-green-600",
         proficiency: 75,
-      },
-      {
-        name: "Firebase",
-        icon: SiFirebase,
-        color: "text-orange-500",
-        proficiency: 70,
       },
     ],
   },
@@ -292,12 +286,12 @@ export default function SkillsShowcase() {
               I&apos;m constantly exploring new technologies and best practices
               to deliver cutting-edge solutions for my clients.
             </p>
-            <a
+            <Link
               href="#projects"
               className="inline-block px-8 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-semibold rounded-full hover:shadow-lg transform hover:scale-105 transition-all duration-300"
             >
               View My Work
-            </a>
+            </Link>
           </div>
         </motion.div>
       </div>

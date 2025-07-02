@@ -9,6 +9,7 @@ import {
   FaCode,
   FaUsers,
 } from "react-icons/fa";
+import Link from "next/link";
 
 // Experience data structure
 interface IExperience {
@@ -270,12 +271,12 @@ const Experience = () => {
               With years of experience in modern web development, I&apos;m ready
               to help you create exceptional digital solutions.
             </p>
-            <a
+            <Link
               href="#contact"
               className="inline-block px-8 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-semibold rounded-full hover:shadow-lg transform hover:scale-105 transition-all duration-300"
             >
               Let&apos;s Work Together
-            </a>
+            </Link>
           </div>
         </motion.div>
       </div>

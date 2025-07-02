@@ -7,7 +7,6 @@ import { Analytics } from "@vercel/analytics/react";
 
 import { Providers } from "./providers";
 import React from "react";
-import ThemeToggle from "@/components/ui/ThemeToggle";
 
 // Define site-wide metadata for SEO and social sharing
 export const metadata: Metadata = {
@@ -114,10 +113,10 @@ export default function RootLayout({
       <body className="bg-background font-sans antialiased scroll-smooth">
         {/* Theme provider for global styling and theme management */}
         <Providers themeProps={{ attribute: "class", defaultTheme: "system" }}>
-          <div className="h-screen min-h-screen overflow-y-auto overflow-x-hidden z-10 max-h-fit relative flex justify-between flex-col">
-            <div className="absolute top-4 right-4 z-50">
-              <ThemeToggle />
-            </div>
+          <div
+            id="app-scroll-container"
+            className="h-screen min-h-screen overflow-y-auto overflow-x-hidden z-10 max-h-fit relative flex justify-between flex-col"
+          >
             <main>{children}</main>
             <Footer />
           </div>

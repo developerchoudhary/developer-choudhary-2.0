@@ -3,13 +3,15 @@ import { Link } from "@nextui-org/link";
 import React from "react";
 import { FcLike } from "react-icons/fc";
 import {
-  FaLinkedin,
+  FaInstagram,
   FaGithub,
   FaTwitter,
   FaWhatsapp,
   FaArrowUp,
+  FaFacebook,
 } from "react-icons/fa";
 import { motion } from "framer-motion";
+import ThemeToggle from "./ui/ThemeToggle";
 
 /**
  * Footer Component
@@ -18,25 +20,25 @@ import { motion } from "framer-motion";
 const Footer = () => {
   // Scroll to top handler
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    document.getElementById("top")?.scrollIntoView({ behavior: "smooth" });
   };
 
   // Social media links
   const socialLinks = [
-    {
-      icon: FaLinkedin,
-      url: "https://linkedin.com/in/developerchoudhary",
-      label: "LinkedIn",
-    },
     {
       icon: FaGithub,
       url: "https://github.com/developerchoudhary",
       label: "GitHub",
     },
     {
-      icon: FaTwitter,
-      url: "https://twitter.com/developer_jaat",
-      label: "Twitter",
+      icon: FaInstagram,
+      url: "https://www.instagram.com/developer_choudhary/",
+      label: "Instagram",
+    },
+    {
+      icon: FaFacebook,
+      url: "https://www.facebook.com/DeveloperChoudhary",
+      label: "Facebook",
     },
     {
       icon: FaWhatsapp,
@@ -56,6 +58,9 @@ const Footer = () => {
 
   return (
     <footer className="relative mt-10">
+      <div className="absolute top-4 right-4 z-50">
+        <ThemeToggle />
+      </div>
       {/* Scroll to top button: Fixed floating button */}
       <motion.button
         onClick={scrollToTop}
@@ -131,12 +136,12 @@ const Footer = () => {
                     transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
                     viewport={{ once: true }}
                   >
-                    <a
+                    <Link
                       href={link.href}
                       className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-cyan-400 transition-colors"
                     >
                       {link.name}
-                    </a>
+                    </Link>
                   </motion.li>
                 ))}
               </ul>

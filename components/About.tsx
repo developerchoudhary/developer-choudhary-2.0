@@ -9,6 +9,7 @@ import {
   FaMapMarkerAlt,
   FaEnvelope,
 } from "react-icons/fa";
+import Link from "next/link";
 
 // Stats and skills for About section
 const stats = [
@@ -229,12 +230,12 @@ export default function AboutPage() {
               Let&apos;s collaborate and bring your ideas to life with
               cutting-edge technology and creative solutions.
             </p>
-            <a
+            <Link
               href="#contact"
               className="inline-block px-8 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-semibold rounded-full hover:shadow-lg transform hover:scale-105 transition-all duration-300"
             >
               Get In Touch
-            </a>
+            </Link>
           </div>
         </motion.div>
       </div>

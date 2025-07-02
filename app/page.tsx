@@ -12,9 +12,9 @@ import SkillsShowcase from "@/components/Skills";
  */
 export default function Home() {
   return (
-    <div className="flex flex-col justify-center items-center overflow-hidden px-6 w-full">
+    <div className="flex flex-col justify-center items-center overflow-hidden w-full">
       {/* Hero Section - Introduction and main heading */}
-      <section>
+      <section id="top" className="max-w-7xl mx-auto w-full">
         <Hero />
       </section>
 

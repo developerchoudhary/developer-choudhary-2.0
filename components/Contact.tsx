@@ -6,15 +6,16 @@ import {
   FaEnvelope,
   FaPhone,
   FaMapMarkerAlt,
-  FaLinkedin,
   FaGithub,
-  FaTwitter,
+  FaInstagram,
+  FaFacebook,
   FaWhatsapp,
 } from "react-icons/fa";
 import axios from "axios";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 // Contact form data structure
 export interface ContactFormData {
@@ -87,12 +88,6 @@ const contactInfo = [
 
 const socialLinks = [
   {
-    icon: FaLinkedin,
-    name: "LinkedIn",
-    url: "https://linkedin.com/in/developerchoudhary",
-    color: "text-blue-600 hover:text-blue-700",
-  },
-  {
     icon: FaGithub,
     name: "GitHub",
     url: "https://github.com/developerchoudhary",
@@ -100,9 +95,15 @@ const socialLinks = [
       "text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white",
   },
   {
-    icon: FaTwitter,
-    name: "Twitter",
-    url: "https://twitter.com/developer_jaat",
+    icon: FaInstagram,
+    name: "Instagram",
+    url: "https://www.instagram.com/developer_choudhary/",
+    color: "text-rose-400 hover:text-rose-500",
+  },
+  {
+    icon: FaFacebook,
+    name: "Facebook",
+    url: "https://www.facebook.com/DeveloperChoudhary",
     color: "text-blue-400 hover:text-blue-500",
   },
   {
@@ -141,7 +142,7 @@ export default function Contact() {
     try {
       await axios.post("/api/contact", data);
       setSuccessMessage(
-        "Thank you for your message! I&apos;ll get back to you soon.",
+        "Thank you for your message! I&apos;ll get back to you soon."
       );
       removeMessages();
       reset();
@@ -205,7 +206,6 @@ export default function Contact() {
           <h2 className="text-4xl md:text-5xl font-bold mb-4">
             <span className="text-gray-900 dark:text-white">Let&apos;s</span>
             <span className="bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
-              {" "}
               Connect
             </span>
           </h2>
@@ -240,17 +240,19 @@ export default function Contact() {
                     <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
                       <info.icon className="w-6 h-6 text-blue-600 dark:text-cyan-400" />
                     </div>
-                    <div>
+                    <div className="overflow-auto max-w-full">
                       <h3 className="font-semibold text-gray-900 dark:text-white">
                         {info.title}
                       </h3>
                       {info.link ? (
-                        <a
-                          href={info.link}
-                          className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-cyan-400 transition-colors"
-                        >
-                          {info.value}
-                        </a>
+                        <div className="overflow-auto whitespace-nowrap max-w-full">
+                          <Link
+                            href={info.link}
+                            className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-cyan-400 transition-colors"
+                          >
+                            {info.value}
+                          </Link>
+                        </div>
                       ) : (
                         <p className="text-gray-600 dark:text-gray-300">
                           {info.value}
