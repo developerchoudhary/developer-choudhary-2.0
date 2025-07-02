@@ -107,7 +107,7 @@ export default function AboutPage() {
                   curiosity to build things that make a difference.
                 </p>
                 <p>
-                  I earned my <span className="font-semibold">BCA degree</span>
+                  I earned my <span className="font-semibold">BCA degree</span>{" "}
                   from Seth G.L Bihani S.D (P.G) College, which provided me with
                   a solid foundation in computer science and programming
                   principles.

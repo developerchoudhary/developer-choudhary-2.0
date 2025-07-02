@@ -33,7 +33,7 @@ const experiences: IExperience[] = [
 
     type: "full-time",
     description: [
-      "Led the development and maintenance of the institution&apos;s comprehensive web presence",
+      "Led the development and maintenance of the institution's comprehensive web presence",
       "Implemented responsive design principles for optimal viewing across all devices",
       "Collaborated with stakeholders to gather requirements and deliver solutions",
       "Managed multiple projects simultaneously while maintaining high code quality",
