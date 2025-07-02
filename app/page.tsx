@@ -19,7 +19,7 @@ export default function Home() {
       </section>
 
       {/* Projects Section - Showcases work and completed projects */}
-      <section id="project-showcase" className="max-w-7xl mx-auto w-full">
+      <section id="projects" className="max-w-7xl mx-auto w-full">
         <ProjectShowcase />
       </section>
 

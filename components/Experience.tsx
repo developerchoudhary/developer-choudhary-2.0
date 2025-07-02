@@ -58,7 +58,7 @@ const experiences: IExperience[] = [
 // Experience Section: Card-based layout, achievements, and responsibilities
 const Experience = () => {
   return (
-    <section id="experience" className="py-10 px-4 md:px-6 relative">
+    <section className="py-10 px-4 md:px-6 relative">
       <div className="max-w-6xl mx-auto">
         {/* Section Header */}
         <motion.div

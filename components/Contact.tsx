@@ -30,10 +30,6 @@ export interface ContactFormData {
 const formValidation = {
   firstName: {
     required: "First name is required",
-    minLength: {
-      value: 2,
-      message: "First name must be at least 2 characters",
-    },
     pattern: {
       value: /^[A-Za-z]+$/,
       message: "First name must contain only letters",
@@ -50,13 +46,12 @@ const formValidation = {
   mobileNumber: {
     required: "Mobile number is required",
     pattern: {
-      value: /^[0-9]{10}$/,
-      message: "Please enter a valid 10-digit mobile number",
+      value: /^(\+91[\s-]?|91[\s-]?)?\d{5}[\s-]?\d{5}$/,
+      message: "Please enter a valid mobile number",
     },
   },
   query: {
     required: "Please enter your message",
-    minLength: { value: 10, message: "Message must be at least 10 characters" },
     maxLength: {
       value: 500,
       message: "Message must not exceed 500 characters",
@@ -193,7 +188,7 @@ export default function Contact() {
   );
 
   return (
-    <section id="contact" className="py-10 px-4 md:px-6 relative">
+    <section className="py-10 px-4 md:px-6 relative">
       <div className="max-w-6xl mx-auto">
         {/* Section Header */}
         <motion.div

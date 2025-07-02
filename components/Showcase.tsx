@@ -69,7 +69,7 @@ export default function ProjectShowcase() {
   );
 
   return (
-    <section id="projects" className="py-10 px-4 md:px-6 relative">
+    <section className="py-10 px-4 md:px-6 relative">
       <div className="max-w-6xl mx-auto">
         {/* Section Header */}
         <motion.div

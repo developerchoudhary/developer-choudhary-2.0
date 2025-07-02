@@ -156,7 +156,7 @@ const SkillProgressBar = ({ proficiency }: { proficiency: number }) => (
 // Skills Section: Categories, additional skills, and call-to-action
 export default function SkillsShowcase() {
   return (
-    <section id="skills" className="py-10 px-4 md:px-6 relative">
+    <section className="py-10 px-4 md:px-6 relative">
       <div className="max-w-6xl mx-auto">
         {/* Section Header */}
         <motion.div

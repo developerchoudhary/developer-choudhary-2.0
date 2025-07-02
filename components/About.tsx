@@ -30,7 +30,7 @@ const skills = [
 // About Section: Bio, stats, skills, and call-to-action
 export default function AboutPage() {
   return (
-    <section id="about" className="py-20 px-4 md:px-6 relative">
+    <section className="py-20 px-4 md:px-6 relative">
       <div className="max-w-6xl mx-auto">
         {/* Section Header */}
         <motion.div
