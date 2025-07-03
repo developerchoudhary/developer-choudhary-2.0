@@ -15,7 +15,7 @@ export default function Hero() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.8 }}
-      className="w-full min-h-screen flex flex-col gap-x-10 md:flex-row items-center justify-center px-4 py-8"
+      className="w-full flex min-h-[100dvh] flex-col gap-10 md:flex-row items-center justify-center px-4 py-8"
     >
       {/* Left Side */}
       <motion.div
@@ -92,7 +92,7 @@ export default function Hero() {
         initial={{ opacity: 0, x: 40 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.8, delay: 0.4 }}
-        className="flex-1 flex items-center justify-center mt-10 md:mt-0"
+        className="flex-1 flex items-center justify-center"
       >
         <div className="relative w-72 h-72 md:w-80 md:h-80">
           {/* Custom background shape */}
