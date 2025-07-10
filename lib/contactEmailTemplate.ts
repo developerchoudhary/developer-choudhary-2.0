@@ -10,82 +10,115 @@ const adminNotification = (
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>New User Contact - Developer Choudhary</title>
+    <title>New Contact - Developer Choudhary</title>
     <style>
       body {
-        font-family: Arial, sans-serif;
-        font-size: 16px;
-        line-height: 1.6;
-        color: #333;
+        background: #f6f8fa;
         margin: 0;
         padding: 0;
-        background-color: #f4f4f4;
+        font-family: 'Segoe UI', Arial, sans-serif;
+        color: #222;
       }
-      .container {
-        max-width: 600px;
-        margin: 20px auto;
-        padding: 25px;
-        background-color: #ffffff;
-        border-radius: 10px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      .email-container {
+        max-width: 540px;
+        margin: 32px auto;
+        background: #fff;
+        border-radius: 14px;
+        box-shadow: 0 6px 32px rgba(0,0,0,0.07);
+        overflow: hidden;
+        border: 1px solid #e3e8ee;
+      }
+      .header {
+        background: linear-gradient(90deg, #2563eb 0%, #1e40af 100%);
+        padding: 32px 0 20px 0;
         text-align: center;
       }
-      .logo {
-        font-size: 1.8rem;
+      .header-title {
+        color: #fff;
+        font-size: 2.1rem;
         font-weight: 800;
-        color: #007bff;
-        margin-bottom: 15px;
+        letter-spacing: 1px;
+        margin: 0;
       }
-      .message {
-        font-size: 26px;
-        font-weight: bold;
-        color: #333;
-        margin-bottom: 20px;
+      .header-sub {
+        color: #dbeafe;
+        font-size: 1.1rem;
+        margin-top: 8px;
+        margin-bottom: 0;
+        font-weight: 500;
       }
-      .body {
-        font-size: 18px;
-        color: #555;
-        margin-bottom: 20px;
+      .divider {
+        border: none;
+        border-top: 1.5px solid #e0e7ef;
+        margin: 0 32px 24px 32px;
       }
-      .user-details {
-        background-color: #f9f9f9;
-        padding: 20px;
+      .content {
+        padding: 0 32px 24px 32px;
+      }
+      .greeting {
+        font-size: 1.1rem;
+        margin-bottom: 12px;
+        color: #222;
+      }
+      .info-block {
+        background: #f1f5f9;
         border-radius: 8px;
-        box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
-        text-align: left;
+        padding: 18px 20px;
+        margin-bottom: 18px;
+        font-size: 1rem;
+        color: #1e293b;
       }
-      .info {
-        font-size: 16px;
-        margin-bottom: 15px;
+      .info-label {
+        font-weight: 600;
+        color: #2563eb;
+        min-width: 80px;
+        display: inline-block;
       }
-      .highlight {
-        font-weight: bold;
-        color: #007bff;
+      .query-block {
+        background: #e0e7ef;
+        border-left: 4px solid #2563eb;
+        border-radius: 6px;
+        padding: 14px 18px;
+        margin-bottom: 18px;
+        font-size: 1rem;
+        color: #334155;
       }
       .footer {
-        margin-top: 20px;
-        font-size: 14px;
-        color: #777;
+        text-align: center;
+        padding: 18px 0 14px 0;
+        font-size: 0.95rem;
+        color: #64748b;
+        background: #f8fafc;
+        border-top: 1px solid #e0e7ef;
+      }
+      @media (max-width: 600px) {
+        .email-container, .content, .divider {
+          margin: 0 !important;
+          padding: 0 10px !important;
+        }
       }
     </style>
   </head>
   <body>
-    <div class="container">
-      <div class="logo">Developer Choudhary</div>
-      <div class="message">✨ New User Contact!</div>
-      <div class="body">
-        <p>Hello Aman,</p>
-        <p>You've received a new message from a user on your website! Here are the details:</p>
-        <div class="user-details">
-          <div class="info">
-            <p><strong>Name:</strong> <span class="highlight">${firstName} ${lastName}</span></p>
-            <p><strong>Email:</strong> <span class="highlight">${email}</span></p>
-            <p><strong>Phone:</strong> <span class="highlight">${mobileNumber}</span></p>
-          </div>
-          <p><strong>Query:</strong></p>
-          <p>${query}</p>
+    <div class="email-container">
+      <div class="header">
+        <div class="header-title">Developer Choudhary</div>
+        <div class="header-sub">Portfolio Contact Notification</div>
+      </div>
+      <hr class="divider" />
+      <div class="content">
+        <div class="greeting">Hi Aman,</div>
+        <div style="margin-bottom: 18px;">You have received a new contact request from your portfolio website. Here are the details:</div>
+        <div class="info-block">
+          <div><span class="info-label">Name:</span> ${firstName} ${lastName}</div>
+          <div><span class="info-label">Email:</span> ${email}</div>
+          <div><span class="info-label">Phone:</span> ${mobileNumber}</div>
         </div>
-        <p>Make sure to respond promptly and leave a great impression. 🚀</p>
+        <div class="query-block">
+          <div style="font-weight:600; margin-bottom: 6px;">Query:</div>
+          <div>${query}</div>
+        </div>
+        <div style="margin-top: 18px; color: #475569;">Please respond promptly to make a great impression! 🚀</div>
       </div>
       <div class="footer">&copy; 2025 Developer Choudhary. All rights reserved.</div>
     </div>
