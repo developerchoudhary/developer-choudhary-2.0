@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+import { userNotification } from "./contactEmailTemplate";
 
 /**
  * Sends an email using Nodemailer.
@@ -22,7 +23,7 @@ export const sendEmail = async (email: string, title: string, body: string) => {
 
     // Email options
     const mailOptions = {
-      from: '"Developer Choudhary"<support@developerchoudhary.com>', // Sender name
+      from: '"Developer Choudhary"<contact@developerchoudhary.com>', // Sender name
       to: email, // Recipient email
       subject: title, // Email subject
       html: body, // Email content in HTML format
@@ -36,4 +37,15 @@ export const sendEmail = async (email: string, title: string, body: string) => {
     console.log(error);
     throw new Error(`Error while sending email - ${error}`);
   }
+};
+
+export const sendUserNotificationEmail = async (
+  email: string,
+  firstName: string,
+) => {
+  return sendEmail(
+    email,
+    "Thank you for contacting Developer Choudhary!",
+    userNotification(firstName),
+  );
 };

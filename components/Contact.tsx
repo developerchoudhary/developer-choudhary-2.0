@@ -64,8 +64,8 @@ const contactInfo = [
   {
     icon: FaEnvelope,
     title: "Email",
-    value: "support@developerchoudhary.com",
-    link: "mailto:support@developerchoudhary.com",
+    value: "contact@developerchoudhary.com",
+    link: "mailto:contact@developerchoudhary.com",
   },
   {
     icon: FaPhone,
@@ -334,7 +334,7 @@ export default function Contact() {
                   name="email"
                   label="Email Address"
                   type="email"
-                  placeholder="support@developerchoudhary.com"
+                  placeholder="contact@developerchoudhary.com"
                   register={register}
                   error={errors.email?.message}
                 />

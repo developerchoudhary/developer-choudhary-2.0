@@ -1,7 +1,7 @@
 "use server";
 
 import adminNotification from "@/lib/contactEmailTemplate";
-import { sendEmail } from "@/lib/sendEmail";
+import { sendEmail, sendUserNotificationEmail } from "@/lib/sendEmail";
 import { NextRequest, NextResponse } from "next/server";
 
 /**
@@ -27,14 +27,17 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Send email notification to admin
-    await sendEmail(
-      "amanjaat7668@gmail.com", // Admin email recipient
-      "New user contacted", // Email subject
-      adminNotification(firstName, lastName, email, mobileNumber, query), // Email content
-    );
+    // Send email notification to admin (awaited)
+    await Promise.all([
+      sendEmail(
+        "amanjaat7668@gmail.com", // Admin email recipient
+        "New user contacted", // Email subject
+        adminNotification(firstName, lastName, email, mobileNumber, query), // Email content
+      ),
+      sendUserNotificationEmail(email, firstName),
+    ]);
 
-    // Respond with success message
+    // Respond to user after both emails are sent
     return NextResponse.json(
       {
         status: 200,
