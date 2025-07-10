@@ -158,7 +158,7 @@ const Footer = () => {
                 Get In Touch
               </h4>
               <div className="space-y-2 text-gray-600 dark:text-gray-300">
-                <p>aman@developerchoudhary.com</p>
+                <p>support@developerchoudhary.com</p>
                 <p>+91 95303 63236</p>
                 <p>Sri Ganganagar, Rajasthan</p>
               </div>
