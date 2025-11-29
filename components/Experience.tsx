@@ -27,10 +27,46 @@ interface IExperience {
 const experiences: IExperience[] = [
   {
     title: "Full-Stack Web Developer",
-    company: "Seth G.L. Bihani Shiksha Trust",
-    period: "2024 - Present",
+    company: "PME Global",
+    period: "August 2025 - Present",
     location: "Sri Ganganagar, Rajasthan",
-
+    type: "full-time",
+    description: [
+      "Developed and maintained a comprehensive CRM portal for PME Global using React (Vite) frontend and Golang/Spring Boot backend",
+      "Created and maintain the PME Global website (pmeglobal.com.au) - a Next.js static site with dynamic API integrations from the CRM portal",
+      "Built and maintain oparealestate.com - a full-stack property management platform (child company of PME Global)",
+      "Established enterprise-level architecture and infrastructure for production applications",
+      "Implemented GraphQL, WebSockets, and HTTP protocols for real-time communication and data management",
+      "Deployed and managed self-hosted MongoDB, Redis, and dedicated servers using Docker containers and PM2",
+      "Developed super admin panel in React.js for managing the property platform",
+    ],
+    technologies: [
+      "React.js",
+      "Next.js",
+      "Golang",
+      "Spring Boot",
+      "GraphQL",
+      "Redis",
+      "MongoDB",
+      "Docker",
+      "PM2",
+      "TypeScript",
+      "Tailwind CSS",
+      "DevOps",
+    ],
+    achievements: [
+      "Successfully launched oparealestate.com - a production-ready property management platform",
+      "Delivered PME Global website (pmeglobal.com.au) with dynamic content integration",
+      "Established industry-grade CRM portal architecture with modern tech stack",
+      "Implemented scalable infrastructure using Docker containers and self-hosted services",
+      "Learned and implemented Golang, Redis, and DevOps practices for enterprise applications",
+    ],
+  },
+  {
+    title: "Full-Stack Web Developer",
+    company: "Seth G.L. Bihani Shiksha Trust",
+    period: "2024 - August 2025",
+    location: "Sri Ganganagar, Rajasthan",
     type: "full-time",
     description: [
       "Led the development and maintenance of the institution's comprehensive web presence",
@@ -200,7 +236,7 @@ const Experience = () => {
           ))}
         </div>
 
-        {/* Additional Information: Responsibilities split into two columns */}
+        {/* Additional Information: Current Focus Areas */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -210,44 +246,46 @@ const Experience = () => {
         >
           <div className="glass p-8">
             <h3 className="text-2xl font-bold mb-6 text-center text-gray-900 dark:text-white">
-              Current Responsibilities
+              Current Focus Areas
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <h4 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white">
-                  Website Maintenance
+                  Enterprise Development
                 </h4>
                 <ul className="space-y-2 text-gray-600 dark:text-gray-300">
                   <li className="flex items-center gap-2">
                     <div className="w-2 h-2 bg-blue-600 dark:bg-cyan-400 rounded-full"></div>
-                    Maintaining 6 existing .NET-based websites
+                    Building industry-grade CRM portal with React, Golang, and
+                    Spring Boot
                   </li>
                   <li className="flex items-center gap-2">
                     <div className="w-2 h-2 bg-blue-600 dark:bg-cyan-400 rounded-full"></div>
-                    Regular updates and security patches
+                    Implementing GraphQL, WebSockets, and HTTP protocols
                   </li>
                   <li className="flex items-center gap-2">
                     <div className="w-2 h-2 bg-blue-600 dark:bg-cyan-400 rounded-full"></div>
-                    Performance optimization and monitoring
+                    Establishing scalable architecture for enterprise
+                    applications
                   </li>
                 </ul>
               </div>
               <div>
                 <h4 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white">
-                  New Development
+                  Production Applications
                 </h4>
                 <ul className="space-y-2 text-gray-600 dark:text-gray-300">
                   <li className="flex items-center gap-2">
                     <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                    Building 7 new dynamic websites
+                    Maintaining oparealestate.com - live property platform
                   </li>
                   <li className="flex items-center gap-2">
                     <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                    Modern tech stack implementation
+                    Managing PME Global website with dynamic API integrations
                   </li>
                   <li className="flex items-center gap-2">
                     <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                    Advanced features and integrations
+                    DevOps: Docker containers, PM2, self-hosted MongoDB & Redis
                   </li>
                 </ul>
               </div>

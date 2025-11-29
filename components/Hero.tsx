@@ -37,9 +37,9 @@ export default function Hero() {
           transition={{ duration: 0.7, delay: 0.4 }}
           className="text-3xl md:text-5xl font-extrabold mb-4 leading-tight"
         >
-          Hi, I&apos;m <span className="text-sky-700">Aman Choudhary</span>, a
+          Hi, I&apos;m <span className="text-sky-700">Aman Choudhary</span>,
           <br />
-          <span className="text-amber-600">UI UX Designer.</span>
+          <span className="text-amber-600">Full Stack Developer.</span>
         </motion.h1>
         <motion.p
           initial={{ opacity: 0, y: 20 }}

@@ -86,6 +86,12 @@ const skillCategories = [
         proficiency: 85,
       },
       {
+        name: "Golang",
+        icon: FaServer,
+        color: "text-cyan-600",
+        proficiency: 80,
+      },
+      {
         name: "Express.js",
         icon: SiExpress,
         color: "text-gray-600",
@@ -95,6 +101,12 @@ const skillCategories = [
         name: "MongoDB",
         icon: SiMongodb,
         color: "text-green-600",
+        proficiency: 75,
+      },
+      {
+        name: "Redis",
+        icon: FaDatabase,
+        color: "text-red-600",
         proficiency: 75,
       },
     ],
@@ -124,6 +136,7 @@ const skillCategories = [
 const additionalSkills = [
   "REST APIs",
   "GraphQL",
+  "WebSockets",
   "JWT",
   "OAuth",
   "Responsive Design",
@@ -133,6 +146,9 @@ const additionalSkills = [
   "Testing (Jest)",
   "CI/CD",
   "Docker",
+  "PM2",
+  "DevOps",
+  "Spring Boot",
   "AWS",
   "UI/UX Design",
   "Wireframing",

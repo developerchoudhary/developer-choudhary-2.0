@@ -16,7 +16,7 @@ export interface Project {
   link: string;
   github?: string;
   img: string;
-  category: 'frontend' | 'fullstack' | 'backend' | 'other';
+  category: "frontend" | "fullstack" | "backend" | "other";
   technologies: string[];
   featured?: boolean;
 }
@@ -24,60 +24,110 @@ export interface Project {
 export const products: Project[] = [
   {
     id: 1,
+    title: "Online Property Agent",
+    subtitle: "Property Management Platform",
+    description:
+      "Discover premium properties with our expert real estate agents. Search, filter, and find your perfect home with our advanced property search platform. Browse thousands of properties for sale and rent. Built with Next.js frontend, Golang backend, Redis caching, and MongoDB database. Deployed using Docker containers and PM2 on dedicated servers with a React.js super admin panel.",
+    link: "https://oparealestate.com/",
+    img: "https://res.cloudinary.com/dh7b09yai/image/upload/v1764389254/Screenshot_2025-11-29_at_9.37.12_AM_svcmr0.png",
+    category: "fullstack",
+    technologies: [
+      "Next.js",
+      "Golang",
+      "MongoDB",
+      "Redis",
+      "Docker",
+      "PM2",
+      "React.js",
+      "Tailwind CSS",
+    ],
+    featured: true,
+  },
+  {
+    id: 2,
+    title: "PME Global",
+    subtitle: "Migration Consulting Services",
+    description:
+      "PME Migration provides expert migration consulting services for study abroad, visa applications, PR pathways, and test preparation. Built as a Next.js static website with dynamic API integrations from the CRM portal for real-time data updates.",
+    link: "https://pmeglobal.com.au/",
+    img: "https://res.cloudinary.com/dh7b09yai/image/upload/v1764389319/Screenshot_2025-11-29_at_9.38.24_AM_uikh7i.png",
+    category: "fullstack",
+    technologies: [
+      "Next.js",
+      "Tailwind CSS",
+      "Ant Design",
+      "GraphQL",
+      "REST API",
+    ],
+    featured: true,
+  },
+  {
+    id: 3,
     title: "StudyNexaa",
     subtitle: "E-Learning Platform",
-    description: "A comprehensive e-learning platform built with Next.js and TypeScript, featuring course management, student progress tracking, and interactive learning materials.",
+    description:
+      "A comprehensive e-learning platform built with Next.js and TypeScript, featuring course management, student progress tracking, and interactive learning materials.",
     link: "https://studynexaa.vercel.app/",
     github: "https://github.com/developerchoudhary/studynexaa",
     img: "https://res.cloudinary.com/dh7b09yai/image/upload/v1730052031/duzrubbu4pb5kjz68lp6.png",
     category: "fullstack",
-    technologies: ["Next.js", "TypeScript", "Tailwind CSS", "MongoDB", "Node.js"],
-    featured: true
+    technologies: [
+      "Next.js",
+      "TypeScript",
+      "Tailwind CSS",
+      "MongoDB",
+      "Node.js",
+    ],
+    featured: true,
   },
   {
-    id: 2,
+    id: 4,
     title: "Jai Shree Equipment Dairy",
     subtitle: "Dairy Equipment E-commerce",
-    description: "A full-featured e-commerce platform for dairy equipment with product catalog, order management, and automated milk collection system integration.",
+    description:
+      "A full-featured e-commerce platform for dairy equipment with product catalog, order management, and automated milk collection system integration.",
     link: "https://jaishreeequipmentdairy.in",
     img: "https://res.cloudinary.com/dh7b09yai/image/upload/v1730052035/ktn8avmr3wfhjogruxuz.png",
     category: "fullstack",
     technologies: ["React.js", "Node.js", "Express", "MongoDB", "Stripe"],
-    featured: true
+    featured: true,
   },
   {
-    id: 3,
+    id: 5,
     title: "Portfolio Website",
     subtitle: "Personal Portfolio",
-    description: "Modern portfolio website showcasing my projects and skills, built with Next.js 14 and NextUI for a seamless user experience.",
+    description:
+      "Modern portfolio website showcasing my projects and skills, built with Next.js 14 and NextUI for a seamless user experience.",
     link: "https://ex-developerchoudhary.vercel.app/",
     github: "https://github.com/developerchoudhary/portfolio",
     img: "https://res.cloudinary.com/dh7b09yai/image/upload/v1730052029/rsyftif6jynnsulq5kaw.png",
     category: "frontend",
     technologies: ["Next.js", "NextUI", "Tailwind CSS", "Framer Motion"],
-    featured: true
+    featured: true,
   },
   {
-    id: 4,
+    id: 6,
     title: "IndianMarket",
     subtitle: "Online Marketplace",
-    description: "A feature-rich online marketplace connecting local sellers with customers, including real-time chat and secure payment processing.",
+    description:
+      "A feature-rich online marketplace connecting local sellers with customers, including real-time chat and secure payment processing.",
     link: "https://indianmarket.online/",
     img: "https://res.cloudinary.com/dh7b09yai/image/upload/v1730052035/rj8vvweaabfdmv6tczbt.png",
     category: "fullstack",
     technologies: ["React.js", "Node.js", "Socket.io", "MongoDB", "Redux"],
-    featured: true
+    featured: true,
   },
   {
-    id: 5,
+    id: 7,
     title: "Hthai Chat",
     subtitle: "Real-time Chat Application",
-    description: "Secure real-time chat application with end-to-end encryption, user authentication, and message history.",
+    description:
+      "Secure real-time chat application with end-to-end encryption, user authentication, and message history.",
     link: "https://hthai.vercel.app/register",
     github: "https://github.com/developerchoudhary/hthai",
     img: "https://res.cloudinary.com/dh7b09yai/image/upload/v1730052034/hyenoikem7br65fqgjo3.png",
     category: "fullstack",
     technologies: ["Next.js", "Socket.io", "MongoDB", "JWT", "Tailwind CSS"],
-    featured: false
-  }
- ];
+    featured: false,
+  },
+];

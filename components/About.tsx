@@ -22,9 +22,12 @@ const skills = [
   "React.js",
   "Next.js",
   "Node.js",
+  "Golang",
   "TypeScript",
   "Tailwind CSS",
   "MongoDB",
+  "Redis",
+  "DevOps",
 ];
 
 // About Section: Bio, stats, skills, and call-to-action
