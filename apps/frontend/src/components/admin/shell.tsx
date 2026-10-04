@@ -25,6 +25,7 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
+import { LogoMark } from "@/components/site/logo";
 import { ThemeToggle } from "@/components/site/theme-toggle";
 import { useAuth } from "@/lib/admin/auth";
 import { cn } from "@/lib/utils";
@@ -101,9 +102,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
     <div className="admin-root flex min-h-screen bg-bg">
       <aside className="sticky top-0 flex h-screen w-[248px] shrink-0 flex-col border-r border-line bg-bg-elevated">
         <div className="flex h-16 items-center gap-2.5 border-b border-line px-5">
-          <span className="relative inline-flex size-8 items-center justify-center overflow-hidden rounded-lg bg-accent text-accent-fg">
-            <span className="font-display text-[0.95rem] font-bold tracking-tight">DC</span>
-          </span>
+          <LogoMark className="size-8 shrink-0" />
           <div className="leading-tight">
             <p className="font-display text-sm font-semibold">Developer Choudhary</p>
             <p className="text-[0.65rem] uppercase tracking-wider text-fg-subtle">Admin console</p>

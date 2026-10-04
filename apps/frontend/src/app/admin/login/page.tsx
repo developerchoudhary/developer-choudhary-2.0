@@ -3,6 +3,7 @@
 import { ArrowRight, Lock } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { LogoMark } from "@/components/site/logo";
 import { Button } from "@/components/ui/button";
 import { Field, Input } from "@/components/ui/field";
 import { useAuth } from "@/lib/admin/auth";
@@ -26,9 +27,7 @@ export default function LoginPage() {
           aria-hidden="true"
         />
         <div className="relative flex items-center gap-2.5">
-          <span className="inline-flex size-9 items-center justify-center rounded-lg bg-accent text-accent-fg">
-            <span className="font-display text-base font-bold">DC</span>
-          </span>
+          <LogoMark className="size-9" />
           <span className="font-display text-base font-semibold">Developer Choudhary</span>
         </div>
         <div className="relative">

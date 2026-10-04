@@ -14,11 +14,20 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   images: {
     formats: ["image/avif", "image/webp"],
+    // In development uploads come from http://localhost:8080, which resolves to a private IP that the
+    // optimizer blocks by default. Production serves uploads from the public site origin.
+    dangerouslyAllowLocalIP: process.env.NODE_ENV === "development",
     qualities: [60, 75, 90],
     remotePatterns: [
       { protocol: "https", hostname: "**" },
+      // local development: the Go API serves /uploads on :8080 and Next proxies it on :3000
       { protocol: "http", hostname: "localhost" },
+      { protocol: "http", hostname: "localhost", port: "8080" },
+      { protocol: "http", hostname: "localhost", port: "3000" },
+      { protocol: "http", hostname: "127.0.0.1", port: "8080" },
+      // in-cluster service name, any port
       { protocol: "http", hostname: "portfolio-backend" },
+      { protocol: "http", hostname: "portfolio-backend", port: "8080" },
     ],
   },
   async rewrites() {

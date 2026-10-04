@@ -7,7 +7,11 @@ interface PageMeta {
   title: string;
   description?: string;
   path: string;
-  image?: string;
+  /**
+   * Share image. A URL uses that image; `undefined` falls back to the site-wide portrait composite;
+   * `null` sets nothing so the segment's own opengraph-image route is used (projects, posts).
+   */
+  image?: string | null;
   type?: "website" | "article";
   publishedTime?: string;
   modifiedTime?: string;
@@ -17,9 +21,18 @@ interface PageMeta {
 export function pageMetadata(meta: PageMeta): Metadata {
   const url = `${SITE_URL}${meta.path}`;
   const description = meta.description || DEFAULT_DESCRIPTION;
-  const images = meta.image
-    ? [{ url: absoluteUrl(meta.image, SITE_URL), width: 1200, height: 630, alt: meta.title }]
-    : undefined;
+  const images =
+    meta.image === null
+      ? undefined
+      : [
+          {
+            url: absoluteUrl(meta.image || "/og-image.png", SITE_URL),
+            width: 1200,
+            height: 630,
+            alt: meta.title,
+          },
+        ];
+  // `images` is omitted only when a page passes `image: null`, so its segment's opengraph-image route wins.
   return {
     title: meta.title,
     description,
@@ -32,7 +45,7 @@ export function pageMetadata(meta: PageMeta): Metadata {
       siteName: SITE_NAME,
       type: meta.type ?? "website",
       locale: "en_IN",
-      images,
+      ...(images ? { images } : {}),
       publishedTime: meta.publishedTime,
       modifiedTime: meta.modifiedTime,
     },
@@ -40,7 +53,7 @@ export function pageMetadata(meta: PageMeta): Metadata {
       card: "summary_large_image",
       title: meta.title,
       description,
-      images: images?.map((i) => i.url),
+      ...(images ? { images: images.map((i) => i.url) } : {}),
     },
   };
 }

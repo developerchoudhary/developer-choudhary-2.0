@@ -35,7 +35,20 @@ export default async function Image({ params }: { params: Promise<{ slug: string
           color: "#a0a0a8",
         }}
       >
-        <span>{`${SITE_NAME} · Work`}</span>
+        <span style={{ display: "flex", alignItems: "center", gap: 14 }}>
+          <svg width="40" height="40" viewBox="0 0 64 64">
+            <rect width="64" height="64" rx="16" fill="#f97316" />
+            <path d="M18 14h9a18 18 0 0 1 0 36h-9z" fill="#0b0b0d" />
+            <path
+              d="M38.36 27.4a6 6 0 1 0 0 9.2"
+              fill="none"
+              stroke="#f97316"
+              strokeWidth="5"
+              strokeLinecap="round"
+            />
+          </svg>
+          {`${SITE_NAME} · Work`}
+        </span>
         <span style={{ textTransform: "uppercase", letterSpacing: 4, color: "#f97316" }}>{type}</span>
       </div>
       <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>

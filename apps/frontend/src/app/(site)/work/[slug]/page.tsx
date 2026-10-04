@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
       `${project.title} · ${project.subtitle || PROJECT_TYPE_LABELS[project.projectType]}`,
     description: project.seoDescription || project.summary,
     path: `/work/${project.slug}`,
-    image: project.coverUrl || `/work/${project.slug}/opengraph-image`,
+    image: project.coverUrl || null, // no cover: the segment's opengraph-image route renders a titled card
   });
 }
 

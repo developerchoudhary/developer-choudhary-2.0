@@ -27,7 +27,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
     title: post.seoTitle || post.title,
     description: post.seoDescription || post.excerpt,
     path: `/blog/${post.slug}`,
-    image: post.coverUrl || `/blog/${post.slug}/opengraph-image`,
+    image: post.coverUrl || null, // no cover: the segment's opengraph-image route renders a titled card
     type: "article",
     publishedTime: post.publishedAt ?? undefined,
     modifiedTime: post.updatedAt,
