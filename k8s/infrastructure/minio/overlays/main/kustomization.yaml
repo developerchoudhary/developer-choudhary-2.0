@@ -1,0 +1,31 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+
+patches:
+  - target:
+      kind: Ingress
+      name: minio-console
+    patch: |-
+      - op: replace
+        path: /spec/tls/0/hosts/0
+        value: storage.developerchoudhary.com
+      - op: replace
+        path: /spec/rules/0/host
+        value: storage.developerchoudhary.com
+
+  - patch: |-
+      apiVersion: apps/v1
+      kind: StatefulSet
+      metadata:
+        name: minio
+      spec:
+        template:
+          spec:
+            containers:
+              - name: minio
+                env:
+                  - name: MINIO_BROWSER_REDIRECT_URL
+                    value: https://storage.developerchoudhary.com

@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: portfolio-backend-dev
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/developerchoudhary/developer-choudhary-2.0.git
+    targetRevision: dev
+    path: k8s/backend/overlays/dev
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: portfolio-dev
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

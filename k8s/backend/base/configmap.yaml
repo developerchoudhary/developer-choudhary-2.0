@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: ConfigMap
+
+metadata:
+  name: portfolio-backend-config
+  labels:
+    app: portfolio-backend
+    component: configuration
+
+data:
+  PORT: "80"
+  GIN_MODE: "release"
+  MINIO_ENDPOINT: "minio.infrastructure.svc.cluster.local:9000"
+  MINIO_USE_SSL: "false"
+  MAX_UPLOAD_BYTES: "26214400"
+  GOTENBERG_URL: "http://gotenberg.infrastructure.svc.cluster.local:3000"
+  SMTP_HOST: "smtp.gmail.com"
+  SMTP_PORT: "587"
+  EMAIL_DISPATCH_IN_API: "true"
+  ACCESS_TOKEN_TTL_MINUTES: "15"
+  REFRESH_TOKEN_TTL_DAYS: "30"
+  COOKIE_SECURE: "true"
+  PUBLIC_WRITE_RATE_PER_MINUTE: "10"
+  FRONTEND_REVALIDATE_URL: "http://portfolio-frontend:3000/api/revalidate"

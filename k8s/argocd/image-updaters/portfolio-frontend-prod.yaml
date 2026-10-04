@@ -1,0 +1,23 @@
+apiVersion: argocd-image-updater.argoproj.io/v1alpha1
+kind: ImageUpdater
+metadata:
+  name: portfolio-frontend-image-updater-prod
+  namespace: argocd
+spec:
+  applicationRefs:
+    - namePattern: portfolio-frontend-prod
+      images:
+        - alias: portfolio-frontend
+          imageName: ghcr.io/developerchoudhary/portfolio-frontend
+          commonUpdateSettings:
+            updateStrategy: newest-build
+            allowTags: "regexp:^prod-[a-f0-9]+$"
+            pullSecret: pullsecret:argocd/ghcr-secret
+          manifestTargets:
+            kustomize:
+              name: ghcr.io/developerchoudhary/portfolio-frontend
+  writeBackConfig:
+    method: git
+    gitConfig:
+      branch: prod
+      writeBackTarget: kustomization

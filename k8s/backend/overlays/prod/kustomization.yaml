@@ -1,0 +1,28 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+
+patches:
+  - target:
+      kind: ConfigMap
+      name: portfolio-backend-config
+    patch: |-
+      - op: add
+        path: /data/MINIO_BUCKET
+        value: "portfolio"
+      - op: add
+        path: /data/ALLOWED_ORIGINS
+        value: "https://developerchoudhary.com,https://www.developerchoudhary.com"
+      - op: add
+        path: /data/PUBLIC_BASE_URL
+        value: "https://developerchoudhary.com"
+      - op: add
+        path: /data/SITE_URL
+        value: "https://developerchoudhary.com"
+
+images:
+  - name: ghcr.io/developerchoudhary/portfolio-backend
+    newName: ghcr.io/developerchoudhary/portfolio-backend
+    newTag: prod-latest

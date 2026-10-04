@@ -1,0 +1,29 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+  - www-redirect.yaml
+
+patches:
+  - target:
+      kind: Ingress
+      name: portfolio-ingress
+    patch: |-
+      - op: replace
+        path: /spec/tls/0/hosts/0
+        value: developerchoudhary.com
+      - op: add
+        path: /spec/tls/0/hosts/-
+        value: www.developerchoudhary.com
+      - op: replace
+        path: /spec/rules/0/host
+        value: developerchoudhary.com
+      - op: add
+        path: /metadata/annotations/traefik.ingress.kubernetes.io~1router.middlewares
+        value: portfolio-redirect-www@kubernetescrd
+
+images:
+  - name: ghcr.io/developerchoudhary/portfolio-frontend
+    newName: ghcr.io/developerchoudhary/portfolio-frontend
+    newTag: prod-latest

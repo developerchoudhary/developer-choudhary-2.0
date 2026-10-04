@@ -1,0 +1,38 @@
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+
+metadata:
+  name: redirect-www
+
+spec:
+  redirectRegex:
+    regex: "^https?://www\\.developerchoudhary\\.com/(.*)"
+    replacement: "https://developerchoudhary.com/${1}"
+    permanent: true
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+
+metadata:
+  name: portfolio-www-ingress
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    traefik.ingress.kubernetes.io/router.middlewares: portfolio-redirect-www@kubernetescrd
+
+spec:
+  ingressClassName: traefik
+  tls:
+    - hosts:
+        - www.developerchoudhary.com
+      secretName: portfolio-www-tls
+  rules:
+    - host: www.developerchoudhary.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: portfolio-frontend
+                port:
+                  number: 3000

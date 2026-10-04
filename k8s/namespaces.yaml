@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: portfolio
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: portfolio-dev
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: infrastructure

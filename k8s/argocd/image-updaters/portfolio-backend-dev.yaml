@@ -1,0 +1,23 @@
+apiVersion: argocd-image-updater.argoproj.io/v1alpha1
+kind: ImageUpdater
+metadata:
+  name: portfolio-backend-image-updater-dev
+  namespace: argocd
+spec:
+  applicationRefs:
+    - namePattern: portfolio-backend-dev
+      images:
+        - alias: portfolio-backend
+          imageName: ghcr.io/developerchoudhary/portfolio-backend
+          commonUpdateSettings:
+            updateStrategy: newest-build
+            allowTags: "regexp:^dev-[a-f0-9]+$"
+            pullSecret: pullsecret:argocd/ghcr-secret
+          manifestTargets:
+            kustomize:
+              name: ghcr.io/developerchoudhary/portfolio-backend
+  writeBackConfig:
+    method: git
+    gitConfig:
+      branch: dev
+      writeBackTarget: kustomization

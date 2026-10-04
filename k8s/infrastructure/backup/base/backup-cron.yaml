@@ -1,0 +1,352 @@
+apiVersion: batch/v1
+kind: CronJob
+
+metadata:
+  name: postgres-backup
+  labels:
+    app: postgres-backup
+
+spec:
+  schedule: "0 */6 * * *"
+  timeZone: "Asia/Kolkata"
+
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  startingDeadlineSeconds: 600
+
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      activeDeadlineSeconds: 7200
+      ttlSecondsAfterFinished: 600
+
+      template:
+        metadata:
+          labels:
+            app: postgres-backup
+
+        spec:
+          restartPolicy: OnFailure
+          automountServiceAccountToken: false
+
+          initContainers:
+            - name: prepare-backup-dir
+              image: postgres:17
+              imagePullPolicy: IfNotPresent
+
+              command:
+                - /bin/bash
+                - -c
+                - |
+                  mkdir -p /backup
+                  chown 999:999 /backup
+                  chmod 750 /backup
+
+              securityContext:
+                runAsUser: 0
+                runAsGroup: 0
+
+              resources:
+                requests:
+                  cpu: 10m
+                  memory: 16Mi
+                limits:
+                  cpu: 50m
+                  memory: 32Mi
+
+              volumeMounts:
+                - name: backup-storage
+                  mountPath: /backup
+
+          containers:
+            - name: postgres-backup
+              image: postgres:17
+              imagePullPolicy: IfNotPresent
+
+              securityContext:
+                runAsUser: 999
+                runAsGroup: 999
+                allowPrivilegeEscalation: false
+
+              env:
+                - name: PGHOST
+                  value: postgres-0.postgres
+
+                - name: PGPORT
+                  value: "5432"
+
+                - name: PGUSER
+                  valueFrom:
+                    secretKeyRef:
+                      name: postgres-secret
+                      key: POSTGRES_USER
+
+                - name: PGPASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: postgres-secret
+                      key: POSTGRES_PASSWORD
+
+                - name: PGDATABASE
+                  valueFrom:
+                    secretKeyRef:
+                      name: postgres-secret
+                      key: POSTGRES_DB
+
+                - name: PGCONNECT_TIMEOUT
+                  value: "15"
+
+                - name: BACKUP_DIR
+                  value: /backup
+
+                - name: RETENTION_DAYS
+                  value: "31"
+
+              command:
+                - /bin/bash
+                - -c
+                - |
+                  set -Eeuo pipefail
+                  umask 027
+
+                  TIMESTAMP="$(date '+%Y-%m-%d_%H-%M-%S')"
+                  STAGING_DIR="${BACKUP_DIR}/.inprogress-${TIMESTAMP}"
+                  FINAL_DIR="${BACKUP_DIR}/${TIMESTAMP}"
+                  GLOBALS_FILE="${STAGING_DIR}/globals.sql"
+
+                  cleanup_staging() {
+                    rm -rf "${STAGING_DIR}"
+                  }
+
+                  trap cleanup_staging EXIT
+
+                  echo "========================================"
+                  echo "PostgreSQL backup started"
+                  echo "Time: $(date)"
+                  echo "Host: ${PGHOST}:${PGPORT}"
+                  echo "Database: ${PGDATABASE}"
+                  echo "Retention: ${RETENTION_DAYS} days"
+                  echo "Backup directory: ${BACKUP_DIR}"
+                  echo "========================================"
+
+                  echo "Checking disk usage..."
+
+                  avail_pct="$(
+                    df -P "${BACKUP_DIR}" |
+                    awk 'NR==2 {
+                      gsub(/%/, "", $5);
+                      print $5
+                    }'
+                  )"
+
+                  if [[ -z "${avail_pct}" ]]; then
+                    echo "ERROR: Unable to determine filesystem usage" >&2
+                    exit 1
+                  fi
+
+                  if [[ "${avail_pct}" -ge 90 ]]; then
+                    echo "ERROR: Refusing backup: filesystem is ${avail_pct}% full" >&2
+                    exit 1
+                  fi
+
+                  echo "Filesystem usage: ${avail_pct}%"
+
+                  echo "Checking PostgreSQL..."
+
+                  pg_isready \
+                    -h "${PGHOST}" \
+                    -p "${PGPORT}" \
+                    -U "${PGUSER}" \
+                    -d "${PGDATABASE}"
+
+                  mkdir -p "${STAGING_DIR}"
+
+                  echo "Discovering PostgreSQL databases..."
+
+                  mapfile -t DATABASES < <(
+                    psql \
+                      -h "${PGHOST}" \
+                      -p "${PGPORT}" \
+                      -U "${PGUSER}" \
+                      -d postgres \
+                      -Atc "
+                        SELECT datname
+                        FROM pg_database
+                        WHERE datallowconn = true
+                          AND datistemplate = false
+                          AND datname <> 'postgres'
+                        ORDER BY datname;
+                      "
+                  )
+
+                  if [[ "${#DATABASES[@]}" -eq 0 ]]; then
+                    echo "ERROR: No databases found" >&2
+                    exit 1
+                  fi
+
+                  echo "Databases to backup:"
+                  printf '  - %s\n' "${DATABASES[@]}"
+
+                  for DB in "${DATABASES[@]}"; do
+
+                    echo "----------------------------------------"
+                    echo "Creating custom-format dump of ${DB}..."
+
+                    pg_dump \
+                      --format=custom \
+                      --compress=9 \
+                      --file="${STAGING_DIR}/${DB}.dump" \
+                      "${DB}"
+
+                    echo "Successfully backed up ${DB}"
+
+                  done
+
+                  echo "----------------------------------------"
+                  echo "Creating globals dump..."
+
+                  pg_dumpall \
+                    --globals-only \
+                    --file="${GLOBALS_FILE}"
+
+                  echo "Globals dump created successfully"
+
+                  echo "----------------------------------------"
+                  echo "Verifying database dumps..."
+
+                  for DUMP in "${STAGING_DIR}"/*.dump; do
+
+                    echo "Verifying: $(basename "${DUMP}")"
+
+                    pg_restore \
+                      --list \
+                      "${DUMP}" \
+                      > /dev/null
+
+                    echo "Verified: $(basename "${DUMP}")"
+
+                  done
+
+                  echo "All database dumps verified successfully"
+
+                  echo "----------------------------------------"
+                  echo "Generating SHA256 checksums..."
+
+                  (
+                    cd "${STAGING_DIR}"
+
+                    sha256sum \
+                      *.dump \
+                      globals.sql \
+                      > SHA256SUMS
+
+                    sha256sum --check SHA256SUMS
+                  )
+
+                  echo "Checksums verified successfully"
+
+                  echo "----------------------------------------"
+                  echo "Finalizing backup..."
+
+                  mv "${STAGING_DIR}" "${FINAL_DIR}"
+
+                  trap - EXIT
+
+                  echo "Backup finalized:"
+                  echo "${FINAL_DIR}"
+
+                  echo "----------------------------------------"
+                  echo "Removing backups older than ${RETENTION_DAYS} days..."
+
+                  CUTOFF="$(
+                    date \
+                      -d "${RETENTION_DAYS} days ago" \
+                      '+%Y-%m-%d'
+                  )"
+
+                  echo "Retention cutoff date: ${CUTOFF}"
+
+                  shopt -s nullglob
+
+                  for dir in \
+                    "${BACKUP_DIR}"/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]_[0-9][0-9]-[0-9][0-9]-[0-9][0-9]/
+                  do
+
+                    dir_name="$(basename "${dir}")"
+                    dir_date="${dir_name:0:10}"
+
+                    if [[ "${dir_date}" < "${CUTOFF}" ]]; then
+
+                      echo "Deleting expired backup: ${dir}"
+
+                      rm -rf -- "${dir}"
+
+                    fi
+
+                  done
+
+                  echo "----------------------------------------"
+                  echo "Removing old flat-layout backups..."
+
+                  for f in "${BACKUP_DIR}"/postgres-*; do
+
+                    [[ -e "${f}" ]] || continue
+
+                    fname="$(basename "${f}")"
+
+                    file_date="${fname#postgres-}"
+                    file_date="${file_date:0:10}"
+
+                    if [[ "${file_date}" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]] &&
+                       [[ "${file_date}" < "${CUTOFF}" ]]
+                    then
+
+                      echo "Deleting expired legacy backup: ${f}"
+
+                      rm -f -- "${f}"
+
+                    fi
+
+                  done
+
+                  echo "========================================"
+                  echo "PostgreSQL backup completed successfully"
+                  echo "Time: $(date)"
+                  echo "Backup: ${FINAL_DIR}"
+                  echo "========================================"
+
+                  echo "Backup contents:"
+                  ls -lah "${FINAL_DIR}"
+
+                  echo "========================================"
+                  echo "Current backup directories:"
+
+                  find "${BACKUP_DIR}" \
+                    -mindepth 1 \
+                    -maxdepth 1 \
+                    -type d \
+                    -name '20??-??-??_??-??-??' \
+                    -printf '%f\n' \
+                    | sort
+
+                  echo "========================================"
+
+              volumeMounts:
+                - name: backup-storage
+                  mountPath: /backup
+
+              resources:
+                requests:
+                  cpu: 100m
+                  memory: 256Mi
+
+                limits:
+                  cpu: "1"
+                  memory: 1Gi
+
+          volumes:
+            - name: backup-storage
+              hostPath:
+                path: /opt/portfolio-postgres-backups
+                type: DirectoryOrCreate

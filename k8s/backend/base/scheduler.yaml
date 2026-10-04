@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: portfolio-scheduler
+  labels:
+    app: portfolio-scheduler
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: portfolio-scheduler
+  template:
+    metadata:
+      labels:
+        app: portfolio-scheduler
+    spec:
+      imagePullSecrets:
+        - name: ghcr-secret
+      terminationGracePeriodSeconds: 30
+      containers:
+        - name: portfolio-scheduler
+          image: ghcr.io/developerchoudhary/portfolio-backend
+          imagePullPolicy: Always
+          args: ["scheduler"]
+          envFrom:
+            - configMapRef:
+                name: portfolio-backend-config
+            - secretRef:
+                name: portfolio-backend-secret
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi
