@@ -24,13 +24,12 @@ type ResponseDTO struct {
 	CreatedAt     string         `json:"createdAt"`
 }
 
+// PublicDTO is the current resume as the site shows it; downloads go through /public/resume/download,
+// which counts them.
 type PublicDTO struct {
-	Version     int    `json:"version"`
-	Title       string `json:"title"`
-	FileURL     string `json:"fileUrl"`
-	DownloadURL string `json:"downloadUrl"`
-	FileSize    int64  `json:"fileSize"`
-	UpdatedAt   string `json:"updatedAt"`
+	FileURL   string `json:"fileUrl"`
+	FileSize  int64  `json:"fileSize"`
+	UpdatedAt string `json:"updatedAt"`
 }
 
 func ToResponse(r *Resume) *ResponseDTO {
@@ -64,12 +63,9 @@ func ToPublic(r *Resume) *PublicDTO {
 		return nil
 	}
 	return &PublicDTO{
-		Version:     r.Version,
-		Title:       r.Title,
-		FileURL:     r.FileURL,
-		DownloadURL: r.FileURL + "?download=1",
-		FileSize:    r.FileSize,
-		UpdatedAt:   r.CreatedAt.UTC().Format(time.RFC3339),
+		FileURL:   r.FileURL,
+		FileSize:  r.FileSize,
+		UpdatedAt: r.CreatedAt.UTC().Format(time.RFC3339),
 	}
 }
 

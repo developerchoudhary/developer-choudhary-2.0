@@ -16,6 +16,7 @@ var ListSchema = pagination.Schema{
 		"status":      {Column: "projects.status", Type: pagination.TypeEnum, Multi: true},
 		"isFeatured":  {Column: "projects.is_featured", Type: pagination.TypeBool},
 		"isPublished": {Column: "projects.is_published", Type: pagination.TypeBool},
+		"service":     {Column: "projects.service_slugs", Type: pagination.TypeString, Contains: true},
 	},
 	SearchCols: []string{"projects.title", "projects.subtitle", "projects.summary", "projects.client_name"},
 }

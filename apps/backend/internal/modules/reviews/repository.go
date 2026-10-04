@@ -103,8 +103,8 @@ func itoa(n int) string {
 
 func (r *repo) Update(ctx context.Context, item *Review) error {
 	return shared.UpdateColumns(ctx, r.db, item, item.ID, "review not found",
-		"author_name", "author_role", "author_company", "author_email", "author_website", "author_avatar_file_id", "author_avatar_url",
-		"rating", "title", "body", "project_id", "service_slug", "source", "status", "is_featured", "approved_at", "approved_by",
+		"author_name", "author_role", "author_company", "author_email", "author_avatar_file_id", "author_avatar_url",
+		"rating", "title", "body", "service_slug", "source", "status", "is_featured", "approved_at", "approved_by",
 		"reviewed_at", "updated_by", "updated_at")
 }
 

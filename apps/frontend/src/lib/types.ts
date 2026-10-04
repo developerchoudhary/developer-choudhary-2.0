@@ -51,23 +51,10 @@ export interface Profile {
   updatedAt: string;
 }
 
-export interface Tagline {
-  id: string;
-  text: string;
-  context: "hero" | "cta" | "footer" | "about";
-  sortOrder?: number;
-  isActive?: boolean;
-}
-
 export interface Skill {
   id: string;
   name: string;
   category: string;
-  proficiency: number;
-  years: number;
-  icon: string;
-  color: string;
-  description: string;
   isFeatured: boolean;
   isPublished: boolean;
   sortOrder: number;
@@ -85,18 +72,115 @@ export interface ReviewSummary {
 }
 
 export interface ResumePublic {
-  version: number;
-  title: string;
   fileUrl: string;
-  downloadUrl: string;
   fileSize: number;
   updatedAt: string;
+}
+
+/** CSS custom properties of one mode, as derived by the API (internal/modules/themes/derive.go). */
+export interface ThemeTokens {
+  bg: string;
+  bgElevated: string;
+  bgMuted: string;
+  bgInset: string;
+  fg: string;
+  fgMuted: string;
+  fgSubtle: string;
+  line: string;
+  lineStrong: string;
+  canvas: string;
+  accent: string;
+  accentStrong: string;
+  accentFg: string;
+  accentSoft: string;
+  highlight: string;
+  btnFrom: string;
+  btnTo: string;
+  btnHoverFrom: string;
+  btnHoverTo: string;
+  btnFg: string;
+  btnGlow: string;
+  brandFrom: string;
+  brandTo: string;
+  frame: string;
+  photoFrom: string;
+  photoTo: string;
+  photoGlow: string;
+}
+
+export interface ModeTokens {
+  light: ThemeTokens;
+  dark: ThemeTokens;
+}
+
+/** The theme the site uses: CSS to inject plus tokens for icons and share images. */
+export interface ActiveTheme {
+  slug: string;
+  name: string;
+  version: string;
+  css: string;
+  tokens: ModeTokens;
+}
+
+export interface ThemeModeColors {
+  accent: string;
+  buttonFrom: string;
+  buttonTo: string;
+  highlight: string;
+}
+
+export interface ThemeDefinition {
+  name: string;
+  description: string;
+  surface: string;
+  logoFrom: string;
+  logoTo: string;
+  /** The studio backdrop behind the photo, the same in both modes. */
+  backdrop: string;
+  light: ThemeModeColors;
+  dark: ThemeModeColors;
+}
+
+export interface ThemeIssue {
+  field: string;
+  message: string;
+}
+
+export interface ThemeItem extends ThemeDefinition {
+  id: string | null;
+  slug: string;
+  builtin: boolean;
+  active: boolean;
+  tokens: ModeTokens;
+  css: string;
+  version: string;
+  issues: ThemeIssue[];
+}
+
+export interface ThemeSurface {
+  key: string;
+  label: string;
+  description: string;
+  lightBg: string;
+  darkBg: string;
+}
+
+export interface ThemeList {
+  active: string;
+  surfaces: ThemeSurface[];
+  themes: ThemeItem[];
+}
+
+export interface ThemePreview {
+  tokens: ModeTokens;
+  css: string;
+  issues: ThemeIssue[];
 }
 
 export interface SiteBundle {
   profile: Profile;
   settings: Record<string, unknown>;
-  taglines: Tagline[];
+  theme: ActiveTheme | null;
   skills: SkillGroup[];
   reviews: ReviewSummary;
   resume: ResumePublic | null;
@@ -183,6 +267,15 @@ export interface ProjectDetail extends Project {
   related: Project[];
 }
 
+export interface FacetCount {
+  value: string;
+  count: number;
+}
+
+export interface ProjectFacets {
+  types: FacetCount[];
+}
+
 export interface Experience {
   id: string;
   company: string;
@@ -198,8 +291,6 @@ export interface Experience {
   responsibilities: string[];
   achievements: string[];
   technologies: string[];
-  logoFileId: string | null;
-  logoUrl: string;
   sortOrder: number;
   isPublished: boolean;
 }
@@ -223,8 +314,6 @@ export interface Certification {
   name: string;
   issuer: string;
   issuedAt: string | null;
-  expiresAt: string | null;
-  credentialId: string;
   credentialUrl: string;
   sortOrder: number;
   isPublished: boolean;
@@ -283,13 +372,11 @@ export interface Review {
   authorRole: string;
   authorCompany: string;
   authorEmail?: string;
-  authorWebsite: string;
   authorAvatarFileId?: string | null;
   authorAvatarUrl: string;
   rating: number;
   title: string;
   body: string;
-  projectId: string | null;
   serviceSlug: string;
   source: string;
   status?: "pending" | "approved" | "rejected";
@@ -314,9 +401,7 @@ export interface Lead {
   email: string;
   phone: string;
   company: string;
-  website: string;
   serviceInterest: string;
-  projectType: string;
   budgetRange: string;
   timeline: string;
   message: string;
@@ -353,7 +438,6 @@ export interface LeadStats {
   last7Days: number;
   last30Days: number;
   byStatus: Record<string, number>;
-  bySource: CountItem[];
   daily: DayCount[];
 }
 
@@ -458,12 +542,25 @@ export interface AdminUser {
   createdAt: string;
 }
 
-export interface Setting {
+export type SettingKind = "string" | "text" | "url" | "bool" | "link" | "list";
+
+/** One setting from the backend registry (internal/modules/settings/registry.go) with its current value. */
+export interface SettingField {
   key: string;
-  value: unknown;
-  isPublic: boolean;
+  kind: SettingKind;
+  label: string;
   description: string;
-  updatedAt: string;
+  default: unknown;
+  maxLength?: number;
+  value: unknown;
+  updatedAt: string | null;
+}
+
+export interface SettingGroup {
+  key: string;
+  label: string;
+  description: string;
+  items: SettingField[];
 }
 
 export interface Dashboard {

@@ -13,7 +13,6 @@ import (
 var (
 	nonAlnum   = regexp.MustCompile(`[^a-z0-9]+`)
 	multiDash  = regexp.MustCompile(`-{2,}`)
-	validSlug  = regexp.MustCompile(`^[a-z0-9]+(?:-[a-z0-9]+)*$`)
 	maxSlugLen = 96
 )
 
@@ -32,11 +31,6 @@ func Make(input string) string {
 		s = strings.Trim(s[:maxSlugLen], "-")
 	}
 	return s
-}
-
-// IsValid reports whether s is already a well-formed slug.
-func IsValid(s string) bool {
-	return s != "" && len(s) <= maxSlugLen && validSlug.MatchString(s)
 }
 
 // Coalesce returns the explicit slug when valid, otherwise derives one from fallback text.

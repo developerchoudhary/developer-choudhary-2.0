@@ -112,15 +112,6 @@ func (h *Handler) Folders(c *gin.Context) {
 	httputil.WriteSuccess(c, http.StatusOK, "Folders fetched successfully", folders)
 }
 
-func (h *Handler) Get(c *gin.Context) {
-	file, err := h.service.Get(c.Request.Context(), c.Param("id"))
-	if err != nil {
-		httputil.WriteError(c, err)
-		return
-	}
-	httputil.WriteSuccess(c, http.StatusOK, "File fetched successfully", file)
-}
-
 func (h *Handler) Update(c *gin.Context) {
 	req := &UpdateRequest{}
 	if err := c.ShouldBindJSON(req); err != nil {

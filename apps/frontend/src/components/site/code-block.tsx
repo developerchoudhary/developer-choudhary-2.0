@@ -11,14 +11,14 @@ export async function CodeBlock({
 }) {
   let html = "";
   try {
-    html = await codeToHtml(code, { lang: language || "text", theme: "vesper" });
+    html = await codeToHtml(code, { lang: language || "text", theme: "github-dark-default" });
   } catch {
     html = `<pre><code>${code.replace(/</g, "&lt;")}</code></pre>`;
   }
   return (
-    <figure className="not-prose overflow-hidden rounded-xl border border-line bg-[#0c0e12]">
+    <figure className="not-prose overflow-hidden rounded-xl border border-line bg-[#0d1117]">
       {filename && (
-        <figcaption className="border-b border-white/10 px-4 py-2 font-mono text-xs text-[#9aa0aa]">
+        <figcaption className="border-b border-white/10 px-4 py-2 font-mono text-xs text-[#8b949e]">
           {filename}
         </figcaption>
       )}

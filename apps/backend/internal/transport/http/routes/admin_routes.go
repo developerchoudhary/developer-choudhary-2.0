@@ -49,14 +49,21 @@ func RegisterAdmin(rg *gin.RouterGroup, h *Handlers, limiter *md.RateLimiter) {
 	r.GET("/settings", h.Settings.List)
 	r.PUT("/settings", md.RequirePermission(permSettingsWrite), h.Settings.BulkUpdate)
 
+	themes := r.Group("/themes", md.RequirePermission(permSettingsWrite))
+	themes.GET("", h.Themes.List)
+	themes.POST("", h.Themes.Create)
+	themes.POST("/preview", h.Themes.Preview)
+	themes.PUT("/active", h.Themes.Activate)
+	themes.PUT("/:id", h.Themes.Update)
+	themes.DELETE("/:id", h.Themes.Delete)
+
 	content := r.Group("", md.RequirePermission(permContentWrite))
-	crud(content, "/taglines", h.Taglines.List, h.Taglines.Create, nil, h.Taglines.Update, h.Taglines.Delete, h.Taglines.Reorder)
-	crud(content, "/services", h.Services.List, h.Services.Create, h.Services.Get, h.Services.Update, h.Services.Delete, h.Services.Reorder)
-	crud(content, "/skills", h.Skills.List, h.Skills.Create, nil, h.Skills.Update, h.Skills.Delete, h.Skills.Reorder)
-	crud(content, "/projects", h.Projects.List, h.Projects.Create, h.Projects.Get, h.Projects.Update, h.Projects.Delete, h.Projects.Reorder)
-	crud(content, "/experience", h.Experience.List, h.Experience.Create, h.Experience.Get, h.Experience.Update, h.Experience.Delete, h.Experience.Reorder)
-	crud(content, "/education", h.Education.List, h.Education.Create, nil, h.Education.Update, h.Education.Delete, nil)
-	crud(content, "/certifications", h.Certifications.List, h.Certifications.Create, nil, h.Certifications.Update, h.Certifications.Delete, nil)
+	crud(content, "/services", h.Services.List, h.Services.Create, h.Services.Get, h.Services.Update, h.Services.Delete)
+	crud(content, "/skills", h.Skills.List, h.Skills.Create, nil, h.Skills.Update, h.Skills.Delete)
+	crud(content, "/projects", h.Projects.List, h.Projects.Create, h.Projects.Get, h.Projects.Update, h.Projects.Delete)
+	crud(content, "/experience", h.Experience.List, h.Experience.Create, h.Experience.Get, h.Experience.Update, h.Experience.Delete)
+	crud(content, "/education", h.Education.List, h.Education.Create, nil, h.Education.Update, h.Education.Delete)
+	crud(content, "/certifications", h.Certifications.List, h.Certifications.Create, nil, h.Certifications.Update, h.Certifications.Delete)
 
 	blog := r.Group("", md.RequirePermission(permBlogWrite))
 	blog.GET("/posts", h.Posts.List)
@@ -78,14 +85,12 @@ func RegisterAdmin(rg *gin.RouterGroup, h *Handlers, limiter *md.RateLimiter) {
 	media.GET("", h.Files.List)
 	media.POST("", h.Files.Create)
 	media.GET("/folders", h.Files.Folders)
-	media.GET("/:id", h.Files.Get)
 	media.PUT("/:id", h.Files.Update)
 	media.DELETE("/:id", h.Files.Delete)
 
 	reviews := r.Group("/reviews", md.RequirePermission(permReviewsWrite))
 	reviews.GET("", h.Reviews.List)
 	reviews.POST("", h.Reviews.Create)
-	reviews.GET("/:id", h.Reviews.Get)
 	reviews.PUT("/:id", h.Reviews.Update)
 	reviews.PATCH("/:id/status", h.Reviews.SetStatus)
 	reviews.DELETE("/:id", h.Reviews.Delete)
@@ -108,17 +113,13 @@ func RegisterAdmin(rg *gin.RouterGroup, h *Handlers, limiter *md.RateLimiter) {
 	resumes.GET("/templates", h.Resumes.Templates)
 	resumes.POST("/preview", h.Resumes.Preview)
 	resumes.POST("", h.Resumes.Generate)
-	resumes.GET("/:id", h.Resumes.Get)
 	resumes.POST("/:id/current", h.Resumes.SetCurrent)
 	resumes.DELETE("/:id", h.Resumes.Delete)
 }
 
-func crud(rg *gin.RouterGroup, path string, list, create, get, update, del, reorder gin.HandlerFunc) {
+func crud(rg *gin.RouterGroup, path string, list, create, get, update, del gin.HandlerFunc) {
 	rg.GET(path, list)
 	rg.POST(path, create)
-	if reorder != nil {
-		rg.POST(path+"/reorder", reorder)
-	}
 	if get != nil {
 		rg.GET(path+"/:id", get)
 	}

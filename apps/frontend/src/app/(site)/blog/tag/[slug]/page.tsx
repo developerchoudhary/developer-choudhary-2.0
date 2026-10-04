@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { BlogList } from "@/components/site/blog-list";
 import { JsonLd } from "@/components/site/json-ld";
-import { PageHero } from "@/components/site/section";
-import { getCategories, getPosts, getTag } from "@/lib/data";
+import { PageHeader } from "@/components/site/ui";
+import { getPosts, getSite, getTag } from "@/lib/data";
 import { breadcrumbJsonLd, pageMetadata } from "@/lib/seo";
+import { siteSettings } from "@/lib/site";
 
 type Params = Promise<{ slug: string }>;
 
@@ -28,12 +29,12 @@ export default async function TagPage({
 }) {
   const [{ slug }, sp] = await Promise.all([params, searchParams]);
   const page = Math.max(1, Number(sp.page ?? 1) || 1);
-  const [tag, categories, posts] = await Promise.all([
+  const [site, tag, posts] = await Promise.all([
+    getSite(),
     getTag(slug),
-    getCategories(),
     getPosts(page, { tag: slug }).catch(() => null),
   ]);
-  if (!tag || !posts) notFound();
+  if (!siteSettings(site).showBlog || !tag || !posts) notFound();
   return (
     <>
       <JsonLd
@@ -43,14 +44,14 @@ export default async function TagPage({
           { name: tag.name, path: `/blog/tag/${slug}` },
         ])}
       />
-      <PageHero
-        eyebrow="Tag"
-        title={<>#{tag.name}</>}
+      <PageHeader
+        title={`#${tag.name}`}
         lede={`${tag.postCount} article${tag.postCount === 1 ? "" : "s"}`}
+        back={{ href: "/blog", label: "Blog" }}
       />
       <BlogList
         posts={posts}
-        categories={categories}
+        categories={[]}
         hrefFor={(p) => (p > 1 ? `/blog/tag/${slug}?page=${p}` : `/blog/tag/${slug}`)}
       />
     </>

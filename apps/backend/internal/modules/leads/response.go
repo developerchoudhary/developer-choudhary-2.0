@@ -21,9 +21,7 @@ type ResponseDTO struct {
 	Email            string            `json:"email"`
 	Phone            string            `json:"phone"`
 	Company          string            `json:"company"`
-	Website          string            `json:"website"`
 	ServiceInterest  string            `json:"serviceInterest"`
-	ProjectType      string            `json:"projectType"`
 	BudgetRange      string            `json:"budgetRange"`
 	Timeline         string            `json:"timeline"`
 	Message          string            `json:"message"`
@@ -60,13 +58,7 @@ type StatsDTO struct {
 	Last7Days  int            `json:"last7Days"`
 	Last30Days int            `json:"last30Days"`
 	ByStatus   map[string]int `json:"byStatus"`
-	BySource   []CountDTO     `json:"bySource"`
 	Daily      []DayCountDTO  `json:"daily"`
-}
-
-type CountDTO struct {
-	Label string `json:"label" bun:"label"`
-	Count int    `json:"count" bun:"count"`
 }
 
 func ToNote(n *Note) NoteDTO {
@@ -93,9 +85,7 @@ func ToResponse(l *Lead, withNotes bool) *ResponseDTO {
 		Email:            l.Email,
 		Phone:            l.Phone,
 		Company:          l.Company,
-		Website:          l.Website,
 		ServiceInterest:  l.ServiceInterest,
-		ProjectType:      l.ProjectType,
 		BudgetRange:      l.BudgetRange,
 		Timeline:         l.Timeline,
 		Message:          l.Message,

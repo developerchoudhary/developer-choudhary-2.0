@@ -44,19 +44,11 @@ func (s *Service) List(ctx context.Context, query *pagination.ListQuery) ([]*Res
 }
 
 func (s *Service) PublicList(ctx context.Context, query *pagination.ListQuery, categorySlug, tagSlug string) ([]*ResponseDTO, *pagination.Response, error) {
-	items, total, err := s.repo.List(ctx, query, ListFilter{PublishedOnly: true, CategorySlug: categorySlug, TagSlug: tagSlug})
+	items, total, err := s.repo.List(ctx, query, ListFilter{PublishedOnly: true, PinFeatured: query.SortBy == "", CategorySlug: categorySlug, TagSlug: tagSlug})
 	if err != nil {
 		return nil, nil, err
 	}
 	return ToListResponse(items), pagination.NewResponse(&query.Request, total), nil
-}
-
-func (s *Service) Recent(ctx context.Context, limit int) ([]*ResponseDTO, error) {
-	items, err := s.repo.Recent(ctx, limit, uuid.Nil)
-	if err != nil {
-		return nil, err
-	}
-	return ToListResponse(items), nil
 }
 
 func (s *Service) PublishedForSitemap(ctx context.Context) ([]*Post, error) {
@@ -76,7 +68,7 @@ func (s *Service) PublicGetBySlug(ctx context.Context, sl string) (*DetailDTO, e
 	if err != nil {
 		return nil, err
 	}
-	related, err := s.repo.Recent(ctx, 3, item.ID)
+	related, err := s.repo.Related(ctx, item.ID, item.CategoryID, 3)
 	if err != nil {
 		return nil, err
 	}
@@ -101,7 +93,7 @@ func (s *Service) RecordView(ctx context.Context, sl string) error {
 }
 
 func (s *Service) Create(ctx context.Context, req *RequestDTO, actor uuid.UUID) (*ResponseDTO, error) {
-	item := &Post{AuthorID: &actor}
+	item := &Post{}
 	tagIDs, err := s.apply(ctx, item, req, actor)
 	if err != nil {
 		return nil, err

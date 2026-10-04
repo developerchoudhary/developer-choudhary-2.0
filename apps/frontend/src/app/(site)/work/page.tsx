@@ -1,58 +1,54 @@
-import { FolderKanban } from "lucide-react";
-import Link from "next/link";
-import { Pagination } from "@/components/site/bits";
-import { ProjectCard } from "@/components/site/cards";
-import { CtaBand } from "@/components/site/cta-band";
+import type { Metadata } from "next";
+import { ProjectCard, ProjectRow } from "@/components/site/cards";
+import { Cta } from "@/components/site/cta";
 import { JsonLd } from "@/components/site/json-ld";
 import { Reveal } from "@/components/site/reveal";
-import { PageHero } from "@/components/site/section";
-import { EmptyState } from "@/components/ui/misc";
-import { getProjects, getSite } from "@/lib/data";
+import { Empty, FilterTabs, PageHeader, Pagination } from "@/components/site/ui";
+import { getProjectFacets, getProjects, getSite } from "@/lib/data";
 import { breadcrumbJsonLd, pageMetadata } from "@/lib/seo";
-import { PROJECT_STATUS_LABELS, PROJECT_TYPE_LABELS } from "@/lib/site";
-import { cn } from "@/lib/utils";
+import { PROJECT_TYPE_LABELS, siteSettings } from "@/lib/site";
+import type { Paginated, Project } from "@/lib/types";
 
-export const metadata = pageMetadata({
-  title: "Work · Websites, ERPs, CRMs and platforms in production",
-  description:
-    "Case studies from Developer Choudhary: property platforms, CRM portals, e-commerce, e-learning and business websites built with Next.js, Go and PostgreSQL.",
-  path: "/work",
-});
+export function generateMetadata(): Promise<Metadata> {
+  return pageMetadata({
+    title: "Work",
+    description:
+      "Selected projects by Aman Choudhary: property platforms, CRM portals, e-commerce and business websites built with Next.js, Go and PostgreSQL.",
+    path: "/work",
+  });
+}
 
-const TYPES = ["website", "web-app", "erp", "crm", "ecommerce", "api", "devops"];
-const STATUSES = ["completed", "in-progress", "upcoming"];
+const emptyPage: Paginated<Project> = {
+  items: [],
+  meta: { currentPage: 1, pageSize: 12, totalItems: 0, totalPages: 0 },
+};
 
 export default async function WorkPage({
   searchParams,
 }: {
-  searchParams: Promise<{ page?: string; type?: string; status?: string }>;
+  searchParams: Promise<{ page?: string; type?: string }>;
 }) {
   const sp = await searchParams;
+  const [facets, site] = await Promise.all([getProjectFacets(), getSite()]);
+  const types = facets.types.filter((t) => t.count > 0);
+  const type = types.some((t) => t.value === sp.type) ? sp.type : undefined;
   const page = Math.max(1, Number(sp.page ?? 1) || 1);
-  const type = TYPES.includes(sp.type ?? "") ? sp.type : undefined;
-  const status = STATUSES.includes(sp.status ?? "") ? sp.status : undefined;
-  const [projects, site] = await Promise.all([
-    getProjects(page, type, status).catch(() => ({
-      items: [],
-      meta: { currentPage: 1, pageSize: 12, totalItems: 0, totalPages: 0 },
-    })),
-    getSite(),
+  const [completed, building] = await Promise.all([
+    getProjects({ page, type, status: "completed" }).catch(() => emptyPage),
+    page === 1
+      ? getProjects({ type, status: "in-progress,upcoming", pageSize: 6 }).catch(() => emptyPage)
+      : Promise.resolve(emptyPage),
   ]);
-  const href = (patch: { type?: string; status?: string; page?: number }) => {
+  const settings = siteSettings(site);
+  const total = types.reduce((sum, t) => sum + t.count, 0);
+  const href = (patch: { type?: string; page?: number }) => {
     const q = new URLSearchParams();
     const t = "type" in patch ? patch.type : type;
-    const s = "status" in patch ? patch.status : status;
     if (t) q.set("type", t);
-    if (s) q.set("status", s);
     if (patch.page && patch.page > 1) q.set("page", String(patch.page));
     const qs = q.toString();
     return qs ? `/work?${qs}` : "/work";
   };
-  const chip = (active: boolean) =>
-    cn(
-      "shrink-0 rounded-full border px-4 py-1.5 text-sm transition",
-      active ? "border-fg bg-fg text-bg" : "border-line text-fg-muted hover:border-line-strong hover:text-fg",
-    );
 
   return (
     <>
@@ -62,64 +58,64 @@ export default async function WorkPage({
           { name: "Work", path: "/work" },
         ])}
       />
-      <PageHero
-        eyebrow="Work"
-        title={
-          <>
-            Products people <span className="text-accent">actually use.</span>
-          </>
-        }
-        lede="A selection of websites, platforms and internal tools I have shipped, plus what is on the workbench right now."
-      />
-      <section className="container-dc pb-8">
-        <div className="mb-8 space-y-3">
-          <div className="no-scrollbar -mx-5 flex gap-2 overflow-x-auto px-5 sm:mx-0 sm:flex-wrap sm:px-0">
-            <Link href={href({ type: undefined })} className={chip(!type)}>
-              All types
-            </Link>
-            {TYPES.map((t) => (
-              <Link key={t} href={href({ type: t })} className={chip(type === t)}>
-                {PROJECT_TYPE_LABELS[t]}
-              </Link>
-            ))}
-          </div>
-          <div className="no-scrollbar -mx-5 flex gap-2 overflow-x-auto px-5 sm:mx-0 sm:flex-wrap sm:px-0">
-            <Link href={href({ status: undefined })} className={chip(!status)}>
-              Any status
-            </Link>
-            {STATUSES.map((s) => (
-              <Link key={s} href={href({ status: s })} className={chip(status === s)}>
-                {PROJECT_STATUS_LABELS[s]}
-              </Link>
-            ))}
-          </div>
-        </div>
-        {projects.items.length === 0 ? (
-          <EmptyState
-            icon={<FolderKanban className="size-5" />}
-            title="Nothing matches those filters"
-            description="Try another type or status, or browse everything."
-            action={
-              <Link href="/work" className="text-sm font-medium text-accent">
-                Clear filters
-              </Link>
-            }
+      <PageHeader
+        title="Work"
+        lede="Websites, web apps and business software I have designed, built and shipped for clients in India and abroad."
+      >
+        {types.length > 1 && (
+          <FilterTabs
+            label="Project type"
+            items={[
+              { href: href({ type: undefined }), label: "All", active: !type, count: total },
+              ...types.map((t) => ({
+                href: href({ type: t.value }),
+                label: PROJECT_TYPE_LABELS[t.value] ?? t.value,
+                active: type === t.value,
+                count: t.count,
+              })),
+            ]}
           />
-        ) : (
-          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {projects.items.map((p, i) => (
-              <Reveal key={p.id} delay={Math.min(i * 0.05, 0.3)}>
-                <ProjectCard project={p} />
+        )}
+      </PageHeader>
+
+      <section className="container-dc pb-6">
+        {completed.items.length > 0 ? (
+          <div className="grid gap-x-8 gap-y-14 md:grid-cols-2">
+            {completed.items.map((p, i) => (
+              <Reveal key={p.id} delay={Math.min(i, 3) * 0.05}>
+                <ProjectCard
+                  project={p}
+                  priority={i < 2}
+                  sizes="(min-width: 1120px) 528px, (min-width: 768px) 50vw, 100vw"
+                />
               </Reveal>
             ))}
           </div>
+        ) : (
+          building.items.length === 0 && (
+            <Empty title="No projects here yet">New case studies are on the way. Check back soon.</Empty>
+          )
         )}
-        <Pagination meta={projects.meta} hrefFor={(p) => href({ page: p })} />
+        <Pagination meta={completed.meta} hrefFor={(p) => href({ page: p })} />
       </section>
-      <CtaBand
-        text="Want results like these for your business? Let's scope it together."
+
+      {building.items.length > 0 && (
+        <section className="container-dc py-14 sm:py-16">
+          <h2 className="display text-2xl sm:text-[1.75rem]">In progress & upcoming</h2>
+          <p className="mt-2 text-fg-muted">What I am building right now, and what is next.</p>
+          <div className="mt-6 card px-5 sm:px-6">
+            {building.items.map((p) => (
+              <ProjectRow key={p.id} project={p} />
+            ))}
+          </div>
+        </section>
+      )}
+
+      <Cta
+        title={settings.ctaTitle}
+        text={settings.ctaText}
         whatsapp={site.profile.whatsapp}
-        email={site.profile.email}
+        primary={settings.heroPrimary}
       />
     </>
   );

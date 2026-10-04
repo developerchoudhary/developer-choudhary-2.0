@@ -1,56 +1,47 @@
 import Link from "next/link";
 import { useId } from "react";
+import { DEFAULT_BRAND, LOGO_C_PATH, LOGO_D_PATH } from "@/lib/brand";
 import { cn } from "@/lib/utils";
 
 /**
- * The DC mark: a solid D with a lowercase c cut out of its counter.
- * `tile` draws it on the orange rounded square (app icon / favicon);
- * `glyph` draws only the letterform in currentColor for use on any background.
+ * The DC mark on its gradient tile (geometry in lib/brand.ts). The colours are the theme's
+ * --brand-from/--brand-to, so the logo follows the theme chosen in the admin; `colors` draws it
+ * in other colours (theme swatches in the admin).
  */
-export const LOGO_D_PATH = "M18 14h9a18 18 0 0 1 0 36h-9z";
-export const LOGO_C_PATH = "M38.36 27.4a6 6 0 1 0 0 9.2";
-
 export function LogoMark({
   className,
-  variant = "tile",
   title = "Developer Choudhary",
+  colors,
 }: {
   className?: string;
-  variant?: "tile" | "glyph";
   title?: string;
+  colors?: { from: string; to: string };
 }) {
   const id = useId();
-  if (variant === "glyph") {
-    return (
-      <svg viewBox="0 0 64 64" className={className} role="img" aria-label={title}>
-        <title>{title}</title>
-        <mask id={id}>
-          <rect width="64" height="64" fill="#fff" />
-          <path d={LOGO_C_PATH} fill="none" stroke="#000" strokeWidth="5" strokeLinecap="round" />
-        </mask>
-        <path d={LOGO_D_PATH} fill="currentColor" mask={`url(#${id})`} />
-      </svg>
-    );
-  }
   return (
     <svg viewBox="0 0 64 64" className={className} role="img" aria-label={title}>
       <title>{title}</title>
-      <rect width="64" height="64" rx="16" className="fill-accent" />
-      <path d={LOGO_D_PATH} className="fill-accent-fg" />
-      <path d={LOGO_C_PATH} fill="none" className="stroke-accent" strokeWidth="5" strokeLinecap="round" />
+      <defs>
+        <linearGradient id={id} x1="0" y1="0" x2="1" y2="1">
+          <stop
+            offset="0"
+            style={{ stopColor: colors?.from ?? `var(--brand-from, ${DEFAULT_BRAND.from})` }}
+          />
+          <stop offset="1" style={{ stopColor: colors?.to ?? `var(--brand-to, ${DEFAULT_BRAND.to})` }} />
+        </linearGradient>
+      </defs>
+      <rect width="64" height="64" rx="16" fill={`url(#${id})`} />
+      <path d={LOGO_D_PATH} fill="#fff" />
+      <path d={LOGO_C_PATH} fill="none" stroke={`url(#${id})`} strokeWidth="5" strokeLinecap="round" />
     </svg>
   );
 }
 
-export function Logo({ compact, className }: { compact?: boolean; className?: string }) {
+export function Logo({ name = "Developer Choudhary", className }: { name?: string; className?: string }) {
   return (
-    <Link href="/" className={cn("group inline-flex items-center gap-2.5", className)} aria-label="Home">
-      <LogoMark className="size-8 shrink-0 drop-shadow-[0_6px_16px_rgba(249,115,22,0.35)]" />
-      {!compact && (
-        <span className="font-display text-[1.05rem] font-semibold tracking-tight text-fg">
-          Developer <span className="text-fg-muted transition-colors group-hover:text-fg">Choudhary</span>
-        </span>
-      )}
+    <Link href="/" className={cn("inline-flex items-center gap-2.5", className)} aria-label={`${name}, home`}>
+      <LogoMark className="size-8 shrink-0" title={name} />
+      <span className="text-[0.95rem] font-semibold tracking-tight text-fg">{name}</span>
     </Link>
   );
 }

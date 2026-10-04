@@ -16,6 +16,7 @@ import (
 	"portfolio-backend/internal/modules/profile"
 	"portfolio-backend/internal/modules/projects"
 	"portfolio-backend/internal/modules/skills"
+	"portfolio-backend/internal/modules/themes"
 	"portfolio-backend/internal/pdf"
 	"portfolio-backend/internal/render"
 	"portfolio-backend/internal/revalidate"
@@ -23,8 +24,6 @@ import (
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
 )
-
-const defaultAccent = "#0E7C66"
 
 type Deps struct {
 	Profile        *profile.Service
@@ -36,6 +35,7 @@ type Deps struct {
 	Files          *files.Service
 	PDF            *pdf.Client
 	Revalidator    *revalidate.Client
+	Themes         *themes.Service
 }
 
 type Service struct {
@@ -48,7 +48,12 @@ func NewService(db *bun.DB, deps Deps) *Service {
 	return &Service{Deps: deps, repo: NewRepository(db), db: db}
 }
 
-func (s *Service) options(req *GenerateRequest) (render.Options, string) {
+// DefaultAccent is the active theme's accent, used when a resume is generated without choosing one.
+func (s *Service) DefaultAccent(ctx context.Context) string {
+	return s.Themes.Active(ctx).Tokens.Light.Accent
+}
+
+func (s *Service) options(ctx context.Context, req *GenerateRequest) (render.Options, string) {
 	opts := render.DefaultOptions()
 	if req.Options != nil {
 		opts = *req.Options
@@ -61,14 +66,14 @@ func (s *Service) options(req *GenerateRequest) (render.Options, string) {
 	}
 	accent := strings.TrimSpace(req.AccentColor)
 	if accent == "" {
-		accent = defaultAccent
+		accent = s.DefaultAccent(ctx)
 	}
 	return opts, accent
 }
 
 // Preview renders the resume HTML without producing a PDF.
 func (s *Service) Preview(ctx context.Context, req *GenerateRequest) (string, error) {
-	opts, accent := s.options(req)
+	opts, accent := s.options(ctx, req)
 	data, err := s.build(ctx, req.Template, accent, opts)
 	if err != nil {
 		return "", err
@@ -78,7 +83,7 @@ func (s *Service) Preview(ctx context.Context, req *GenerateRequest) (string, er
 
 // Generate builds the resume from live data, renders a PDF via Gotenberg and stores it.
 func (s *Service) Generate(ctx context.Context, req *GenerateRequest, actor uuid.UUID) (*ResponseDTO, error) {
-	opts, accent := s.options(req)
+	opts, accent := s.options(ctx, req)
 	data, err := s.build(ctx, req.Template, accent, opts)
 	if err != nil {
 		return nil, err
@@ -111,7 +116,6 @@ func (s *Service) Generate(ctx context.Context, req *GenerateRequest, actor uuid
 	}
 
 	optsJSON, _ := json.Marshal(opts)
-	snapshot, _ := json.Marshal(data)
 	setCurrent := req.SetCurrent == nil || *req.SetCurrent
 	item := &Resume{
 		Template:    req.Template,
@@ -119,7 +123,6 @@ func (s *Service) Generate(ctx context.Context, req *GenerateRequest, actor uuid
 		Label:       strings.TrimSpace(req.Label),
 		AccentColor: accent,
 		Options:     optsJSON,
-		Snapshot:    snapshot,
 		FileID:      file.ID,
 		FileURL:     file.URL,
 		FileSize:    file.Size,

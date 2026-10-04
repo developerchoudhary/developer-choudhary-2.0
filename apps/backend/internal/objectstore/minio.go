@@ -35,10 +35,6 @@ func New() (*Store, error) {
 	return &Store{client: client, bucket: bucket}, nil
 }
 
-func (s *Store) Bucket() string {
-	return s.bucket
-}
-
 func (s *Store) EnsureBucket(ctx context.Context) error {
 	exists, err := s.client.BucketExists(ctx, s.bucket)
 	if err != nil {

@@ -15,7 +15,6 @@ type Repository interface {
 	List(ctx context.Context, publishedOnly bool) ([]*Experience, error)
 	Update(ctx context.Context, item *Experience) error
 	SoftDelete(ctx context.Context, id, deletedBy uuid.UUID) error
-	Reorder(ctx context.Context, ids []uuid.UUID, userID uuid.UUID) error
 }
 
 type repo struct {
@@ -47,14 +46,10 @@ func (r *repo) List(ctx context.Context, publishedOnly bool) ([]*Experience, err
 func (r *repo) Update(ctx context.Context, item *Experience) error {
 	return shared.UpdateColumns(ctx, r.db, item, item.ID, "experience not found",
 		"company", "company_url", "role", "employment_type", "location", "is_remote", "started_at", "ended_at", "is_current",
-		"summary", "responsibilities", "achievements", "technologies", "logo_file_id", "logo_url", "sort_order", "is_published",
+		"summary", "responsibilities", "achievements", "technologies", "sort_order", "is_published",
 		"updated_by", "updated_at")
 }
 
 func (r *repo) SoftDelete(ctx context.Context, id, deletedBy uuid.UUID) error {
 	return shared.SoftDelete[Experience](ctx, r.db, id, deletedBy, "experience not found")
-}
-
-func (r *repo) Reorder(ctx context.Context, ids []uuid.UUID, userID uuid.UUID) error {
-	return shared.Reorder[Experience](ctx, r.db, ids, userID)
 }

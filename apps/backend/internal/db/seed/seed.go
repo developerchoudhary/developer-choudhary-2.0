@@ -2,7 +2,6 @@ package seed
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"log"
 	"time"
@@ -15,9 +14,7 @@ import (
 	"portfolio-backend/internal/modules/profile"
 	"portfolio-backend/internal/modules/projects"
 	"portfolio-backend/internal/modules/services"
-	"portfolio-backend/internal/modules/settings"
 	"portfolio-backend/internal/modules/skills"
-	"portfolio-backend/internal/modules/taglines"
 	"portfolio-backend/internal/modules/users"
 	"portfolio-backend/internal/revalidate"
 	"portfolio-backend/pkg/slug"
@@ -43,8 +40,6 @@ func Run(ctx context.Context, db *bun.DB) error {
 		fn   func() error
 	}{
 		{"profile", func() error { return seedProfile(ctx, db, rv, actor) }},
-		{"settings", func() error { return seedSettings(ctx, db, rv, actor) }},
-		{"taglines", func() error { return seedTaglines(ctx, db, rv, actor) }},
 		{"services", func() error { return seedServices(ctx, db, rv, actor) }},
 		{"skills", func() error { return seedSkills(ctx, db, rv, actor) }},
 		{"experience", func() error { return seedExperience(ctx, db, rv, actor) }},
@@ -96,45 +91,6 @@ func seedProfile(ctx context.Context, db *bun.DB, rv *revalidate.Client, actor u
 	}
 	_, err = svc.Update(ctx, &profileData, actor)
 	return err
-}
-
-func seedSettings(ctx context.Context, db *bun.DB, rv *revalidate.Client, actor uuid.UUID) error {
-	repo := settings.NewRepository(db)
-	existing, err := repo.List(ctx, false)
-	if err != nil {
-		return err
-	}
-	have := map[string]bool{}
-	for _, s := range existing {
-		have[s.Key] = true
-	}
-	items := make([]*settings.Setting, 0)
-	for _, d := range settingsData {
-		if have[d.key] {
-			continue
-		}
-		raw, err := json.Marshal(d.value)
-		if err != nil {
-			return err
-		}
-		items = append(items, &settings.Setting{Key: d.key, Value: raw, IsPublic: d.public, Description: d.description, UpdatedBy: &actor})
-	}
-	return repo.Upsert(ctx, items)
-}
-
-func seedTaglines(ctx context.Context, db *bun.DB, rv *revalidate.Client, actor uuid.UUID) error {
-	ok, err := empty[taglines.Tagline](ctx, db)
-	if err != nil || !ok {
-		return err
-	}
-	svc := taglines.NewService(taglines.NewRepository(db), db, rv)
-	for i := range taglineData {
-		taglineData[i].SortOrder = i
-		if _, err := svc.Create(ctx, &taglineData[i], actor); err != nil {
-			return err
-		}
-	}
-	return nil
 }
 
 func seedServices(ctx context.Context, db *bun.DB, rv *revalidate.Client, actor uuid.UUID) error {

@@ -56,13 +56,6 @@ func Conflict(msg string) *AppError {
 	}
 }
 
-func TooManyRequests(msg string) *AppError {
-	return &AppError{
-		StatusCode: http.StatusTooManyRequests,
-		Message:    msg,
-	}
-}
-
 func Unavailable(msg string) *AppError {
 	return &AppError{
 		StatusCode: http.StatusServiceUnavailable,
@@ -120,14 +113,6 @@ func WriteBadRequest(c *gin.Context, err error) {
 	c.JSON(http.StatusBadRequest, gin.H{
 		"success": false,
 		"message": "Bad request",
-		"error":   err.Error(),
-	})
-}
-
-func WriteNotFound(c *gin.Context, err error) {
-	c.JSON(http.StatusNotFound, gin.H{
-		"success": false,
-		"message": "Not found",
 		"error":   err.Error(),
 	})
 }

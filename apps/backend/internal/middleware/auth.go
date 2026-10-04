@@ -45,29 +45,7 @@ func AuthMiddleware() gin.HandlerFunc {
 		c.Set("user_id", tokenInfo.UserID)
 		c.Set("session_id", tokenInfo.SessionID)
 		c.Set(ContextKeyAuth, auth)
-		c.Request = c.Request.WithContext(authz.WithContext(c.Request.Context(), auth))
 
-		c.Next()
-	}
-}
-
-// OptionalAuth attaches the auth context when a valid token is present but never rejects.
-func OptionalAuth() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		tokenString := ExtractBearerToken(c)
-		if tokenString != "" {
-			if tokenInfo, err := utils.ValidateToken(tokenString); err == nil {
-				auth := &authz.AuthContext{
-					UserID:      tokenInfo.UserID,
-					SessionID:   tokenInfo.SessionID,
-					Role:        tokenInfo.Role,
-					Permissions: tokenInfo.Permissions,
-				}
-				c.Set("user_id", tokenInfo.UserID)
-				c.Set(ContextKeyAuth, auth)
-				c.Request = c.Request.WithContext(authz.WithContext(c.Request.Context(), auth))
-			}
-		}
 		c.Next()
 	}
 }

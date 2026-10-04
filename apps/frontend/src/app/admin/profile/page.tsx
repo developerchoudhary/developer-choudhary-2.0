@@ -46,8 +46,11 @@ export default function ProfilePage() {
           <Field label="Full name" required>
             <Input {...register("fullName", { required: true })} />
           </Field>
-          <Field label="Headline" hint={`${watch("headline")?.length ?? 0}/200`}>
-            <Input {...register("headline")} />
+          <Field
+            label="Headline"
+            hint={`your role, shown under your name · ${watch("headline")?.length ?? 0}/60`}
+          >
+            <Input maxLength={60} placeholder="Full-stack developer" {...register("headline")} />
           </Field>
           <Controller
             control={control}
@@ -55,6 +58,7 @@ export default function ProfilePage() {
             render={({ field }) => (
               <ImagePicker
                 label="Profile photo"
+                hint="4:5 portrait · home and About pages"
                 value={
                   field.value
                     ? { fileId: watch("avatarFileId") ?? "", url: field.value, alt: watch("fullName") ?? "" }
@@ -67,7 +71,7 @@ export default function ProfilePage() {
               />
             )}
           />
-          <Field label="Short bio" hint="hero and cards">
+          <Field label="Short bio" hint="one or two sentences under your name on the home page">
             <Textarea rows={3} {...register("bioShort")} />
           </Field>
           <Field label="Long bio" hint="about page · blank line between paragraphs">

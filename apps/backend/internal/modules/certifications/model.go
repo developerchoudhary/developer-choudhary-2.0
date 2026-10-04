@@ -16,8 +16,6 @@ type Certification struct {
 	Name          string     `bun:"name,notnull"`
 	Issuer        string     `bun:"issuer"`
 	IssuedAt      *time.Time `bun:"issued_at"`
-	ExpiresAt     *time.Time `bun:"expires_at"`
-	CredentialID  string     `bun:"credential_id"`
 	CredentialURL string     `bun:"credential_url"`
 	SortOrder     int        `bun:"sort_order"`
 	IsPublished   bool       `bun:"is_published"`

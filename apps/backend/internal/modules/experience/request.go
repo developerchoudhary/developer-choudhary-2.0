@@ -1,7 +1,5 @@
 package experience
 
-import "github.com/google/uuid"
-
 type RequestDTO struct {
 	Company          string   `json:"company" binding:"required,min=2,max=120"`
 	CompanyURL       string   `json:"companyUrl" binding:"omitempty,url,max=300"`
@@ -16,12 +14,6 @@ type RequestDTO struct {
 	Responsibilities []string `json:"responsibilities" binding:"max=30,dive,max=500"`
 	Achievements     []string `json:"achievements" binding:"max=30,dive,max=500"`
 	Technologies     []string `json:"technologies" binding:"max=40,dive,max=60"`
-	LogoFileID       *string  `json:"logoFileId"`
-	LogoURL          string   `json:"logoUrl" binding:"max=500"`
 	SortOrder        int      `json:"sortOrder"`
 	IsPublished      *bool    `json:"isPublished"`
-}
-
-type ReorderRequest struct {
-	IDs []uuid.UUID `json:"ids" binding:"required,min=1"`
 }

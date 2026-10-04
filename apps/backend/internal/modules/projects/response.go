@@ -103,3 +103,13 @@ func orEmpty(v []string) []string {
 	}
 	return v
 }
+
+type FacetCount struct {
+	Value string `json:"value" bun:"value"`
+	Count int    `json:"count" bun:"count"`
+}
+
+// FacetsDTO powers the filter tabs on the public work page.
+type FacetsDTO struct {
+	Types []FacetCount `json:"types"`
+}

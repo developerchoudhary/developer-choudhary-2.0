@@ -91,14 +91,6 @@ func (s *Service) Delete(ctx context.Context, id uuid.UUID, actor uuid.UUID) err
 	return nil
 }
 
-func (s *Service) Reorder(ctx context.Context, ids []uuid.UUID, actor uuid.UUID) error {
-	if err := s.repo.Reorder(ctx, ids, actor); err != nil {
-		return err
-	}
-	s.reval.Async("experience", "site")
-	return nil
-}
-
 func apply(item *Experience, req *RequestDTO) error {
 	started, err := dateparse.ParseDate(req.StartedAt)
 	if err != nil {
@@ -129,8 +121,6 @@ func apply(item *Experience, req *RequestDTO) error {
 	item.Responsibilities = cleanList(req.Responsibilities)
 	item.Achievements = cleanList(req.Achievements)
 	item.Technologies = cleanList(req.Technologies)
-	item.LogoFileID = req.LogoFileID
-	item.LogoURL = strings.TrimSpace(req.LogoURL)
 	item.SortOrder = req.SortOrder
 	if req.IsPublished != nil {
 		item.IsPublished = *req.IsPublished

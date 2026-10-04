@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowUpRight, Menu, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -8,103 +8,91 @@ import { NAV } from "@/lib/site";
 import { cn } from "@/lib/utils";
 import { Logo } from "./logo";
 import { ThemeToggle } from "./theme-toggle";
+import { buttonClass } from "./ui";
 
-interface HeaderProps {
-  availability: "available" | "limited" | "unavailable";
-  showBlog: boolean;
-}
-
-const availabilityLabel = {
-  available: "Available for projects",
-  limited: "Limited availability",
-  unavailable: "Fully booked",
-};
-
-export function Header({ availability, showBlog }: HeaderProps) {
+export function Header({ siteName, showBlog }: { siteName: string; showBlog: boolean }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8);
+    const onScroll = () => setScrolled(window.scrollY > 4);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Close the mobile menu on navigation and on Escape; lock page scroll while it is open.
   useEffect(() => {
     if (pathname) setOpen(false);
   }, [pathname]);
-
   useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "";
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    document.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
     return () => {
+      document.removeEventListener("keydown", onKey);
       document.body.style.overflow = "";
     };
   }, [open]);
 
-  const items = NAV.filter((n) => (n.href === "/blog" ? showBlog : true));
+  const items = NAV.filter((n) => n.href !== "/blog" || showBlog);
   const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
 
   return (
     <header className="sticky top-0 z-50">
+      {/* The blur lives on this bar, not the header: backdrop-filter would trap the fixed menu panel. */}
       <div
         className={cn(
-          "transition-all duration-300",
-          scrolled || open ? "border-b border-line bg-bg/80 backdrop-blur-xl" : "bg-transparent",
+          "border-b transition-[background-color,border-color] duration-300",
+          open
+            ? "border-line bg-bg"
+            : scrolled
+              ? "border-line bg-bg/80 backdrop-blur-lg"
+              : "border-transparent",
         )}
       >
-        <div className="container-dc flex h-16 items-center justify-between gap-4 sm:h-[72px]">
-          <Logo />
+        <div className="container-dc flex h-16 items-center justify-between gap-6">
+          <Logo name={siteName} />
 
-          <nav
-            className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-1 rounded-full border border-line bg-bg-elevated/70 p-1 backdrop-blur md:flex"
-            aria-label="Main"
-          >
+          <nav className="hidden items-center gap-1 md:flex" aria-label="Main">
             {items.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
+                aria-current={isActive(item.href) ? "page" : undefined}
                 className={cn(
-                  "rounded-full px-3.5 py-1.5 text-sm transition-colors",
-                  isActive(item.href) ? "bg-fg text-bg" : "text-fg-muted hover:bg-bg-muted hover:text-fg",
+                  "relative rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                  isActive(item.href) ? "text-fg" : "text-fg-muted hover:text-fg",
                 )}
               >
                 {item.label}
+                <span
+                  className={cn(
+                    "absolute inset-x-3 -bottom-[13px] h-0.5 rounded-full bg-accent transition-opacity",
+                    isActive(item.href) ? "opacity-100" : "opacity-0",
+                  )}
+                  aria-hidden="true"
+                />
               </Link>
             ))}
           </nav>
 
-          <div className="flex items-center gap-2">
-            <span className="hidden items-center gap-2 rounded-full border border-line px-3 py-1.5 text-xs text-fg-muted lg:inline-flex">
-              <span
-                className={cn(
-                  "size-1.5 rounded-full",
-                  availability === "available"
-                    ? "bg-success animate-pulse-soft"
-                    : availability === "limited"
-                      ? "bg-warning"
-                      : "bg-danger",
-                )}
-              />
-              {availabilityLabel[availability]}
-            </span>
+          <div className="flex items-center gap-1.5">
             <ThemeToggle />
-            <Link
-              href="/contact"
-              className="hidden h-9 items-center gap-1.5 rounded-full bg-fg px-4 text-sm font-medium text-bg transition hover:bg-fg/90 sm:inline-flex"
-            >
-              Let&apos;s talk <ArrowUpRight className="size-4" />
+            <Link href="/contact" className={buttonClass("primary", "md", "ml-1 h-9 max-md:hidden")}>
+              Contact
             </Link>
             <button
               type="button"
-              className="inline-flex size-9 items-center justify-center rounded-full border border-line text-fg md:hidden"
+              className="inline-flex size-9 items-center justify-center rounded-full text-fg transition hover:bg-bg-muted md:hidden"
               onClick={() => setOpen((v) => !v)}
               aria-expanded={open}
               aria-controls="mobile-menu"
               aria-label={open ? "Close menu" : "Open menu"}
             >
-              {open ? <X className="size-4" /> : <Menu className="size-4" />}
+              {open ? <X className="size-5" /> : <Menu className="size-5" />}
             </button>
           </div>
         </div>
@@ -113,45 +101,23 @@ export function Header({ availability, showBlog }: HeaderProps) {
       {open && (
         <div
           id="mobile-menu"
-          className="fixed inset-x-0 top-16 bottom-0 z-40 flex flex-col bg-bg/95 backdrop-blur-xl md:hidden"
+          className="fixed inset-x-0 top-16 bottom-0 z-40 overflow-y-auto border-t border-line bg-bg md:hidden"
         >
-          <nav className="container-dc flex flex-1 flex-col justify-center gap-1 py-6" aria-label="Mobile">
-            {items.map((item, i) => (
+          <nav className="container-dc flex flex-col py-4" aria-label="Mobile">
+            {[...items, { href: "/contact", label: "Contact" }].map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                style={{ animationDelay: `${i * 40}ms` }}
+                aria-current={isActive(item.href) ? "page" : undefined}
                 className={cn(
-                  "display flex items-center justify-between rounded-2xl px-4 py-3 text-4xl",
-                  isActive(item.href) ? "text-fg" : "text-fg-muted",
+                  "flex items-center justify-between border-b border-line py-4 text-2xl font-semibold tracking-tight",
+                  isActive(item.href) ? "text-accent" : "text-fg",
                 )}
               >
                 {item.label}
-                <ArrowUpRight className="size-6 text-fg-subtle" />
               </Link>
             ))}
           </nav>
-          <div className="container-dc space-y-3 border-t border-line py-6">
-            <span className="inline-flex items-center gap-2 text-sm text-fg-muted">
-              <span
-                className={cn(
-                  "size-2 rounded-full",
-                  availability === "available"
-                    ? "bg-success animate-pulse-soft"
-                    : availability === "limited"
-                      ? "bg-warning"
-                      : "bg-danger",
-                )}
-              />
-              {availabilityLabel[availability]}
-            </span>
-            <Link
-              href="/contact"
-              className="flex h-12 items-center justify-center gap-2 rounded-xl bg-accent text-sm font-medium text-accent-fg"
-            >
-              Start a project <ArrowUpRight className="size-4" />
-            </Link>
-          </div>
         </div>
       )}
     </header>

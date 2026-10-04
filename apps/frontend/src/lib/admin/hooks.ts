@@ -88,7 +88,3 @@ export function useRemove(path: string, invalidate: string[] = []) {
     success: "Deleted",
   });
 }
-
-export function useReorder(path: string) {
-  return useAction((ids: string[]) => admin.post(`${path}/reorder`, { ids }), { invalidate: [path] });
-}

@@ -17,9 +17,7 @@ type SubmitRequest struct {
 	Email           string            `json:"email" binding:"omitempty,email,max=200"`
 	Phone           string            `json:"phone" binding:"max=40"`
 	Company         string            `json:"company" binding:"max=120"`
-	Website         string            `json:"website" binding:"max=300"`
 	ServiceInterest string            `json:"serviceInterest" binding:"max=120"`
-	ProjectType     string            `json:"projectType" binding:"max=60"`
 	BudgetRange     string            `json:"budgetRange" binding:"max=60"`
 	Timeline        string            `json:"timeline" binding:"max=60"`
 	Message         string            `json:"message" binding:"required,min=10,max=4000"`

@@ -1,7 +1,6 @@
 package authz
 
 import (
-	"context"
 	"errors"
 	"strings"
 )
@@ -16,30 +15,11 @@ const (
 
 var ErrAccessDenied = errors.New("access denied")
 
-type contextKey struct{}
-
 type AuthContext struct {
 	UserID      string
 	SessionID   string
 	Role        string
 	Permissions []string
-}
-
-func WithContext(ctx context.Context, auth *AuthContext) context.Context {
-	return context.WithValue(ctx, contextKey{}, auth)
-}
-
-func FromContext(ctx context.Context) (*AuthContext, bool) {
-	auth, ok := ctx.Value(contextKey{}).(*AuthContext)
-	return auth, ok && auth != nil
-}
-
-func MustFromContext(ctx context.Context) (*AuthContext, error) {
-	auth, ok := FromContext(ctx)
-	if !ok {
-		return nil, ErrAccessDenied
-	}
-	return auth, nil
 }
 
 // PermissionsForRole returns the permission set granted to a role.
@@ -79,29 +59,4 @@ func AssertPermission(auth *AuthContext, key string) error {
 		return ErrAccessDenied
 	}
 	return nil
-}
-
-func AssertAnyPermission(auth *AuthContext, keys ...string) error {
-	for _, k := range keys {
-		if HasPermission(auth, k) {
-			return nil
-		}
-	}
-	return ErrAccessDenied
-}
-
-func RequirePermission(ctx context.Context, key string) error {
-	auth, err := MustFromContext(ctx)
-	if err != nil {
-		return err
-	}
-	return AssertPermission(auth, key)
-}
-
-func RequireAnyPermission(ctx context.Context, keys ...string) error {
-	auth, err := MustFromContext(ctx)
-	if err != nil {
-		return err
-	}
-	return AssertAnyPermission(auth, keys...)
 }

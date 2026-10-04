@@ -127,21 +127,3 @@ func UniqueSlug[T any](ctx context.Context, db bun.IDB, base string, excludeID u
 	}
 	return "", httputil.Conflict("could not allocate a unique slug")
 }
-
-// Reorder updates sort_order for the given ordered ids in one transaction.
-func Reorder[T any](ctx context.Context, db *bun.DB, ids []uuid.UUID, userID uuid.UUID) error {
-	return db.RunInTx(ctx, nil, func(ctx context.Context, tx bun.Tx) error {
-		for i, id := range ids {
-			if _, err := tx.NewUpdate().Model((*T)(nil)).
-				Set("sort_order = ?", i).
-				Set("updated_at = ?", time.Now().UTC()).
-				Set("updated_by = ?", userID).
-				Where("?TableAlias.id = ?", id).
-				Where("?TableAlias.deleted_at IS NULL").
-				Exec(ctx); err != nil {
-				return err
-			}
-		}
-		return nil
-	})
-}

@@ -71,19 +71,6 @@ func (o Options) formFields() map[string]string {
 	}
 }
 
-func (c *Client) Healthy(ctx context.Context) bool {
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, c.baseURL+"/health", nil)
-	if err != nil {
-		return false
-	}
-	resp, err := c.httpClient.Do(req)
-	if err != nil {
-		return false
-	}
-	defer resp.Body.Close()
-	return resp.StatusCode >= 200 && resp.StatusCode < 300
-}
-
 func (c *Client) HTMLToPDF(ctx context.Context, html string, headerHTML, footerHTML string, opts Options) ([]byte, error) {
 	var body bytes.Buffer
 	writer := multipart.NewWriter(&body)

@@ -17,12 +17,3 @@ func TestMake(t *testing.T) {
 		}
 	}
 }
-
-func TestIsValid(t *testing.T) {
-	if !IsValid("a-valid-slug-1") {
-		t.Fatal("expected valid")
-	}
-	if IsValid("Not Valid") || IsValid("-leading") || IsValid("") {
-		t.Fatal("expected invalid")
-	}
-}

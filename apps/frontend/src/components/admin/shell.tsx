@@ -15,7 +15,7 @@ import {
   LogOut,
   MessageSquareQuote,
   Newspaper,
-  Quote,
+  Palette,
   Settings,
   Sparkles,
   UserCircle,
@@ -56,7 +56,6 @@ export const ADMIN_NAV = [
     title: "Profile",
     items: [
       { href: "/admin/profile", label: "Profile", icon: UserCircle, perm: "content:write" },
-      { href: "/admin/taglines", label: "Taglines", icon: Quote, perm: "content:write" },
       { href: "/admin/skills", label: "Skills", icon: Wrench, perm: "content:write" },
       { href: "/admin/experience", label: "Experience", icon: Briefcase, perm: "content:write" },
       { href: "/admin/education", label: "Education", icon: GraduationCap, perm: "content:write" },
@@ -68,6 +67,7 @@ export const ADMIN_NAV = [
     title: "System",
     items: [
       { href: "/admin/settings", label: "Settings", icon: Settings, perm: "settings:write" },
+      { href: "/admin/theme", label: "Theme", icon: Palette, perm: "settings:write" },
       { href: "/admin/users", label: "Account & users", icon: Users, perm: "users:write" },
     ],
   },

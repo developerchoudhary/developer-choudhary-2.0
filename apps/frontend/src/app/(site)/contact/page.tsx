@@ -1,29 +1,34 @@
-import { Clock, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
+import { CalendarDays, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
+import type { Metadata } from "next";
+import type { ReactNode } from "react";
 import { Suspense } from "react";
 import { ContactForm } from "@/components/site/contact-form";
 import { JsonLd } from "@/components/site/json-ld";
-import { Reveal } from "@/components/site/reveal";
-import { PageHero } from "@/components/site/section";
-import { getServices, getSite, setting } from "@/lib/data";
+import { LocalTime } from "@/components/site/local-time";
+import { SocialLinks } from "@/components/site/social-icon";
+import { ButtonLink } from "@/components/site/ui";
+import { getServices, getSite } from "@/lib/data";
 import { breadcrumbJsonLd, pageMetadata } from "@/lib/seo";
+import { siteSettings } from "@/lib/site";
 
-export const metadata = pageMetadata({
-  title: "Contact · Start a project",
-  description:
-    "Tell me about your website, ERP, CRM or web app. I reply personally within one working day with next steps and a rough estimate.",
-  path: "/contact",
-});
+export function generateMetadata(): Promise<Metadata> {
+  return pageMetadata({
+    title: "Contact",
+    description:
+      "Tell me about your website, ERP, CRM or web app. I reply personally with next steps and a rough estimate.",
+    path: "/contact",
+  });
+}
+
+const delay = (ms: number) => ({ "--delay": `${ms}ms` }) as React.CSSProperties;
 
 export default async function ContactPage() {
   const [site, services] = await Promise.all([getSite(), getServices()]);
   const { profile } = site;
-  const responseTime = setting(site, "contact.responseTime", "within one working day");
-  const calendar = setting(site, "contact.calendarUrl", "");
-  const steps = [
-    "You send a few lines about the project.",
-    `I reply ${responseTime} with questions and a rough estimate.`,
-    "We hop on a call, then you get a written scope and fixed quote.",
-  ];
+  const settings = siteSettings(site);
+  const place = [profile.locationCity, profile.locationRegion, profile.locationCountry]
+    .filter(Boolean)
+    .join(", ");
 
   return (
     <>
@@ -33,114 +38,107 @@ export default async function ContactPage() {
           { name: "Contact", path: "/contact" },
         ])}
       />
-      <PageHero
-        eyebrow="Contact"
-        title={
-          <>
-            Let&apos;s build something <span className="text-accent">that lasts.</span>
-          </>
-        }
-        lede="Tell me what you are trying to achieve. No forms disappearing into a void: a real person replies."
-      />
-      <section className="container-dc grid gap-10 pb-16 lg:grid-cols-[0.75fr_1.25fr]">
-        <Reveal className="space-y-6 lg:sticky lg:top-24 lg:self-start">
-          <div className="card divide-y divide-line">
+      <section className="container-dc grid gap-12 pt-12 pb-16 sm:pt-20 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-16">
+        <div>
+          <h1 className="display rise text-balance text-[2.5rem] sm:text-[3.25rem]">
+            Let&apos;s work together
+          </h1>
+          <p
+            className="rise mt-5 max-w-md text-pretty text-lg leading-relaxed text-fg-muted"
+            style={delay(80)}
+          >
+            Tell me about your project. A real person reads every message and replies {settings.responseTime}.
+          </p>
+          <ul className="rise mt-10 space-y-6" style={delay(140)}>
             {profile.email && (
-              <ContactRow
-                icon={<Mail className="size-4" />}
+              <ContactItem
+                icon={<Mail className="size-[1.1rem]" />}
                 label="Email"
                 href={`mailto:${profile.email}`}
-                value={profile.email}
-              />
+              >
+                {profile.email}
+              </ContactItem>
             )}
             {profile.whatsapp && (
-              <ContactRow
-                icon={<MessageCircle className="size-4" />}
+              <ContactItem
+                icon={<MessageCircle className="size-[1.1rem]" />}
                 label="WhatsApp"
                 href={`https://wa.me/${profile.whatsapp}`}
-                value="Chat on WhatsApp"
-                external
-              />
+              >
+                Chat on WhatsApp
+              </ContactItem>
             )}
             {profile.phone && (
-              <ContactRow
-                icon={<Phone className="size-4" />}
+              <ContactItem
+                icon={<Phone className="size-[1.1rem]" />}
                 label="Phone"
                 href={`tel:${profile.phone.replace(/\s+/g, "")}`}
-                value={profile.phone}
-              />
+              >
+                {profile.phone}
+              </ContactItem>
             )}
-            <ContactRow
-              icon={<MapPin className="size-4" />}
-              label="Based in"
-              value={`${[profile.locationCity, profile.locationRegion, profile.locationCountry].filter(Boolean).join(", ")} · remote worldwide`}
-            />
-            <ContactRow icon={<Clock className="size-4" />} label="Response time" value={responseTime} />
-          </div>
-          {calendar && (
-            <a
-              href={calendar}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex h-12 items-center justify-center rounded-xl border border-line-strong text-sm font-medium transition hover:bg-bg-muted"
-            >
-              Book a 20-minute call
-            </a>
+            {place && (
+              <ContactItem icon={<MapPin className="size-[1.1rem]" />} label="Location">
+                {place}
+                <span className="mt-0.5 block text-sm font-normal text-fg-subtle">
+                  Local time <LocalTime timezone={profile.timezone} /> · working with clients worldwide
+                </span>
+              </ContactItem>
+            )}
+          </ul>
+          {settings.calendarUrl && (
+            <ButtonLink href={settings.calendarUrl} variant="secondary" className="mt-10">
+              <CalendarDays className="size-[1.1rem]" /> Book a call
+            </ButtonLink>
           )}
-          <ol className="card space-y-3 p-6 text-sm">
-            <p className="eyebrow mb-1">What happens next</p>
-            {steps.map((s, i) => (
-              <li key={s} className="flex gap-3 text-fg-muted">
-                <span className="font-mono text-xs text-accent">0{i + 1}</span>
-                {s}
-              </li>
-            ))}
-          </ol>
-        </Reveal>
-        <Reveal delay={0.1}>
-          <Suspense fallback={<div className="card h-[560px] animate-pulse" />}>
-            <ContactForm services={services} whatsapp={profile.whatsapp} />
+          {profile.socials.length > 0 && <SocialLinks links={profile.socials} className="-ml-2 mt-8" />}
+        </div>
+        <div className="rise" style={delay(120)}>
+          <Suspense fallback={<div className="card h-[620px]" />}>
+            <ContactForm
+              services={services}
+              whatsapp={profile.whatsapp}
+              responseTime={settings.responseTime}
+            />
           </Suspense>
-        </Reveal>
+        </div>
       </section>
     </>
   );
 }
 
-function ContactRow({
+function ContactItem({
   icon,
   label,
-  value,
   href,
-  external,
+  children,
 }: {
-  icon: React.ReactNode;
+  icon: ReactNode;
   label: string;
-  value: string;
   href?: string;
-  external?: boolean;
+  children: ReactNode;
 }) {
-  const inner = (
-    <>
-      <span className="inline-flex size-9 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent">
+  const external = href?.startsWith("http");
+  return (
+    <li className="flex gap-4">
+      <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-xl bg-accent-soft text-accent">
         {icon}
       </span>
-      <span className="min-w-0">
-        <span className="eyebrow block">{label}</span>
-        <span className="mt-0.5 block truncate text-sm font-medium text-fg">{value}</span>
-      </span>
-    </>
-  );
-  return href ? (
-    <a
-      href={href}
-      target={external ? "_blank" : undefined}
-      rel={external ? "noopener noreferrer" : undefined}
-      className="flex items-center gap-4 p-4 transition hover:bg-bg-muted/50"
-    >
-      {inner}
-    </a>
-  ) : (
-    <div className="flex items-center gap-4 p-4">{inner}</div>
+      <div className="min-w-0">
+        <p className="text-sm text-fg-subtle">{label}</p>
+        {href ? (
+          <a
+            href={href}
+            target={external ? "_blank" : undefined}
+            rel={external ? "noopener noreferrer" : undefined}
+            className="font-medium break-words text-fg transition-colors hover:text-accent"
+          >
+            {children}
+          </a>
+        ) : (
+          <div className="font-medium text-fg">{children}</div>
+        )}
+      </div>
+    </li>
   );
 }

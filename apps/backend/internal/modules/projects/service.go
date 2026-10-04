@@ -56,6 +56,14 @@ func (s *Service) Featured(ctx context.Context, limit int) ([]*ResponseDTO, erro
 	return ToListResponse(items), nil
 }
 
+func (s *Service) Facets(ctx context.Context) (*FacetsDTO, error) {
+	types, err := s.repo.TypeCounts(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return &FacetsDTO{Types: types}, nil
+}
+
 func (s *Service) PublishedModels(ctx context.Context, featuredOnly bool, limit int) ([]*Project, error) {
 	return s.repo.ListPublished(ctx, featuredOnly, limit)
 }
@@ -117,14 +125,6 @@ func (s *Service) Delete(ctx context.Context, id uuid.UUID, actor uuid.UUID) err
 	}
 	audit.Try(ctx, s.db, audit.ActionDelete, "project", id, nil)
 	s.reval.Async("projects", "site", "sitemap", "resume")
-	return nil
-}
-
-func (s *Service) Reorder(ctx context.Context, ids []uuid.UUID, actor uuid.UUID) error {
-	if err := s.repo.Reorder(ctx, ids, actor); err != nil {
-		return err
-	}
-	s.reval.Async("projects", "site")
 	return nil
 }
 

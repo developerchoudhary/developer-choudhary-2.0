@@ -1,5 +1,5 @@
 import { getPosts, getSite } from "@/lib/data";
-import { SITE_NAME, SITE_URL } from "@/lib/site";
+import { SITE_URL, siteSettings } from "@/lib/site";
 
 export const dynamic = "force-dynamic";
 
@@ -11,6 +11,8 @@ const xmlEscape = (s: string) =>
 
 export async function GET() {
   const [site, posts] = await Promise.all([getSite(), getPosts(1).catch(() => ({ items: [] }))]);
+  const settings = siteSettings(site);
+  if (!settings.showBlog) return new Response("Not found", { status: 404 });
   const items = posts.items
     .map(
       (p) => `<item>
@@ -25,10 +27,10 @@ export async function GET() {
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 <channel>
-  <title>${xmlEscape(SITE_NAME)} · Blog</title>
+  <title>${xmlEscape(settings.name)} · Blog</title>
   <link>${SITE_URL}/blog</link>
   <atom:link href="${SITE_URL}/feed.xml" rel="self" type="application/rss+xml"/>
-  <description>${xmlEscape(site.profile.headline)}</description>
+  <description>${xmlEscape(`Articles by ${site.profile.fullName}, ${site.profile.headline}`)}</description>
   <language>en</language>
   <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
 ${items}

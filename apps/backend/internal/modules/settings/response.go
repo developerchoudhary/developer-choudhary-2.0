@@ -1,41 +1,17 @@
 package settings
 
-import (
-	"encoding/json"
-	"time"
-)
+import "encoding/json"
 
-type ResponseDTO struct {
-	Key         string          `json:"key"`
-	Value       json.RawMessage `json:"value"`
-	IsPublic    bool            `json:"isPublic"`
-	Description string          `json:"description"`
-	UpdatedAt   string          `json:"updatedAt"`
+// FieldDTO is one setting with its definition and current value, for the admin form.
+type FieldDTO struct {
+	Definition
+	Value     json.RawMessage `json:"value"`
+	UpdatedAt *string         `json:"updatedAt"`
 }
 
-func ToResponse(s *Setting) *ResponseDTO {
-	return &ResponseDTO{
-		Key:         s.Key,
-		Value:       s.Value,
-		IsPublic:    s.IsPublic,
-		Description: s.Description,
-		UpdatedAt:   s.UpdatedAt.UTC().Format(time.RFC3339),
-	}
-}
-
-func ToListResponse(items []*Setting) []*ResponseDTO {
-	out := make([]*ResponseDTO, 0, len(items))
-	for _, it := range items {
-		out = append(out, ToResponse(it))
-	}
-	return out
-}
-
-// ToMap flattens settings into {key: value} for the public site bundle.
-func ToMap(items []*Setting) map[string]json.RawMessage {
-	out := make(map[string]json.RawMessage, len(items))
-	for _, it := range items {
-		out[it.Key] = it.Value
-	}
-	return out
+type GroupDTO struct {
+	Key         string     `json:"key"`
+	Label       string     `json:"label"`
+	Description string     `json:"description"`
+	Items       []FieldDTO `json:"items"`
 }

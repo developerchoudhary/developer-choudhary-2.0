@@ -69,8 +69,6 @@ export default function LeadDetail() {
                 ["Budget", lead.budgetRange],
                 ["Timeline", lead.timeline],
                 ["Company", lead.company],
-                ["Website", lead.website],
-                ["Project type", lead.projectType],
               ]
                 .filter(([, v]) => v)
                 .map(([k, v]) => (
@@ -145,6 +143,7 @@ export default function LeadDetail() {
               <StatusBadge value={lead.status} />
               {lead.contactedAt && <span>contacted {formatDate(lead.contactedAt)}</span>}
               {lead.closedAt && <span>· closed {formatDate(lead.closedAt)}</span>}
+              {lead.notifiedAt && <span>· email alert queued {formatDate(lead.notifiedAt)}</span>}
             </div>
           </section>
           <section className="card p-6">
@@ -180,6 +179,9 @@ export default function LeadDetail() {
                 {[lead.city, lead.region, lead.country].filter(Boolean).join(", ") || "Not shared"}
                 {lead.consentLocation && <span className="text-xs text-success">· consented</span>}
               </p>
+              {lead.locationAccuracy != null && (
+                <p>Accuracy: within {Math.round(lead.locationAccuracy).toLocaleString("en-IN")} m</p>
+              )}
               {lead.timezone && <p>Timezone: {lead.timezone}</p>}
               {maps && (
                 <a

@@ -14,7 +14,6 @@ type Repository interface {
 	MarkSent(ctx context.Context, id uuid.UUID) error
 	MarkFailed(ctx context.Context, item *Outbox, errMsg string) error
 	Stats(ctx context.Context) (*StatsDTO, error)
-	Retry(ctx context.Context, id uuid.UUID) error
 }
 
 type repo struct {
@@ -86,16 +85,6 @@ func (r *repo) MarkFailed(ctx context.Context, item *Outbox, errMsg string) erro
 		Set("next_attempt_at = ?", time.Now().UTC().Add(backoff)).
 		Set("updated_at = ?", time.Now().UTC()).
 		Where("id = ?", item.ID).
-		Exec(ctx)
-	return err
-}
-
-func (r *repo) Retry(ctx context.Context, id uuid.UUID) error {
-	_, err := r.db.NewUpdate().Model((*Outbox)(nil)).
-		Set("status = ?", StatusPending).
-		Set("attempts = 0").
-		Set("next_attempt_at = ?", time.Now().UTC()).
-		Where("id = ?", id).
 		Exec(ctx)
 	return err
 }

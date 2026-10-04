@@ -52,18 +52,3 @@ func Try(ctx context.Context, db bun.IDB, action Action, entityName string, enti
 		log.Printf("audit: failed to record %s on %s/%s: %v", action, entityName, entityID, err)
 	}
 }
-
-// RecordCreate logs a CREATE operation.
-func RecordCreate(ctx context.Context, db bun.IDB, entityName string, entityID uuid.UUID, payload any) error {
-	return Record(ctx, db, ActionCreate, entityName, entityID, payload)
-}
-
-// RecordUpdate logs an UPDATE operation.
-func RecordUpdate(ctx context.Context, db bun.IDB, entityName string, entityID uuid.UUID, payload any) error {
-	return Record(ctx, db, ActionUpdate, entityName, entityID, payload)
-}
-
-// RecordDelete logs a DELETE operation.
-func RecordDelete(ctx context.Context, db bun.IDB, entityName string, entityID uuid.UUID, payload any) error {
-	return Record(ctx, db, ActionDelete, entityName, entityID, payload)
-}

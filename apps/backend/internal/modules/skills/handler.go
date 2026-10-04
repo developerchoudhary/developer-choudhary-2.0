@@ -26,15 +26,6 @@ func (h *Handler) List(c *gin.Context) {
 	httputil.WriteSuccess(c, http.StatusOK, "Skills fetched successfully", items)
 }
 
-func (h *Handler) PublicGroups(c *gin.Context) {
-	items, err := h.service.PublicGroups(c.Request.Context())
-	if err != nil {
-		httputil.WriteError(c, err)
-		return
-	}
-	httputil.WriteSuccess(c, http.StatusOK, "Skills fetched successfully", items)
-}
-
 func (h *Handler) Create(c *gin.Context) {
 	actor, err := uuid.Parse(c.GetString("user_id"))
 	if err != nil {
@@ -94,22 +85,4 @@ func (h *Handler) Delete(c *gin.Context) {
 		return
 	}
 	httputil.WriteSuccess(c, http.StatusOK, "Skill deleted successfully", nil)
-}
-
-func (h *Handler) Reorder(c *gin.Context) {
-	actor, err := uuid.Parse(c.GetString("user_id"))
-	if err != nil {
-		httputil.WriteBadRequest(c, err)
-		return
-	}
-	req := &ReorderRequest{}
-	if err := c.ShouldBindJSON(req); err != nil {
-		httputil.WriteValidationError(c, err)
-		return
-	}
-	if err := h.service.Reorder(c.Request.Context(), req.IDs, actor); err != nil {
-		httputil.WriteError(c, err)
-		return
-	}
-	httputil.WriteSuccess(c, http.StatusOK, "Skills reordered", nil)
 }

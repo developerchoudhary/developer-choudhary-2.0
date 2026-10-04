@@ -2,7 +2,7 @@ package profile
 
 type UpdateRequest struct {
 	FullName           string       `json:"fullName" binding:"required,min=2,max=120"`
-	Headline           string       `json:"headline" binding:"max=200"`
+	Headline           string       `json:"headline" binding:"max=60"`
 	BioShort           string       `json:"bioShort" binding:"max=600"`
 	BioLong            string       `json:"bioLong" binding:"max=6000"`
 	Email              string       `json:"email" binding:"omitempty,email"`

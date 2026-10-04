@@ -26,8 +26,6 @@ type Experience struct {
 	Responsibilities []string   `bun:"responsibilities,array"`
 	Achievements     []string   `bun:"achievements,array"`
 	Technologies     []string   `bun:"technologies,array"`
-	LogoFileID       *string    `bun:"logo_file_id"`
-	LogoURL          string     `bun:"logo_url"`
 	SortOrder        int        `bun:"sort_order"`
 	IsPublished      bool       `bun:"is_published"`
 }

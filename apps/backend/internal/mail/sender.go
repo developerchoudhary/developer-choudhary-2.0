@@ -48,10 +48,6 @@ func New() *Sender {
 	}
 }
 
-func (s *Sender) From() string {
-	return s.from
-}
-
 func (s *Sender) Send(msg Message) error {
 	to := strings.TrimSpace(msg.To)
 	if to == "" {

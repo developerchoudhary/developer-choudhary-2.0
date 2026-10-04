@@ -34,6 +34,8 @@ const nextConfig: NextConfig = {
     return [
       { source: "/api/v1/:path*", destination: `${api}/api/v1/:path*` },
       { source: "/uploads/:path*", destination: `${api}/uploads/:path*` },
+      // The favicon is drawn in the active theme's colours (src/app/brand/[asset]/route.tsx).
+      { source: "/favicon.ico", destination: "/brand/favicon.ico" },
     ];
   },
   async headers() {

@@ -57,7 +57,16 @@ export function storedLocation(): StoredLocation | null {
   return read<StoredLocation>(localStorage, LOCATION_KEY);
 }
 
+/**
+ * True inside the admin's theme preview. The site may only be framed by itself
+ * (X-Frame-Options: SAMEORIGIN), so a framed page is never a real visit.
+ */
+export function inPreview(): boolean {
+  return window.self !== window.top;
+}
+
 export function shouldAskLocation(): boolean {
+  if (inPreview()) return false;
   const stored = storedLocation();
   if (!stored) return true;
   if (stored.granted) return false;
@@ -122,6 +131,7 @@ export function requestLocation(): Promise<StoredLocation> {
 }
 
 export function track(path: string, extra: Record<string, unknown> = {}) {
+  if (inPreview()) return;
   const loc = storedLocation();
   const payload = {
     visitorId: visitorId(),

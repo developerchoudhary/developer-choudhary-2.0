@@ -21,8 +21,6 @@ type ResponseDTO struct {
 	Responsibilities []string `json:"responsibilities"`
 	Achievements     []string `json:"achievements"`
 	Technologies     []string `json:"technologies"`
-	LogoFileID       *string  `json:"logoFileId"`
-	LogoURL          string   `json:"logoUrl"`
 	SortOrder        int      `json:"sortOrder"`
 	IsPublished      bool     `json:"isPublished"`
 	CreatedAt        string   `json:"createdAt"`
@@ -48,8 +46,6 @@ func ToResponse(e *Experience) *ResponseDTO {
 		Responsibilities: orEmpty(e.Responsibilities),
 		Achievements:     orEmpty(e.Achievements),
 		Technologies:     orEmpty(e.Technologies),
-		LogoFileID:       e.LogoFileID,
-		LogoURL:          e.LogoURL,
 		SortOrder:        e.SortOrder,
 		IsPublished:      e.IsPublished,
 		CreatedAt:        e.CreatedAt.UTC().Format(time.RFC3339),

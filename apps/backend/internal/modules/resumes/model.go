@@ -18,7 +18,6 @@ type Resume struct {
 	Label         string          `bun:"label"`
 	AccentColor   string          `bun:"accent_color"`
 	Options       json.RawMessage `bun:"options,type:jsonb"`
-	Snapshot      json.RawMessage `bun:"snapshot,type:jsonb"`
 	FileID        string          `bun:"file_id,notnull"`
 	FileURL       string          `bun:"file_url,notnull"`
 	FileSize      int64           `bun:"file_size"`

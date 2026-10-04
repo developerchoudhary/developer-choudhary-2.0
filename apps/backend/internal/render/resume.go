@@ -103,8 +103,10 @@ type Resume struct {
 	Options        Options         `json:"options"`
 	Template       string          `json:"template"`
 	Accent         string          `json:"accent"`
-	GeneratedAt    string          `json:"generatedAt"`
-	SiteURL        string          `json:"siteUrl"`
+	// PhotoBackground is painted behind the photo (a transparent cut-out shows it), from the theme.
+	PhotoBackground string `json:"photoBackground"`
+	GeneratedAt     string `json:"generatedAt"`
+	SiteURL         string `json:"siteUrl"`
 }
 
 func Templates() []string {

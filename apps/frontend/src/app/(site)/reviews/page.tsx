@@ -1,30 +1,28 @@
-import { MessageSquareQuote } from "lucide-react";
-import { ReviewCard } from "@/components/site/cards";
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { ReviewCard, Stars } from "@/components/site/cards";
 import { JsonLd } from "@/components/site/json-ld";
 import { Reveal } from "@/components/site/reveal";
 import { ReviewForm } from "@/components/site/review-form";
-import { PageHero } from "@/components/site/section";
-import { EmptyState, Stars } from "@/components/ui/misc";
-import { getReviewSummary, getReviews, getServices, getSite, setting } from "@/lib/data";
+import { Empty, PageHeader } from "@/components/site/ui";
+import { getReviews, getServices, getSite } from "@/lib/data";
 import { breadcrumbJsonLd, pageMetadata } from "@/lib/seo";
+import { siteSettings } from "@/lib/site";
 
-export const metadata = pageMetadata({
-  title: "Client reviews",
-  description:
-    "What clients say about working with Developer Choudhary on websites, ERPs, CRMs and web platforms.",
-  path: "/reviews",
-});
+export function generateMetadata(): Promise<Metadata> {
+  return pageMetadata({
+    title: "Client reviews",
+    description:
+      "What clients say about working with Aman Choudhary on websites, ERPs, CRMs and web platforms.",
+    path: "/reviews",
+  });
+}
 
 export default async function ReviewsPage() {
-  const [site, reviews, summary, services] = await Promise.all([
-    getSite(),
-    getReviews(false, 0),
-    getReviewSummary(),
-    getServices(),
-  ]);
-  const allowSubmit = setting(site, "features.reviews", true);
-  const distribution = [5, 4, 3, 2, 1].map((n) => ({ n, count: summary.distribution[String(n)] ?? 0 }));
-  const max = Math.max(1, ...distribution.map((d) => d.count));
+  const [site, reviews, services] = await Promise.all([getSite(), getReviews(false, 0), getServices()]);
+  if (!siteSettings(site).showReviews) notFound();
+  const summary = site.reviews;
+  const serviceTitle = (slug: string) => services.find((s) => s.slug === slug)?.title;
 
   return (
     <>
@@ -34,74 +32,49 @@ export default async function ReviewsPage() {
           { name: "Reviews", path: "/reviews" },
         ])}
       />
-      <PageHero
-        eyebrow="Reviews"
-        title={
-          <>
-            Kind words from <span className="text-accent">real clients.</span>
-          </>
-        }
-        lede="Every review is from someone I have built software for. Approved before publishing, never edited for sentiment."
+      <PageHeader
+        title="Client reviews"
+        lede="What clients say after working with me. Every review comes from a real project and is checked before it is published."
       >
         {summary.count > 0 && (
-          <div className="card inline-grid gap-6 p-6 sm:grid-cols-[auto_1fr] sm:items-center">
-            <div>
-              <p className="display text-6xl">{summary.average.toFixed(1)}</p>
-              <Stars rating={Math.round(summary.average)} className="mt-2" />
-              <p className="mt-2 text-sm text-fg-muted">
-                {summary.count} review{summary.count === 1 ? "" : "s"}
-              </p>
-            </div>
-            <ul className="w-56 space-y-1.5">
-              {distribution.map((d) => (
-                <li key={d.n} className="flex items-center gap-3 text-xs text-fg-muted">
-                  <span className="w-3 tabular">{d.n}</span>
-                  <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-bg-muted">
-                    <span
-                      className="block h-full rounded-full bg-accent"
-                      style={{ width: `${(d.count / max) * 100}%` }}
-                    />
-                  </span>
-                  <span className="w-5 text-right tabular">{d.count}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <p className="flex flex-wrap items-center gap-x-3 gap-y-1">
+            <span className="text-3xl font-semibold tracking-tight tabular">
+              {summary.average.toFixed(1)}
+            </span>
+            <Stars rating={Math.round(summary.average)} />
+            <span className="text-fg-muted">
+              from {summary.count} review{summary.count === 1 ? "" : "s"}
+            </span>
+          </p>
         )}
-      </PageHero>
+      </PageHeader>
 
-      <section className="container-dc pb-8">
+      <section className="container-dc pb-6">
         {reviews.length === 0 ? (
-          <EmptyState
-            icon={<MessageSquareQuote className="size-5" />}
-            title="No reviews published yet"
-            description="Worked with me? Your review would mean a lot."
-          />
+          <Empty title="No reviews published yet">Worked with me? Your review below would mean a lot.</Empty>
         ) : (
-          <div className="columns-1 gap-5 md:columns-2 lg:columns-3 [&>*]:mb-5 [&>*]:break-inside-avoid">
+          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
             {reviews.map((r, i) => (
-              <Reveal key={r.id} delay={Math.min(i * 0.04, 0.3)}>
-                <ReviewCard review={r} />
+              <Reveal key={r.id} delay={Math.min(i, 3) * 0.05}>
+                <ReviewCard review={r} serviceTitle={serviceTitle(r.serviceSlug)} />
               </Reveal>
             ))}
           </div>
         )}
       </section>
 
-      {allowSubmit && (
-        <section className="container-dc py-16">
-          <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr]">
-            <div>
-              <p className="eyebrow mb-4">Worked together?</p>
-              <h2 className="display text-3xl sm:text-4xl">Leave a review</h2>
-              <p className="mt-4 text-fg-muted">
-                A few honest lines help the next business decide. Reviews are published after a quick check.
-              </p>
-            </div>
-            <ReviewForm services={services} />
+      <section id="write" className="container-dc py-16 sm:py-20">
+        <div className="grid gap-10 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-16">
+          <div>
+            <h2 className="display text-[1.75rem] sm:text-[2.25rem]">Worked together?</h2>
+            <p className="mt-4 max-w-sm text-pretty text-fg-muted">
+              A few honest lines help the next business decide. Your review appears here once I have checked
+              it.
+            </p>
           </div>
-        </section>
-      )}
+          <ReviewForm services={services} />
+        </div>
+      </section>
     </>
   );
 }

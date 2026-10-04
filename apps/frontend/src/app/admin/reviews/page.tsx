@@ -4,14 +4,15 @@ import { Check, Plus, Star, X } from "lucide-react";
 import { useState } from "react";
 import { ConfirmButton, StatusBadge } from "@/components/admin/bits";
 import { type Column, DataTable } from "@/components/admin/data-table";
+import { ImagePicker } from "@/components/admin/media-library";
 import { PageHeader } from "@/components/admin/page-header";
 import { Button } from "@/components/ui/button";
 import { Dialog } from "@/components/ui/dialog";
 import { Field, Input, Select, Switch, Textarea } from "@/components/ui/field";
 import { Stars } from "@/components/ui/misc";
-import { useAction, useList, useRemove, useSave } from "@/lib/admin/hooks";
+import { useAction, useAll, useList, useRemove, useSave } from "@/lib/admin/hooks";
 import { admin } from "@/lib/api/admin";
-import type { Review } from "@/lib/types";
+import type { Review, Service } from "@/lib/types";
 import { formatDate } from "@/lib/utils";
 
 type Draft = {
@@ -20,7 +21,7 @@ type Draft = {
   authorRole: string;
   authorCompany: string;
   authorEmail: string;
-  authorWebsite: string;
+  authorAvatarFileId: string | null;
   authorAvatarUrl: string;
   rating: number;
   title: string;
@@ -36,7 +37,7 @@ const blank: Draft = {
   authorRole: "",
   authorCompany: "",
   authorEmail: "",
-  authorWebsite: "",
+  authorAvatarFileId: null,
   authorAvatarUrl: "",
   rating: 5,
   title: "",
@@ -65,6 +66,8 @@ export default function ReviewsPage() {
     onSuccess: () => setDraft(null),
   });
   const remove = useRemove("/reviews");
+  const { data: services } = useAll<Service>("/services");
+  const serviceTitle = (slug: string) => services?.find((s) => s.slug === slug)?.title;
   const moderate = useAction(
     ({ id, status, isFeatured }: { id: string; status: string; isFeatured?: boolean }) =>
       admin.patch(`/reviews/${id}/status`, { status, isFeatured }),
@@ -79,7 +82,7 @@ export default function ReviewsPage() {
         <div>
           <p className="font-medium">{r.authorName}</p>
           <p className="text-xs text-fg-muted">
-            {[r.authorRole, r.authorCompany].filter(Boolean).join(", ")}
+            {[r.authorRole, r.authorCompany, serviceTitle(r.serviceSlug)].filter(Boolean).join(" · ")}
           </p>
         </div>
       ),
@@ -201,6 +204,7 @@ export default function ReviewsPage() {
             ...blank,
             ...r,
             authorEmail: r.authorEmail ?? "",
+            authorAvatarFileId: r.authorAvatarFileId ?? null,
             status: r.status ?? "pending",
             reviewedAt: r.reviewedAt ?? "",
           })
@@ -217,11 +221,7 @@ export default function ReviewsPage() {
             onSubmit={(e) => {
               e.preventDefault();
               const { id: _id, ...body } = draft;
-              save.mutate({
-                ...body,
-                reviewedAt: body.reviewedAt || null,
-                authorWebsite: body.authorWebsite || undefined,
-              });
+              save.mutate({ ...body, reviewedAt: body.reviewedAt || null });
             }}
             className="space-y-4"
           >
@@ -287,7 +287,40 @@ export default function ReviewsPage() {
                   onChange={(e) => setDraft({ ...draft, reviewedAt: e.target.value })}
                 />
               </Field>
+              <Field label="Service">
+                <Select
+                  value={draft.serviceSlug}
+                  onChange={(e) => setDraft({ ...draft, serviceSlug: e.target.value })}
+                >
+                  <option value="">Not specified</option>
+                  {services?.map((s) => (
+                    <option key={s.id} value={s.slug}>
+                      {s.title}
+                    </option>
+                  ))}
+                </Select>
+              </Field>
             </div>
+            <ImagePicker
+              label="Photo or logo"
+              hint="optional · shown next to the review"
+              value={
+                draft.authorAvatarUrl
+                  ? {
+                      fileId: draft.authorAvatarFileId ?? "",
+                      url: draft.authorAvatarUrl,
+                      alt: draft.authorName,
+                    }
+                  : null
+              }
+              onChange={(img) =>
+                setDraft({
+                  ...draft,
+                  authorAvatarUrl: img?.url ?? "",
+                  authorAvatarFileId: img?.fileId || null,
+                })
+              }
+            />
             <Field label="Headline">
               <Input value={draft.title} onChange={(e) => setDraft({ ...draft, title: e.target.value })} />
             </Field>
@@ -302,7 +335,7 @@ export default function ReviewsPage() {
             <Switch
               checked={draft.isFeatured}
               onChange={(v) => setDraft({ ...draft, isFeatured: v })}
-              label="Featured on home page"
+              label="Featured on the home page"
             />
             <div className="flex items-center justify-between">
               {draft.id ? (

@@ -35,12 +35,3 @@ func Truncate(s string, max int) string {
 	}
 	return cut + "…"
 }
-
-func PtrString(s string) *string { return &s }
-
-func Deref(s *string) string {
-	if s == nil {
-		return ""
-	}
-	return *s
-}

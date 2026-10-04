@@ -4,6 +4,7 @@ import { MapPin, X } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { requestLocation, saveLocation, shouldAskLocation, track } from "@/lib/visitor";
+import { buttonClass } from "./ui";
 
 export function LocationConsent({ enabled }: { enabled: boolean }) {
   const pathname = usePathname();
@@ -46,12 +47,16 @@ export function LocationConsent({ enabled }: { enabled: boolean }) {
   };
 
   return (
-    <div className="fixed inset-x-4 bottom-4 z-40 sm:inset-x-auto sm:right-6 sm:bottom-6 sm:w-[380px]">
-      <div className="relative rounded-2xl border border-line bg-bg-elevated/95 p-5 shadow-lift backdrop-blur-xl">
+    <div
+      role="dialog"
+      aria-labelledby="location-consent-title"
+      className="fixed inset-x-4 bottom-4 z-40 sm:inset-x-auto sm:right-6 sm:bottom-6 sm:w-[360px]"
+    >
+      <div className="relative rounded-2xl border border-line bg-bg-elevated p-5 shadow-lift">
         <button
           type="button"
           onClick={decline}
-          className="absolute top-3 right-3 rounded-full p-1 text-fg-subtle hover:text-fg"
+          className="absolute top-3 right-3 rounded-full p-1 text-fg-subtle transition-colors hover:text-fg"
           aria-label="Dismiss"
         >
           <X className="size-4" />
@@ -61,24 +66,26 @@ export function LocationConsent({ enabled }: { enabled: boolean }) {
             <MapPin className="size-4" />
           </span>
           <div>
-            <p className="text-sm font-medium">Share your location?</p>
-            <p className="mt-1 text-sm text-fg-muted">
-              It helps me see where visitors come from and reply in your time zone. Nothing is shared with
-              third parties.
+            <p id="location-consent-title" className="text-sm font-semibold">
+              Share your location?
+            </p>
+            <p className="mt-1 text-sm leading-relaxed text-fg-muted">
+              It helps me see where visitors come from and reply in your time zone. It is never shared with
+              anyone.
             </p>
             <div className="mt-4 flex gap-2">
               <button
                 type="button"
                 onClick={accept}
                 disabled={busy}
-                className="inline-flex h-9 items-center rounded-lg bg-fg px-4 text-sm font-medium text-bg disabled:opacity-60"
+                className={buttonClass("primary", "md", "h-9 rounded-lg disabled:opacity-60")}
               >
                 {busy ? "Locating…" : "Share location"}
               </button>
               <button
                 type="button"
                 onClick={decline}
-                className="inline-flex h-9 items-center rounded-lg px-3 text-sm text-fg-muted hover:text-fg"
+                className="inline-flex h-9 items-center rounded-lg px-3 text-sm font-medium text-fg-muted transition-colors hover:text-fg"
               >
                 Not now
               </button>

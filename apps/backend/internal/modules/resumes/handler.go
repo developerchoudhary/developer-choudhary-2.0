@@ -22,7 +22,7 @@ func (h *Handler) Templates(c *gin.Context) {
 	httputil.WriteSuccess(c, http.StatusOK, "Templates fetched", gin.H{
 		"templates":      render.Templates(),
 		"defaultOptions": render.DefaultOptions(),
-		"defaultAccent":  defaultAccent,
+		"defaultAccent":  h.service.DefaultAccent(c.Request.Context()),
 	})
 }
 
@@ -69,20 +69,6 @@ func (h *Handler) List(c *gin.Context) {
 	httputil.WriteSuccess(c, http.StatusOK, "Resumes fetched successfully", items)
 }
 
-func (h *Handler) Get(c *gin.Context) {
-	id, err := uuid.Parse(c.Param("id"))
-	if err != nil {
-		httputil.WriteBadRequest(c, err)
-		return
-	}
-	item, err := h.service.Get(c.Request.Context(), id)
-	if err != nil {
-		httputil.WriteError(c, err)
-		return
-	}
-	httputil.WriteSuccess(c, http.StatusOK, "Resume fetched successfully", item)
-}
-
 func (h *Handler) SetCurrent(c *gin.Context) {
 	id, err := uuid.Parse(c.Param("id"))
 	if err != nil {
@@ -113,15 +99,6 @@ func (h *Handler) Delete(c *gin.Context) {
 		return
 	}
 	httputil.WriteSuccess(c, http.StatusOK, "Resume deleted", nil)
-}
-
-func (h *Handler) PublicCurrent(c *gin.Context) {
-	item, err := h.service.Current(c.Request.Context())
-	if err != nil {
-		httputil.WriteError(c, err)
-		return
-	}
-	httputil.WriteSuccess(c, http.StatusOK, "Resume fetched successfully", item)
 }
 
 func (h *Handler) PublicDownload(c *gin.Context) {

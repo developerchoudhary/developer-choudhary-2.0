@@ -13,13 +13,13 @@ import (
 	"portfolio-backend/internal/modules/services"
 	"portfolio-backend/internal/modules/settings"
 	"portfolio-backend/internal/modules/skills"
-	"portfolio-backend/internal/modules/taglines"
+	"portfolio-backend/internal/modules/themes"
 )
 
 type Service struct {
 	profile  *profile.Service
 	settings *settings.Service
-	taglines *taglines.Service
+	themes   *themes.Service
 	skills   *skills.Service
 	reviews  *reviews.Service
 	projects *projects.Service
@@ -28,14 +28,14 @@ type Service struct {
 	resumes  *resumes.Service
 }
 
-func NewService(p *profile.Service, st *settings.Service, t *taglines.Service, sk *skills.Service, r *reviews.Service, pr *projects.Service, po *posts.Service, sv *services.Svc, re *resumes.Service) *Service {
-	return &Service{profile: p, settings: st, taglines: t, skills: sk, reviews: r, projects: pr, posts: po, services: sv, resumes: re}
+func NewService(p *profile.Service, st *settings.Service, th *themes.Service, sk *skills.Service, r *reviews.Service, pr *projects.Service, po *posts.Service, sv *services.Svc, re *resumes.Service) *Service {
+	return &Service{profile: p, settings: st, themes: th, skills: sk, reviews: r, projects: pr, posts: po, services: sv, resumes: re}
 }
 
 type Bundle struct {
 	Profile  *profile.ResponseDTO       `json:"profile"`
 	Settings map[string]json.RawMessage `json:"settings"`
-	Taglines []taglines.PublicDTO       `json:"taglines"`
+	Theme    *themes.ActiveDTO          `json:"theme"`
 	Skills   []skills.GroupDTO          `json:"skills"`
 	Reviews  *reviews.SummaryDTO        `json:"reviews"`
 	Resume   *resumes.PublicDTO         `json:"resume"`
@@ -50,9 +50,7 @@ func (s *Service) Bundle(ctx context.Context) (*Bundle, error) {
 	if out.Settings, err = s.settings.PublicMap(ctx); err != nil {
 		return nil, err
 	}
-	if out.Taglines, err = s.taglines.PublicList(ctx); err != nil {
-		return nil, err
-	}
+	out.Theme = s.themes.Active(ctx)
 	if out.Skills, err = s.skills.PublicGroups(ctx); err != nil {
 		return nil, err
 	}

@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { BlogList } from "@/components/site/blog-list";
 import { JsonLd } from "@/components/site/json-ld";
-import { PageHero } from "@/components/site/section";
-import { getCategories, getCategory, getPosts } from "@/lib/data";
+import { PageHeader } from "@/components/site/ui";
+import { getCategories, getCategory, getPosts, getSite } from "@/lib/data";
 import { breadcrumbJsonLd, pageMetadata } from "@/lib/seo";
+import { siteSettings } from "@/lib/site";
 
 type Params = Promise<{ slug: string }>;
 
@@ -14,7 +15,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   if (!category) return { title: "Category not found" };
   return pageMetadata({
     title: `${category.name} articles`,
-    description: category.description || `Articles about ${category.name.toLowerCase()}.`,
+    description: category.description || `Articles about ${category.name}.`,
     path: `/blog/category/${slug}`,
   });
 }
@@ -28,12 +29,13 @@ export default async function CategoryPage({
 }) {
   const [{ slug }, sp] = await Promise.all([params, searchParams]);
   const page = Math.max(1, Number(sp.page ?? 1) || 1);
-  const [category, categories, posts] = await Promise.all([
+  const [site, category, categories, posts] = await Promise.all([
+    getSite(),
     getCategory(slug),
     getCategories(),
     getPosts(page, { category: slug }).catch(() => null),
   ]);
-  if (!category || !posts) notFound();
+  if (!siteSettings(site).showBlog || !category || !posts) notFound();
   return (
     <>
       <JsonLd
@@ -43,7 +45,11 @@ export default async function CategoryPage({
           { name: category.name, path: `/blog/category/${slug}` },
         ])}
       />
-      <PageHero eyebrow="Category" title={category.name} lede={category.description || undefined} />
+      <PageHeader
+        title={category.name}
+        lede={category.description || undefined}
+        back={{ href: "/blog", label: "Blog" }}
+      />
       <BlogList
         posts={posts}
         categories={categories}

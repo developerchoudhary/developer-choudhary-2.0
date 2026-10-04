@@ -10,13 +10,12 @@ import (
 	"portfolio-backend/internal/modules/projects"
 	"portfolio-backend/internal/modules/services"
 	"portfolio-backend/internal/modules/skills"
-	"portfolio-backend/internal/modules/taglines"
 )
 
 var profileData = profile.UpdateRequest{
 	FullName:           "Aman Choudhary",
-	Headline:           "Full-stack engineer building websites, ERPs and CRMs for growing businesses",
-	BioShort:           "I design and ship business software end to end: fast Next.js frontends, Go services, PostgreSQL, and the Kubernetes infrastructure that runs them on your own servers.",
+	Headline:           "Full-stack developer",
+	BioShort:           "I design and build fast websites, ERPs and CRM portals for growing businesses, from the first sketch to the servers they run on.",
 	BioLong:            "I am a full-stack developer from Sri Ganganagar, Rajasthan. I started by building websites for local institutions and now architect production systems for companies in India and Australia: CRM portals, property platforms, ERP modules and marketing sites.\n\nMy work covers the whole stack. On the frontend I use Next.js, React and Tailwind to build fast, accessible interfaces. On the backend I write Go services with PostgreSQL, Redis and MinIO, and I run everything on self-hosted k3s clusters with GitOps deployments.\n\nI care about software that is simple to operate, cheap to run and easy to change. If you need a reliable partner for your next website, internal tool or customer portal, I would love to hear about it.",
 	Email:              "contact@developerchoudhary.com",
 	Phone:              "+91 95303 63236",
@@ -25,7 +24,7 @@ var profileData = profile.UpdateRequest{
 	LocationRegion:     "Rajasthan",
 	LocationCountry:    "India",
 	Timezone:           "Asia/Kolkata",
-	AvatarURL:          "/aman-choudhary.jpg",
+	AvatarURL:          "/portraits/aman-portrait-4x5.webp",
 	AvailabilityStatus: "available",
 	AvailabilityNote:   "Taking on new projects this quarter",
 	YearsExperience:    3,
@@ -38,42 +37,6 @@ var profileData = profile.UpdateRequest{
 		{Label: "WhatsApp", URL: "https://wa.me/919530363236", Icon: "whatsapp"},
 	},
 	ResumeSummary: "Full-stack engineer with hands-on experience shipping production CRM, ERP and real-estate platforms using Go, Next.js, PostgreSQL and Kubernetes. Comfortable owning architecture, infrastructure and delivery for small teams.",
-}
-
-type settingSeed struct {
-	key         string
-	value       any
-	public      bool
-	description string
-}
-
-var settingsData = []settingSeed{
-	{"site.name", "Developer Choudhary", true, "Brand name used in titles and emails"},
-	{"site.shortName", "DC", true, "Short wordmark"},
-	{"seo.defaultTitle", "Developer Choudhary · Websites, ERP & CRM development", true, "Default <title>"},
-	{"seo.defaultDescription", "Aman Choudhary builds high-performance websites, ERP systems and CRM portals with Next.js, Go and PostgreSQL, self-hosted on Kubernetes. Based in Rajasthan, working worldwide.", true, "Default meta description"},
-	{"seo.keywords", []string{"web developer India", "Next.js developer", "Golang developer", "ERP development", "CRM development", "freelance full stack developer", "Sri Ganganagar"}, true, "Default keywords"},
-	{"seo.twitterHandle", "@developer_jaat", true, "Twitter / X handle"},
-	{"hero.eyebrow", "Independent full-stack engineer · India", true, "Small label above the hero title"},
-	{"hero.ctaPrimary", map[string]string{"label": "Start a project", "href": "/contact"}, true, "Primary hero button"},
-	{"hero.ctaSecondary", map[string]string{"label": "See the work", "href": "/work"}, true, "Secondary hero button"},
-	{"contact.responseTime", "within one working day", true, "Promise shown on the contact page"},
-	{"contact.calendarUrl", "", true, "Optional booking link (Cal.com / Calendly)"},
-	{"features.blog", true, true, "Show the blog in navigation"},
-	{"features.reviews", true, true, "Show reviews and allow submissions"},
-	{"features.locationConsent", true, true, "Ask visitors to share their location"},
-	{"features.resume", true, true, "Show the resume page"},
-	{"analytics.gaId", "", true, "Google Analytics measurement id"},
-	{"footer.note", "Designed and built by Aman Choudhary. Runs on Go, Next.js and a self-hosted k3s cluster.", true, "Footer sentence"},
-}
-
-var taglineData = []taglines.RequestDTO{
-	{Text: "Websites that win customers.", Context: "hero"},
-	{Text: "ERPs that run your operations.", Context: "hero"},
-	{Text: "CRMs your team will actually use.", Context: "hero"},
-	{Text: "Software you own, on servers you control.", Context: "hero"},
-	{Text: "Have an idea or a messy spreadsheet? Let's turn it into software.", Context: "cta"},
-	{Text: "Clear scope, fixed timelines, no surprises.", Context: "cta"},
 }
 
 func blocks(items ...map[string]any) json.RawMessage {
@@ -182,30 +145,30 @@ var serviceData = []services.RequestDTO{
 }
 
 var skillData = []skills.RequestDTO{
-	{Name: "Next.js", Category: "frontend", Proficiency: 92, Years: 3, Icon: "nextdotjs", IsFeatured: ptr(true)},
-	{Name: "React", Category: "frontend", Proficiency: 92, Years: 3.5, Icon: "react", IsFeatured: ptr(true)},
-	{Name: "TypeScript", Category: "frontend", Proficiency: 88, Years: 3, Icon: "typescript", IsFeatured: ptr(true)},
-	{Name: "Tailwind CSS", Category: "frontend", Proficiency: 90, Years: 3, Icon: "tailwindcss"},
-	{Name: "JavaScript", Category: "frontend", Proficiency: 94, Years: 4, Icon: "javascript"},
-	{Name: "Go", Category: "backend", Proficiency: 85, Years: 1.5, Icon: "go", IsFeatured: ptr(true)},
-	{Name: "Node.js", Category: "backend", Proficiency: 86, Years: 3, Icon: "nodedotjs", IsFeatured: ptr(true)},
-	{Name: "Spring Boot", Category: "backend", Proficiency: 65, Years: 1, Icon: "springboot"},
-	{Name: "GraphQL", Category: "backend", Proficiency: 78, Years: 1.5, Icon: "graphql"},
-	{Name: "REST APIs", Category: "backend", Proficiency: 92, Years: 3.5, Icon: ""},
-	{Name: "WebSockets", Category: "backend", Proficiency: 75, Years: 1.5, Icon: ""},
-	{Name: "PostgreSQL", Category: "database", Proficiency: 84, Years: 2, Icon: "postgresql", IsFeatured: ptr(true)},
-	{Name: "MongoDB", Category: "database", Proficiency: 82, Years: 3, Icon: "mongodb"},
-	{Name: "Redis", Category: "database", Proficiency: 78, Years: 1.5, Icon: "redis"},
-	{Name: "Kubernetes (k3s)", Category: "devops", Proficiency: 78, Years: 1, Icon: "kubernetes", IsFeatured: ptr(true)},
-	{Name: "Docker", Category: "devops", Proficiency: 85, Years: 2, Icon: "docker"},
-	{Name: "ArgoCD", Category: "devops", Proficiency: 72, Years: 1, Icon: "argo"},
-	{Name: "GitHub Actions", Category: "devops", Proficiency: 82, Years: 2, Icon: "githubactions"},
-	{Name: "Traefik & cert-manager", Category: "devops", Proficiency: 74, Years: 1, Icon: "traefikproxy"},
-	{Name: "MinIO", Category: "cloud", Proficiency: 76, Years: 1, Icon: "minio"},
-	{Name: "Vercel", Category: "cloud", Proficiency: 85, Years: 3, Icon: "vercel"},
-	{Name: "Git", Category: "tools", Proficiency: 90, Years: 4, Icon: "git"},
-	{Name: "Figma", Category: "design", Proficiency: 72, Years: 2, Icon: "figma"},
-	{Name: "SEO & Core Web Vitals", Category: "other", Proficiency: 85, Years: 3, Icon: ""},
+	{Name: "Next.js", Category: "frontend", IsFeatured: ptr(true)},
+	{Name: "React", Category: "frontend", IsFeatured: ptr(true)},
+	{Name: "TypeScript", Category: "frontend", IsFeatured: ptr(true)},
+	{Name: "Tailwind CSS", Category: "frontend"},
+	{Name: "JavaScript", Category: "frontend"},
+	{Name: "Go", Category: "backend", IsFeatured: ptr(true)},
+	{Name: "Node.js", Category: "backend", IsFeatured: ptr(true)},
+	{Name: "Spring Boot", Category: "backend"},
+	{Name: "GraphQL", Category: "backend"},
+	{Name: "REST APIs", Category: "backend"},
+	{Name: "WebSockets", Category: "backend"},
+	{Name: "PostgreSQL", Category: "database", IsFeatured: ptr(true)},
+	{Name: "MongoDB", Category: "database"},
+	{Name: "Redis", Category: "database"},
+	{Name: "Kubernetes (k3s)", Category: "devops", IsFeatured: ptr(true)},
+	{Name: "Docker", Category: "devops"},
+	{Name: "ArgoCD", Category: "devops"},
+	{Name: "GitHub Actions", Category: "devops"},
+	{Name: "Traefik & cert-manager", Category: "devops"},
+	{Name: "MinIO", Category: "cloud"},
+	{Name: "Vercel", Category: "cloud"},
+	{Name: "Git", Category: "tools"},
+	{Name: "Figma", Category: "design"},
+	{Name: "SEO & Core Web Vitals", Category: "other"},
 }
 
 var experienceData = []experience.RequestDTO{
@@ -325,8 +288,8 @@ var upcomingProjectData = projects.RequestDTO{
 }
 
 var categoryData = []posts.CategoryRequest{
-	{Name: "Engineering", Description: "Go, Next.js, PostgreSQL and architecture notes", Color: "#0E7C66"},
-	{Name: "Business software", Description: "ERPs, CRMs and digitising operations", Color: "#2563EB"},
+	{Name: "Engineering", Description: "Go, Next.js, PostgreSQL and architecture notes", Color: "#0369A1"},
+	{Name: "Business software", Description: "ERPs, CRMs and digitising operations", Color: "#0891B2"},
 	{Name: "DevOps", Description: "Kubernetes, self-hosting and deployments", Color: "#7C3AED"},
-	{Name: "Journal", Description: "Lessons from projects and freelancing", Color: "#F2B33D"},
+	{Name: "Journal", Description: "Lessons from projects and freelancing", Color: "#D97706"},
 }

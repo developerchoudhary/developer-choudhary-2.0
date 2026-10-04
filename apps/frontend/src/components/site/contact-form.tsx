@@ -1,14 +1,15 @@
 "use client";
 
-import { ArrowUpRight, CheckCircle2 } from "lucide-react";
+import { CheckCircle2, MessageCircle } from "lucide-react";
+import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { BUDGET_RANGES, TIMELINES } from "@/lib/site";
 import type { Service } from "@/lib/types";
 import { storedLocation } from "@/lib/visitor";
-import { Button } from "../ui/button";
 import { Field, Input, Select, Textarea } from "../ui/field";
+import { buttonClass } from "./ui";
 
 interface FormValues {
   firstName: string;
@@ -26,22 +27,23 @@ interface FormValues {
 export function ContactForm({
   services,
   whatsapp,
-  defaultService,
+  responseTime,
 }: {
   services: Service[];
   whatsapp?: string;
-  defaultService?: string;
+  responseTime: string;
 }) {
   const pathname = usePathname();
   const params = useSearchParams();
   const [done, setDone] = useState(false);
   const [serverError, setServerError] = useState("");
+  const requested = params.get("service") ?? "";
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<FormValues>({
-    defaultValues: { serviceInterest: defaultService ?? params.get("service") ?? "" },
+    defaultValues: { serviceInterest: services.some((s) => s.title === requested) ? requested : "" },
   });
 
   const onSubmit = async (values: FormValues) => {
@@ -69,38 +71,39 @@ export function ContactForm({
           }
         : undefined,
     };
-    const res = await fetch("/api/v1/public/leads", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-    const body = await res.json().catch(() => null);
-    if (!res.ok) {
-      setServerError(
-        body?.error || body?.message || "Something went wrong. Please try again or message me on WhatsApp.",
-      );
-      return;
+    try {
+      const res = await fetch("/api/v1/public/leads", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const body = await res.json().catch(() => null);
+      if (!res.ok) {
+        setServerError(body?.error || body?.message || "Something went wrong. Please try again.");
+        return;
+      }
+      setDone(true);
+    } catch {
+      setServerError("Could not reach the server. Check your connection and try again.");
     }
-    setDone(true);
   };
 
   if (done) {
     return (
-      <div className="card p-8 text-center">
-        <CheckCircle2 className="mx-auto size-10 text-success" />
-        <h3 className="mt-4 text-2xl font-semibold tracking-tight">Thanks, your message is in.</h3>
-        <p className="mt-2 text-fg-muted">
-          I reply personally, usually within a few hours. If it&apos;s urgent, WhatsApp is the fastest way to
-          reach me.
+      <div className="card flex flex-col items-center px-6 py-14 text-center sm:px-10" aria-live="polite">
+        <CheckCircle2 className="size-10 text-success" />
+        <h2 className="mt-5 text-2xl font-semibold tracking-tight">Thanks, your message is in.</h2>
+        <p className="mt-3 max-w-sm text-fg-muted">
+          I will reply {responseTime}. A copy of your message is on its way to your inbox.
         </p>
         {whatsapp && (
           <a
             href={`https://wa.me/${whatsapp}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-6 inline-flex h-11 items-center gap-2 rounded-full bg-fg px-5 text-sm font-medium text-bg"
+            className={buttonClass("secondary", "md", "mt-8")}
           >
-            Message on WhatsApp <ArrowUpRight className="size-4" />
+            <MessageCircle className="size-4" /> Urgent? Message on WhatsApp
           </a>
         )}
       </div>
@@ -112,16 +115,16 @@ export function ContactForm({
       <div className="grid gap-5 sm:grid-cols-2">
         <Field label="First name" required error={errors.firstName?.message}>
           <Input
-            placeholder="Aman"
             autoComplete="given-name"
+            aria-invalid={Boolean(errors.firstName)}
             {...register("firstName", {
               required: "Please tell me your name",
-              minLength: { value: 2, message: "Too short" },
+              minLength: { value: 2, message: "That looks too short" },
             })}
           />
         </Field>
         <Field label="Last name">
-          <Input placeholder="Choudhary" autoComplete="family-name" {...register("lastName")} />
+          <Input autoComplete="family-name" {...register("lastName")} />
         </Field>
       </div>
       <div className="grid gap-5 sm:grid-cols-2">
@@ -130,18 +133,19 @@ export function ContactForm({
             type="email"
             placeholder="you@company.com"
             autoComplete="email"
+            aria-invalid={Boolean(errors.email)}
             {...register("email", {
               required: "I need an email to reply",
               pattern: { value: /^[^@\s]+@[^@\s]+\.[^@\s]+$/, message: "That email looks off" },
             })}
           />
         </Field>
-        <Field label="Phone / WhatsApp" hint="optional">
-          <Input type="tel" placeholder="+91 ..." autoComplete="tel" {...register("phone")} />
+        <Field label="Phone or WhatsApp" hint="Optional">
+          <Input type="tel" placeholder="+91" autoComplete="tel" {...register("phone")} />
         </Field>
       </div>
-      <Field label="Company or project name" hint="optional">
-        <Input placeholder="Acme Traders" autoComplete="organization" {...register("company")} />
+      <Field label="Company" hint="Optional">
+        <Input autoComplete="organization" {...register("company")} />
       </Field>
       <div className="grid gap-5 sm:grid-cols-3">
         <Field label="What do you need?">
@@ -176,16 +180,18 @@ export function ContactForm({
           </Select>
         </Field>
       </div>
-      <Field label="Tell me about the project" required error={errors.message?.message}>
+      <Field label="About the project" required error={errors.message?.message}>
         <Textarea
-          rows={6}
-          placeholder="What are you building, who is it for, and what does success look like?"
+          rows={5}
+          placeholder="What are you building, who is it for, and what would success look like?"
+          aria-invalid={Boolean(errors.message)}
           {...register("message", {
             required: "A few lines about the project help me reply properly",
             minLength: { value: 10, message: "A little more detail, please" },
           })}
         />
       </Field>
+      {/* Honeypot: real visitors never see or fill this field. */}
       <input
         type="text"
         tabIndex={-1}
@@ -194,12 +200,29 @@ export function ContactForm({
         aria-hidden="true"
         {...register("nickname")}
       />
-      {serverError && <p className="rounded-xl bg-danger/10 px-4 py-3 text-sm text-danger">{serverError}</p>}
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-xs text-fg-subtle">By sending you agree to the privacy policy. No spam, ever.</p>
-        <Button type="submit" size="lg" loading={isSubmitting}>
-          Send message <ArrowUpRight className="size-4" />
-        </Button>
+      {serverError && (
+        <p className="rounded-xl bg-danger/10 px-4 py-3 text-sm text-danger" role="alert">
+          {serverError}
+        </p>
+      )}
+      <div className="flex flex-col-reverse gap-4 pt-1 sm:flex-row sm:items-center sm:justify-between">
+        <p className="text-xs text-fg-subtle">
+          By sending this you agree to the{" "}
+          <Link href="/privacy" className="underline underline-offset-2 hover:text-fg">
+            privacy policy
+          </Link>
+          .
+        </p>
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className={buttonClass("primary", "lg", "disabled:opacity-60")}
+        >
+          {isSubmitting && (
+            <span className="size-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+          )}
+          Send message
+        </button>
       </div>
     </form>
   );

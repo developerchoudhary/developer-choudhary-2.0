@@ -1,12 +1,11 @@
 import { GeistMono } from "geist/font/mono";
-import { GeistSans } from "geist/font/sans";
 import localFont from "next/font/local";
 
-/** Bricolage Grotesque (variable) carries headlines; Geist handles text and code. */
-export const display = localFont({
-  src: [{ path: "../fonts/BricolageGrotesque-Variable.ttf", weight: "200 800", style: "normal" }],
-  variable: "--font-display",
+/** Inter (variable, Latin subset with the optical-size axis) for all text; Geist Mono for code. */
+export const inter = localFont({
+  src: [{ path: "../fonts/InterVariable-latin.woff2", weight: "100 900", style: "normal" }],
+  variable: "--font-inter",
   display: "swap",
 });
 
-export const fontClassNames = `${GeistSans.variable} ${GeistMono.variable} ${display.variable}`;
+export const fontClassNames = `${inter.variable} ${GeistMono.variable}`;

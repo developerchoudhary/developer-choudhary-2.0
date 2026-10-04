@@ -19,8 +19,12 @@ k8s/
 
 - Public pages: home, work (case studies with completed / in-progress / upcoming status), services (one SEO page
   per service), about (story, experience, skills, education), blog with categories and tags, reviews, contact,
-  resume, privacy and terms. Mobile-first, dark by default with a light theme.
-- Everything is editable from `/admin`: taglines, profile, services, projects, skills, experience, education,
+  resume, privacy and terms. Mobile-first, light and dark modes that follow the system setting.
+- Colour themes chosen in Admin → Theme: 13 built-in themes (default Powder, the soft blue of the photo backdrop) and
+  custom ones made in the admin, each tried on the real pages before it goes live. The theme colours the site, the
+  admin accents, emails, resume PDFs, the favicon and app icons, the web manifest, share images and the photo
+  backdrop; themes that would be hard to read are rejected.
+- Everything is editable from `/admin`: site copy and SEO settings, the theme, profile, services, projects, skills, experience, education,
   certifications, blog posts (block editor with preview and scheduling), reviews moderation, leads pipeline with
   notes and CSV export, an analytics dashboard (traffic over 7/30/90/365 days with period comparison, pages,
   referrers, devices, countries, consented locations), media library and a resume generator.

@@ -4,8 +4,9 @@ import { CheckCircle2 } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import type { Service } from "@/lib/types";
-import { Button } from "../ui/button";
+import { cn } from "@/lib/utils";
 import { Field, Input, Select, Textarea } from "../ui/field";
+import { buttonClass } from "./ui";
 
 interface FormValues {
   authorName: string;
@@ -33,24 +34,28 @@ export function ReviewForm({ services }: { services: Service[] }) {
 
   const onSubmit = async (values: FormValues) => {
     setError("");
-    const res = await fetch("/api/v1/public/reviews", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...values, rating: Number(values.rating) }),
-    });
-    const body = await res.json().catch(() => null);
-    if (!res.ok) {
-      setError(body?.error || body?.message || "Could not submit the review right now.");
-      return;
+    try {
+      const res = await fetch("/api/v1/public/reviews", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...values, rating: Number(values.rating) }),
+      });
+      const body = await res.json().catch(() => null);
+      if (!res.ok) {
+        setError(body?.error || body?.message || "Could not submit the review right now.");
+        return;
+      }
+      setDone(true);
+    } catch {
+      setError("Could not reach the server. Check your connection and try again.");
     }
-    setDone(true);
   };
 
   if (done) {
     return (
-      <div className="card p-8 text-center">
-        <CheckCircle2 className="mx-auto size-10 text-success" />
-        <h3 className="mt-4 text-xl font-semibold">Thank you!</h3>
+      <div className="card flex flex-col items-center px-6 py-12 text-center" aria-live="polite">
+        <CheckCircle2 className="size-10 text-success" />
+        <h3 className="mt-4 text-xl font-semibold tracking-tight">Thank you!</h3>
         <p className="mt-2 text-fg-muted">Your review will appear here once I have approved it.</p>
       </div>
     );
@@ -58,8 +63,8 @@ export function ReviewForm({ services }: { services: Service[] }) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="card space-y-5 p-6 sm:p-8" noValidate>
-      <div>
-        <p className="mb-2 text-sm font-medium">Your rating</p>
+      <fieldset>
+        <legend className="mb-2 text-sm font-medium">Your rating</legend>
         <div className="flex gap-1">
           {[1, 2, 3, 4, 5].map((n) => (
             <button
@@ -67,11 +72,15 @@ export function ReviewForm({ services }: { services: Service[] }) {
               type="button"
               onClick={() => setValue("rating", n)}
               aria-label={`${n} star${n > 1 ? "s" : ""}`}
-              className="p-0.5"
+              aria-pressed={n === rating}
+              className="rounded-md p-0.5"
             >
               <svg
                 viewBox="0 0 20 20"
-                className={`size-7 transition ${n <= rating ? "fill-highlight" : "fill-line-strong hover:fill-highlight/60"}`}
+                className={cn(
+                  "size-7 transition-colors",
+                  n <= rating ? "fill-highlight" : "fill-line-strong hover:fill-highlight/60",
+                )}
                 aria-hidden="true"
               >
                 <path d="M10 1.5l2.6 5.4 5.9.8-4.3 4.1 1.1 5.9L10 14.9l-5.3 2.8 1.1-5.9L1.5 7.7l5.9-.8z" />
@@ -80,19 +89,21 @@ export function ReviewForm({ services }: { services: Service[] }) {
           ))}
         </div>
         <input type="hidden" {...register("rating", { valueAsNumber: true })} />
-      </div>
+      </fieldset>
       <div className="grid gap-5 sm:grid-cols-2">
         <Field label="Your name" required error={errors.authorName?.message}>
           <Input
+            autoComplete="name"
             {...register("authorName", {
               required: "Please add your name",
-              minLength: { value: 2, message: "Too short" },
+              minLength: { value: 2, message: "That looks too short" },
             })}
           />
         </Field>
-        <Field label="Email" hint="never shown publicly" error={errors.authorEmail?.message}>
+        <Field label="Email" hint="Never shown" error={errors.authorEmail?.message}>
           <Input
             type="email"
+            autoComplete="email"
             {...register("authorEmail", {
               pattern: { value: /^[^@\s]+@[^@\s]+\.[^@\s]+$/, message: "That email looks off" },
             })}
@@ -104,9 +115,9 @@ export function ReviewForm({ services }: { services: Service[] }) {
           <Input placeholder="Founder" {...register("authorRole")} />
         </Field>
         <Field label="Company">
-          <Input placeholder="Acme" {...register("authorCompany")} />
+          <Input autoComplete="organization" {...register("authorCompany")} />
         </Field>
-        <Field label="Project type">
+        <Field label="Service">
           <Select {...register("serviceSlug")}>
             <option value="">Choose…</option>
             {services.map((s) => (
@@ -117,7 +128,7 @@ export function ReviewForm({ services }: { services: Service[] }) {
           </Select>
         </Field>
       </div>
-      <Field label="Headline" hint="optional">
+      <Field label="Headline" hint="Optional">
         <Input placeholder="Delivered ahead of schedule" {...register("title")} />
       </Field>
       <Field label="Your review" required error={errors.body?.message}>
@@ -130,6 +141,7 @@ export function ReviewForm({ services }: { services: Service[] }) {
           })}
         />
       </Field>
+      {/* Honeypot: real visitors never see or fill this field. */}
       <input
         type="text"
         tabIndex={-1}
@@ -138,10 +150,21 @@ export function ReviewForm({ services }: { services: Service[] }) {
         aria-hidden="true"
         {...register("website")}
       />
-      {error && <p className="rounded-xl bg-danger/10 px-4 py-3 text-sm text-danger">{error}</p>}
-      <Button type="submit" loading={isSubmitting}>
+      {error && (
+        <p className="rounded-xl bg-danger/10 px-4 py-3 text-sm text-danger" role="alert">
+          {error}
+        </p>
+      )}
+      <button
+        type="submit"
+        disabled={isSubmitting}
+        className={buttonClass("primary", "lg", "disabled:opacity-60")}
+      >
+        {isSubmitting && (
+          <span className="size-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+        )}
         Submit review
-      </Button>
+      </button>
     </form>
   );
 }

@@ -40,7 +40,6 @@ type Post struct {
 	SEOTitle           string          `bun:"seo_title"`
 	SEODescription     string          `bun:"seo_description"`
 	CanonicalURL       string          `bun:"canonical_url"`
-	AuthorID           *uuid.UUID      `bun:"author_id"`
 
 	Category *Category `bun:"rel:belongs-to,join:category_id=id"`
 	Tags     []*Tag    `bun:"m2m:post_tag_links,join:Post=Tag"`

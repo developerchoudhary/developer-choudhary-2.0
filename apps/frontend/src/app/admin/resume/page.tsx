@@ -24,7 +24,8 @@ export default function ResumePage() {
   const list = useAll<Resume>("/resumes");
   const [template, setTemplate] = useState("modern");
   const [label, setLabel] = useState("");
-  const [accent, setAccent] = useState("#0E7C66");
+  const [chosenAccent, setAccent] = useState<string | null>(null);
+  const accent = chosenAccent ?? meta.data?.defaultAccent ?? "#0369A1";
   const [options, setOptions] = useState<ResumeOptions | null>(null);
   const [preview, setPreview] = useState("");
   const opts = options ?? meta.data?.defaultOptions ?? null;

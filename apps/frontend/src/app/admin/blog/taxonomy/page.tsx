@@ -54,7 +54,7 @@ export default function TaxonomyPage() {
             <Button
               size="sm"
               variant="secondary"
-              onClick={() => setCat({ name: "", slug: "", description: "", color: "#0E7C66", sortOrder: 0 })}
+              onClick={() => setCat({ name: "", slug: "", description: "", color: "#0369A1", sortOrder: 0 })}
             >
               <Plus className="size-4" /> Add
             </Button>
@@ -163,7 +163,7 @@ export default function TaxonomyPage() {
               <Field label="Colour">
                 <Input
                   type="color"
-                  value={cat.color || "#0E7C66"}
+                  value={cat.color || "#0369A1"}
                   onChange={(e) => setCat({ ...cat, color: e.target.value })}
                   className="h-10 p-1"
                 />
@@ -174,6 +174,13 @@ export default function TaxonomyPage() {
                 rows={2}
                 value={cat.description}
                 onChange={(e) => setCat({ ...cat, description: e.target.value })}
+              />
+            </Field>
+            <Field label="Sort order" hint="order of the category tabs on the blog">
+              <Input
+                type="number"
+                value={cat.sortOrder}
+                onChange={(e) => setCat({ ...cat, sortOrder: Number(e.target.value) })}
               />
             </Field>
             <div className="flex justify-end gap-2">

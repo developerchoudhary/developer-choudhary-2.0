@@ -1,26 +1,52 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
-import type { ReactNode } from "react";
+import { type ElementType, type ReactNode, useEffect, useRef } from "react";
 
-interface RevealProps {
+/**
+ * Fades its children in when they scroll into view. The hidden start state only applies when
+ * scripting is enabled (globals.css), so the content never depends on this component running.
+ */
+export function Reveal({
+  children,
+  delay = 0,
+  className,
+  as: Tag = "div",
+}: {
   children: ReactNode;
   delay?: number;
   className?: string;
-  y?: number;
-}
-
-export function Reveal({ children, delay = 0, className, y = 20 }: RevealProps) {
-  const reduce = useReducedMotion();
+  as?: ElementType;
+}) {
+  const ref = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    if (!("IntersectionObserver" in window)) {
+      el.classList.add("is-in");
+      return;
+    }
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-in");
+            io.unobserve(entry.target);
+          }
+        }
+      },
+      { rootMargin: "0px 0px -8% 0px", threshold: 0.05 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
   return (
-    <motion.div
+    <Tag
+      ref={ref}
+      data-reveal=""
       className={className}
-      initial={reduce ? false : { opacity: 0, y }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] }}
+      style={delay ? ({ "--delay": `${Math.round(delay * 1000)}ms` } as React.CSSProperties) : undefined}
     >
       {children}
-    </motion.div>
+    </Tag>
   );
 }

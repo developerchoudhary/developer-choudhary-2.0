@@ -2,8 +2,6 @@ package services
 
 import (
 	"encoding/json"
-
-	"github.com/google/uuid"
 )
 
 type RequestDTO struct {
@@ -26,8 +24,4 @@ type RequestDTO struct {
 	SortOrder          int             `json:"sortOrder"`
 	IsFeatured         *bool           `json:"isFeatured"`
 	IsPublished        *bool           `json:"isPublished"`
-}
-
-type ReorderRequest struct {
-	IDs []uuid.UUID `json:"ids" binding:"required,min=1"`
 }

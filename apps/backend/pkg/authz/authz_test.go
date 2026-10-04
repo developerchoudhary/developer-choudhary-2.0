@@ -1,7 +1,6 @@
 package authz
 
 import (
-	"context"
 	"testing"
 )
 
@@ -22,15 +21,15 @@ func TestHasPermissionEditor(t *testing.T) {
 	}
 }
 
-func TestRequirePermissionFromContext(t *testing.T) {
-	ctx := WithContext(context.Background(), &AuthContext{Permissions: []string{"leads:read"}})
-	if err := RequirePermission(ctx, "leads:read"); err != nil {
+func TestAssertPermission(t *testing.T) {
+	auth := &AuthContext{Permissions: []string{"leads:read"}}
+	if err := AssertPermission(auth, "leads:read"); err != nil {
 		t.Fatalf("expected access, got %v", err)
 	}
-	if err := RequirePermission(ctx, "leads:write"); err == nil {
+	if err := AssertPermission(auth, "leads:write"); err == nil {
 		t.Fatalf("expected access denied")
 	}
-	if err := RequirePermission(context.Background(), "leads:read"); err == nil {
-		t.Fatalf("expected access denied without auth context")
+	if err := AssertPermission(nil, "leads:read"); err == nil {
+		t.Fatalf("expected access denied without an auth context")
 	}
 }

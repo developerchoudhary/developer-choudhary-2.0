@@ -1,19 +1,28 @@
 import type { MetadataRoute } from "next";
-import { DEFAULT_DESCRIPTION, SITE_NAME } from "@/lib/site";
+import { versioned } from "@/lib/brand";
+import { getSite } from "@/lib/data";
+import { siteSettings } from "@/lib/site";
 
-export default function manifest(): MetadataRoute.Manifest {
+// Colours and icons follow the theme chosen in the admin, so the manifest is built on request.
+export const dynamic = "force-dynamic";
+
+export default async function manifest(): Promise<MetadataRoute.Manifest> {
+  const site = await getSite();
+  const s = siteSettings(site);
+  const light = site.theme?.tokens.light;
+  const icon = (path: string) => versioned(path, site.theme);
   return {
-    name: `${SITE_NAME} · Aman Choudhary`,
-    short_name: SITE_NAME,
-    description: DEFAULT_DESCRIPTION,
+    name: `${s.name} · ${site.profile.fullName}`,
+    short_name: s.name,
+    description: s.seoDescription,
     start_url: "/",
     display: "standalone",
-    background_color: "#09090b",
-    theme_color: "#09090b",
+    background_color: light?.bg ?? "#f8fafc",
+    theme_color: light?.accent ?? "#23648e",
     icons: [
-      { src: "/icon-192.png", sizes: "192x192", type: "image/png" },
-      { src: "/icon-512.png", sizes: "512x512", type: "image/png" },
-      { src: "/icon-maskable-512.png", sizes: "512x512", type: "image/png", purpose: "maskable" },
+      { src: icon("/brand/icon-192.png"), sizes: "192x192", type: "image/png" },
+      { src: icon("/brand/icon-512.png"), sizes: "512x512", type: "image/png" },
+      { src: icon("/brand/icon-maskable.png"), sizes: "512x512", type: "image/png", purpose: "maskable" },
     ],
     categories: ["business", "technology", "productivity"],
     lang: "en",

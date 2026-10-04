@@ -7,6 +7,7 @@ import (
 
 	"portfolio-backend/internal/audit"
 	"portfolio-backend/internal/modules/notifications"
+	"portfolio-backend/internal/modules/settings"
 	"portfolio-backend/internal/revalidate"
 	"portfolio-backend/pkg/dateparse"
 	"portfolio-backend/pkg/httputil"
@@ -21,10 +22,11 @@ type Service struct {
 	db       *bun.DB
 	reval    *revalidate.Client
 	notifier *notifications.Service
+	settings *settings.Service
 }
 
-func NewService(repo Repository, db *bun.DB, reval *revalidate.Client, notifier *notifications.Service) *Service {
-	return &Service{repo: repo, db: db, reval: reval, notifier: notifier}
+func NewService(repo Repository, db *bun.DB, reval *revalidate.Client, notifier *notifications.Service, st *settings.Service) *Service {
+	return &Service{repo: repo, db: db, reval: reval, notifier: notifier, settings: st}
 }
 
 func (s *Service) List(ctx context.Context, query *pagination.ListQuery) ([]*ResponseDTO, *pagination.Response, error) {
@@ -47,16 +49,11 @@ func (s *Service) Summary(ctx context.Context) (*SummaryDTO, error) {
 	return s.repo.Summary(ctx)
 }
 
-func (s *Service) Get(ctx context.Context, id uuid.UUID) (*ResponseDTO, error) {
-	item, err := s.repo.Get(ctx, id)
-	if err != nil {
-		return nil, err
-	}
-	return ToResponse(item, true), nil
-}
-
 // Submit stores a public review as pending and notifies the admin.
 func (s *Service) Submit(ctx context.Context, req *SubmitRequest, ip string) (*ResponseDTO, error) {
+	if !s.settings.Enabled(ctx, settings.KeyFeatureReviews) {
+		return nil, httputil.Forbidden("reviews are closed")
+	}
 	if strings.TrimSpace(req.Website) != "" {
 		// honeypot tripped: pretend success without storing anything
 		return &ResponseDTO{AuthorName: req.AuthorName, Rating: req.Rating, Body: req.Body, Status: StatusPending}, nil
@@ -69,7 +66,6 @@ func (s *Service) Submit(ctx context.Context, req *SubmitRequest, ip string) (*R
 		Rating:        int16(req.Rating),
 		Title:         strings.TrimSpace(req.Title),
 		Body:          strings.TrimSpace(req.Body),
-		ProjectID:     req.ProjectID,
 		ServiceSlug:   strings.TrimSpace(req.ServiceSlug),
 		Source:        "website",
 		Status:        StatusPending,
@@ -165,13 +161,11 @@ func apply(item *Review, req *AdminRequest, actor uuid.UUID) error {
 	item.AuthorRole = strings.TrimSpace(req.AuthorRole)
 	item.AuthorCompany = strings.TrimSpace(req.AuthorCompany)
 	item.AuthorEmail = strings.ToLower(strings.TrimSpace(req.AuthorEmail))
-	item.AuthorWebsite = strings.TrimSpace(req.AuthorWebsite)
 	item.AuthorAvatarFileID = req.AuthorAvatarFileID
 	item.AuthorAvatarURL = strings.TrimSpace(req.AuthorAvatarURL)
 	item.Rating = int16(req.Rating)
 	item.Title = strings.TrimSpace(req.Title)
 	item.Body = strings.TrimSpace(req.Body)
-	item.ProjectID = req.ProjectID
 	item.ServiceSlug = strings.TrimSpace(req.ServiceSlug)
 	item.Source = req.Source
 	item.ReviewedAt = reviewed

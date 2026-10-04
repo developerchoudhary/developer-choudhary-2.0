@@ -5,7 +5,7 @@
 <title>{{.Profile.FullName}} · Resume</title>
 <style>
 @font-face{font-family:"Inter";src:url("Inter-Variable.ttf") format("truetype");font-weight:100 900;font-style:normal}
-:root{--accent:{{css .Accent}};--ink:#15171b;--muted:#5d636c;--line:#e3e0d9;--soft:#f6f4ef}
+:root{--accent:{{css .Accent}};--ink:#0f172a;--muted:#475569;--line:#e2e8f0;--soft:#f1f5f9}
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
 body{font-family:"Inter",Helvetica,Arial,sans-serif;color:var(--ink);font-size:9.6pt;line-height:1.45;-webkit-print-color-adjust:exact;print-color-adjust:exact}
@@ -14,7 +14,8 @@ h1,h2,h3,p,ul{margin:0}
 ul{padding-left:1.1em}
 li{margin:0 0 2.5pt}
 .muted{color:var(--muted)}
-.chip{display:inline-block;padding:1.5pt 6pt;border:1px solid var(--line);border-radius:999px;font-size:8pt;margin:0 3pt 3pt 0;background:#fff}
+.chip{display:inline-block;padding:1.5pt 6pt;border:1px solid var(--line);border-radius:999px;font-size:8pt;margin:0 3pt 3pt 0;background:#fff;overflow-wrap:normal}
+a{overflow-wrap:anywhere}
 .avoid{break-inside:avoid}
 </style>
 </head>

@@ -74,7 +74,7 @@ func (r *repo) Current(ctx context.Context) (*Resume, error) {
 
 func (r *repo) List(ctx context.Context) ([]*Resume, error) {
 	var items []*Resume
-	err := r.db.NewSelect().Model(&items).ExcludeColumn("snapshot").Order("version DESC").Limit(50).Scan(ctx)
+	err := r.db.NewSelect().Model(&items).Order("version DESC").Limit(50).Scan(ctx)
 	return items, err
 }
 

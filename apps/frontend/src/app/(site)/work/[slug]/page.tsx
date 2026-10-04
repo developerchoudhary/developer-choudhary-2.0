@@ -4,14 +4,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { BlockRenderer } from "@/components/site/block-renderer";
-import { Breadcrumbs } from "@/components/site/breadcrumbs";
 import { ProjectCard } from "@/components/site/cards";
-import { CtaBand } from "@/components/site/cta-band";
+import { Cta } from "@/components/site/cta";
 import { JsonLd } from "@/components/site/json-ld";
 import { Reveal } from "@/components/site/reveal";
-import { getProject, getSite } from "@/lib/data";
+import { ArrowLink, BackLink, ButtonLink, StatusBadge, TagList } from "@/components/site/ui";
+import { getProject, getServices, getSite } from "@/lib/data";
 import { breadcrumbJsonLd, pageMetadata, projectJsonLd } from "@/lib/seo";
-import { PROJECT_STATUS_LABELS, PROJECT_TYPE_LABELS } from "@/lib/site";
+import { PROJECT_TYPE_LABELS, siteSettings } from "@/lib/site";
 import { formatMonth } from "@/lib/utils";
 
 type Params = Promise<{ slug: string }>;
@@ -32,8 +32,9 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 
 export default async function ProjectPage({ params }: { params: Params }) {
   const { slug } = await params;
-  const [project, site] = await Promise.all([getProject(slug), getSite()]);
+  const [project, site, services] = await Promise.all([getProject(slug), getSite(), getServices()]);
   if (!project) notFound();
+  const settings = siteSettings(site);
   const crumbs = [
     { name: "Home", path: "/" },
     { name: "Work", path: "/work" },
@@ -41,161 +42,160 @@ export default async function ProjectPage({ params }: { params: Params }) {
   ];
   const period = [formatMonth(project.startedAt), formatMonth(project.completedAt)]
     .filter(Boolean)
-    .join(" — ");
+    .join(" – ");
+  const facts = [
+    { label: "Client", value: project.clientName },
+    { label: "Industry", value: project.clientIndustry },
+    { label: "My role", value: project.role },
+    { label: "Timeline", value: period || (project.status === "upcoming" ? "Starting soon" : "") },
+  ].filter((f) => f.value);
+  const linkedServices = services.filter((s) => project.serviceSlugs.includes(s.slug));
+  const type = PROJECT_TYPE_LABELS[project.projectType] ?? project.projectType;
 
   return (
     <>
       <JsonLd data={[projectJsonLd(project, site.profile), breadcrumbJsonLd(crumbs)]} />
       <article>
-        <header className="container-dc pt-10 sm:pt-16">
-          <Breadcrumbs items={crumbs} />
-          <Reveal>
-            <div className="mt-8 mb-4 flex flex-wrap items-center gap-3">
-              <p className="eyebrow">
-                {PROJECT_TYPE_LABELS[project.projectType] ?? project.projectType}
-                {project.clientIndustry ? ` · ${project.clientIndustry}` : ""}
-              </p>
-              {project.status !== "completed" && (
-                <span className="rounded-full bg-accent px-2.5 py-1 font-mono text-[0.65rem] uppercase tracking-wider text-accent-fg">
-                  {PROJECT_STATUS_LABELS[project.status]}
-                </span>
-              )}
-            </div>
-            <h1 className="display max-w-4xl text-balance text-4xl sm:text-6xl lg:text-7xl">
-              {project.title}
-            </h1>
-            {project.subtitle && (
-              <p className="mt-5 max-w-2xl text-pretty text-xl text-fg-muted">{project.subtitle}</p>
-            )}
-            <div className="mt-8 flex flex-wrap gap-3">
+        <header className="container-dc pt-12 sm:pt-16">
+          <BackLink href="/work">All work</BackLink>
+          <div className="rise mt-10 flex flex-wrap items-center gap-3">
+            <span className="text-sm font-semibold uppercase tracking-[0.08em] text-accent">{type}</span>
+            {project.status !== "completed" && <StatusBadge status={project.status} />}
+          </div>
+          <h1 className="display rise mt-3 max-w-3xl text-balance text-[2.4rem] sm:text-[3.25rem]">
+            {project.title}
+          </h1>
+          {project.subtitle && (
+            <p className="rise mt-4 max-w-2xl text-pretty text-lg text-fg-muted sm:text-xl">
+              {project.subtitle}
+            </p>
+          )}
+          {(project.liveUrl || project.repoUrl) && (
+            <div className="rise mt-8 flex flex-col gap-3 sm:flex-row">
               {project.liveUrl && (
-                <a
-                  href={project.liveUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex h-11 items-center gap-2 rounded-xl bg-accent px-5 text-sm font-medium text-accent-fg shadow-glow transition hover:bg-accent-strong"
-                >
+                <ButtonLink href={project.liveUrl}>
                   Visit live site <ArrowUpRight className="size-4" />
-                </a>
+                </ButtonLink>
               )}
               {project.repoUrl && (
-                <a
-                  href={project.repoUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex h-11 items-center gap-2 rounded-xl border border-line-strong px-5 text-sm font-medium transition hover:bg-bg-muted"
-                >
+                <ButtonLink href={project.repoUrl} variant="secondary">
                   <Github className="size-4" /> Source code
-                </a>
+                </ButtonLink>
               )}
             </div>
-          </Reveal>
+          )}
+          {facts.length > 0 && (
+            <dl className="mt-10 grid grid-cols-2 gap-x-6 gap-y-5 border-y border-line py-6 sm:grid-cols-4">
+              {facts.map((f) => (
+                <div key={f.label}>
+                  <dt className="text-sm text-fg-subtle">{f.label}</dt>
+                  <dd className="mt-1 font-medium">{f.value}</dd>
+                </div>
+              ))}
+            </dl>
+          )}
         </header>
 
         {project.coverUrl && (
-          <Reveal className="container-dc mt-12">
-            <div className="relative aspect-[16/9] overflow-hidden rounded-3xl border border-line bg-bg-muted shadow-lift">
+          <Reveal className="container-dc mt-10">
+            <div className="relative aspect-[16/10] overflow-hidden rounded-2xl border border-line bg-bg-muted shadow-lift sm:aspect-[16/9]">
               <Image
                 src={project.coverUrl}
                 alt={project.title}
                 fill
                 priority
-                sizes="(min-width: 1200px) 1200px, 100vw"
+                sizes="(min-width: 1120px) 1056px, 100vw"
                 className="object-cover object-top"
               />
             </div>
           </Reveal>
         )}
 
-        <div className="container-dc mt-14 grid gap-12 lg:grid-cols-[0.65fr_1.35fr]">
-          <aside className="space-y-8 lg:sticky lg:top-24 lg:self-start">
-            <dl className="card divide-y divide-line">
-              {project.clientName && <Row label="Client" value={project.clientName} />}
-              {project.role && <Row label="My role" value={project.role} />}
-              {period && <Row label="Timeline" value={period} />}
-              <div className="p-5">
-                <dt className="eyebrow">Stack</dt>
-                <dd className="mt-2 flex flex-wrap gap-1.5">
-                  {project.technologies.map((t) => (
-                    <span
-                      key={t}
-                      className="rounded-md border border-line bg-bg-muted/50 px-2 py-0.5 font-mono text-[0.68rem] text-fg-muted"
-                    >
-                      {t}
-                    </span>
-                  ))}
-                </dd>
-              </div>
-            </dl>
-            {project.highlights.length > 0 && (
-              <div className="grid grid-cols-2 gap-3">
-                {project.highlights.map((h) => (
-                  <div key={h.label} className="card p-4">
-                    <p className="display text-3xl">{h.value}</p>
-                    <p className="mt-1 text-xs text-fg-muted">{h.label}</p>
-                  </div>
-                ))}
-              </div>
+        <div className="container-dc mt-14 grid gap-12 lg:grid-cols-[minmax(0,1fr)_300px] lg:gap-16">
+          <div className="min-w-0 max-w-[68ch]">
+            {project.summary && (
+              <p className="text-pretty text-xl leading-relaxed text-fg">{project.summary}</p>
             )}
-          </aside>
-          <div>
-            <p className="text-xl leading-relaxed text-fg">{project.summary}</p>
-            <div className="mt-8">
-              <BlockRenderer blocks={project.description} />
-            </div>
+            <BlockRenderer blocks={project.description} className="rich mt-8" />
             {project.gallery.length > 0 && (
-              <div className="mt-12 grid gap-4 sm:grid-cols-2">
+              <div className="mt-12 grid gap-5 sm:grid-cols-2">
                 {project.gallery.map((g) => (
-                  <figure key={g.url} className="overflow-hidden rounded-2xl border border-line bg-bg-muted">
-                    <div className="relative aspect-[4/3]">
+                  <figure key={g.url}>
+                    <div className="relative aspect-[4/3] overflow-hidden rounded-xl border border-line bg-bg-muted">
                       <Image
                         src={g.url}
                         alt={g.alt || project.title}
                         fill
-                        sizes="(min-width: 768px) 40vw, 100vw"
+                        sizes="(min-width: 768px) 340px, 100vw"
                         className="object-cover"
                       />
                     </div>
                     {g.caption && (
-                      <figcaption className="px-4 py-3 text-sm text-fg-muted">{g.caption}</figcaption>
+                      <figcaption className="mt-2 text-sm text-fg-subtle">{g.caption}</figcaption>
                     )}
                   </figure>
                 ))}
               </div>
             )}
           </div>
+          <aside className="space-y-10 lg:sticky lg:top-24 lg:self-start">
+            {project.highlights.length > 0 && (
+              <dl className="grid grid-cols-2 gap-3">
+                {project.highlights.map((h) => (
+                  <div key={h.label} className="card flex flex-col p-4">
+                    <dt className="order-2 mt-1 text-sm text-fg-muted">{h.label}</dt>
+                    <dd className="order-1 text-2xl font-semibold tracking-tight text-fg">{h.value}</dd>
+                  </div>
+                ))}
+              </dl>
+            )}
+            {project.technologies.length > 0 && (
+              <div>
+                <h2 className="text-sm font-semibold">Tech stack</h2>
+                <TagList items={project.technologies} className="mt-3" />
+              </div>
+            )}
+            {linkedServices.length > 0 && (
+              <div>
+                <h2 className="text-sm font-semibold">Services</h2>
+                <ul className="mt-3 space-y-2">
+                  {linkedServices.map((s) => (
+                    <li key={s.id}>
+                      <Link
+                        href={`/services/${s.slug}`}
+                        className="text-[0.95rem] text-accent hover:underline"
+                      >
+                        {s.title}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </aside>
         </div>
       </article>
 
       {project.related.length > 0 && (
-        <section className="container-dc mt-20">
-          <div className="mb-6 flex items-end justify-between">
-            <h2 className="display text-3xl">More work</h2>
-            <Link href="/work" className="text-sm font-medium link-underline">
-              All projects
-            </Link>
+        <section className="container-dc pt-20 pb-4">
+          <div className="mb-8 flex items-end justify-between gap-6">
+            <h2 className="display text-2xl sm:text-[1.75rem]">More work</h2>
+            <ArrowLink href="/work">All projects</ArrowLink>
           </div>
-          <div className="grid gap-5 md:grid-cols-3">
+          <div className="grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
             {project.related.map((p) => (
               <ProjectCard key={p.id} project={p} />
             ))}
           </div>
         </section>
       )}
-      <CtaBand
-        text="Building something similar? Let's talk about it."
+
+      <Cta
+        title="Building something similar?"
+        text={settings.ctaText}
         whatsapp={site.profile.whatsapp}
-        email={site.profile.email}
+        primary={settings.heroPrimary}
       />
     </>
-  );
-}
-
-function Row({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="p-5">
-      <dt className="eyebrow">{label}</dt>
-      <dd className="mt-1 font-medium">{value}</dd>
-    </div>
   );
 }

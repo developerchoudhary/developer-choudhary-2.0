@@ -45,7 +45,7 @@ func (r *repo) List(ctx context.Context, publishedOnly bool) ([]*Certification, 
 
 func (r *repo) Update(ctx context.Context, item *Certification) error {
 	return shared.UpdateColumns(ctx, r.db, item, item.ID, "certification not found",
-		"name", "issuer", "issued_at", "expires_at", "credential_id", "credential_url", "sort_order", "is_published", "updated_by", "updated_at")
+		"name", "issuer", "issued_at", "credential_url", "sort_order", "is_published", "updated_by", "updated_at")
 }
 
 func (r *repo) SoftDelete(ctx context.Context, id, deletedBy uuid.UUID) error {

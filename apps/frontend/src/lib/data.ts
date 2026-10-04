@@ -8,8 +8,8 @@ import type {
   PostDetail,
   Project,
   ProjectDetail,
+  ProjectFacets,
   Review,
-  ReviewSummary,
   Service,
   SiteBundle,
   SitemapData,
@@ -19,7 +19,7 @@ import type {
 const empty: SiteBundle = {
   profile: {
     fullName: "Aman Choudhary",
-    headline: "Full-stack engineer",
+    headline: "Full-stack developer",
     bioShort: "",
     bioLong: "",
     email: "",
@@ -30,7 +30,7 @@ const empty: SiteBundle = {
     locationCountry: "India",
     timezone: "Asia/Kolkata",
     avatarFileId: null,
-    avatarUrl: "/aman-choudhary.jpg",
+    avatarUrl: "/portraits/aman-portrait-4x5.webp",
     availabilityStatus: "available",
     availabilityNote: "",
     yearsExperience: 0,
@@ -41,7 +41,7 @@ const empty: SiteBundle = {
     updatedAt: "",
   },
   settings: {},
-  taglines: [],
+  theme: null,
   skills: [],
   reviews: { average: 0, count: 0, distribution: {} },
   resume: null,
@@ -49,29 +49,36 @@ const empty: SiteBundle = {
 
 export const getSite = () => apiGetSafe<SiteBundle>("/site", empty, { tags: ["site"] });
 
-export function setting<T>(site: SiteBundle, key: string, fallback: T): T {
-  const value = site.settings[key];
-  return value === undefined || value === null ? fallback : (value as T);
-}
-
 export const getServices = () => apiGetSafe<Service[]>("/services", [], { tags: ["services"] });
 export const getService = (slug: string) =>
   apiGetOrNull<Service>(`/services/${slug}`, { tags: ["services"] });
 
-export const getFeaturedProjects = (limit = 6) =>
+export const getFeaturedProjects = (limit = 3) =>
   apiGetSafe<Project[]>("/projects/featured", [], { tags: ["projects"], query: { limit } });
-export const getProjects = (page: number, projectType?: string, status?: string[] | string, pageSize = 12) =>
+
+export const getProjects = (filters: {
+  page?: number;
+  type?: string;
+  status?: string;
+  service?: string;
+  pageSize?: number;
+}) =>
   apiList<Project>("/projects", {
     tags: ["projects"],
     query: {
-      page,
-      pageSize,
-      projectType,
-      status: Array.isArray(status) ? status.join(",") : status,
+      page: filters.page ?? 1,
+      pageSize: filters.pageSize ?? 12,
+      projectType: filters.type,
+      status: filters.status,
+      service: filters.service,
       sortBy: "sortOrder",
       sortOrder: "asc",
     },
   });
+
+export const getProjectFacets = () =>
+  apiGetSafe<ProjectFacets>("/projects/facets", { types: [] }, { tags: ["projects"] });
+
 export const getProject = (slug: string) =>
   apiGetOrNull<ProjectDetail>(`/projects/${slug}`, { tags: ["projects"] });
 
@@ -82,8 +89,6 @@ export const getCertifications = () =>
 
 export const getPosts = (page: number, filters: { category?: string; tag?: string; search?: string } = {}) =>
   apiList<Post>("/posts", { tags: ["posts"], query: { page, pageSize: 9, ...filters } });
-export const getRecentPosts = (limit = 3) =>
-  apiGetSafe<Post[]>("/posts/recent", [], { tags: ["posts"], query: { limit } });
 export const getPost = (slug: string) => apiGetOrNull<PostDetail>(`/posts/${slug}`, { tags: ["posts"] });
 export const getCategories = () => apiGetSafe<Category[]>("/post-categories", [], { tags: ["posts"] });
 export const getCategory = (slug: string) =>
@@ -92,11 +97,5 @@ export const getTag = (slug: string) => apiGetOrNull<Tag>(`/post-tags/${slug}`, 
 
 export const getReviews = (featured = false, limit = 0) =>
   apiGetSafe<Review[]>("/reviews", [], { tags: ["reviews"], query: { featured, limit } });
-export const getReviewSummary = () =>
-  apiGetSafe<ReviewSummary>(
-    "/reviews/summary",
-    { average: 0, count: 0, distribution: {} },
-    { tags: ["reviews"] },
-  );
 
 export const getSitemap = () => apiGet<SitemapData>("/sitemap", { tags: ["sitemap"], revalidate: 600 });

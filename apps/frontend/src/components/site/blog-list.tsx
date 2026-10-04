@@ -1,70 +1,49 @@
-import { Newspaper } from "lucide-react";
-import Link from "next/link";
 import type { Category, Paginated, Post } from "@/lib/types";
-import { cn } from "@/lib/utils";
-import { EmptyState } from "../ui/misc";
-import { Pagination } from "./bits";
-import { PostCard } from "./cards";
+import { PostRow } from "./cards";
 import { Reveal } from "./reveal";
+import { Empty, FilterTabs, Pagination } from "./ui";
 
-interface BlogListProps {
+/** Category tabs, then one row per article, then pagination. Shared by the blog, category and tag pages. */
+export function BlogList({
+  posts,
+  categories,
+  activeCategory,
+  hrefFor,
+}: {
   posts: Paginated<Post>;
   categories: Category[];
   activeCategory?: string;
   hrefFor: (page: number) => string;
-  showFeatured?: boolean;
-}
-
-export function BlogList({ posts, categories, activeCategory, hrefFor, showFeatured }: BlogListProps) {
-  const [first, ...rest] = posts.items;
-  const featured = showFeatured && posts.meta.currentPage === 1 && first && first.coverUrl ? first : null;
-  const grid = featured ? rest : posts.items;
-  const chip = (active: boolean) =>
-    cn(
-      "rounded-full border px-4 py-1.5 text-sm transition",
-      active ? "border-fg bg-fg text-bg" : "border-line text-fg-muted hover:border-line-strong hover:text-fg",
-    );
+}) {
+  const used = categories.filter((c) => c.postCount > 0);
   return (
-    <section className="container-dc pb-8">
-      {categories.some((c) => c.postCount > 0) && (
-        <div className="no-scrollbar -mx-5 mb-10 flex gap-2 overflow-x-auto px-5 sm:mx-0 sm:flex-wrap sm:px-0">
-          <Link href="/blog" className={chip(!activeCategory)}>
-            All
-          </Link>
-          {categories
-            .filter((c) => c.postCount > 0)
-            .map((c) => (
-              <Link
-                key={c.id}
-                href={`/blog/category/${c.slug}`}
-                className={cn(chip(activeCategory === c.slug), "shrink-0")}
-              >
-                {c.name} <span className="text-fg-subtle">{c.postCount}</span>
-              </Link>
-            ))}
+    <section className="container-dc pb-16">
+      {used.length > 1 && (
+        <div className="mb-8">
+          <FilterTabs
+            label="Categories"
+            items={[
+              { href: "/blog", label: "All", active: !activeCategory },
+              ...used.map((c) => ({
+                href: `/blog/category/${c.slug}`,
+                label: c.name,
+                active: activeCategory === c.slug,
+                count: c.postCount,
+              })),
+            ]}
+          />
         </div>
       )}
       {posts.items.length === 0 ? (
-        <EmptyState
-          icon={<Newspaper className="size-5" />}
-          title="Nothing published here yet"
-          description="New articles land regularly. Check back soon or subscribe to the RSS feed."
-        />
+        <Empty title="Nothing published here yet">New articles land regularly. Check back soon.</Empty>
       ) : (
-        <>
-          {featured && (
-            <Reveal className="mb-6">
-              <PostCard post={featured} featured />
+        <div className="border-b border-line">
+          {posts.items.map((p) => (
+            <Reveal key={p.id}>
+              <PostRow post={p} />
             </Reveal>
-          )}
-          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {grid.map((p, i) => (
-              <Reveal key={p.id} delay={Math.min(i * 0.05, 0.3)}>
-                <PostCard post={p} />
-              </Reveal>
-            ))}
-          </div>
-        </>
+          ))}
+        </div>
       )}
       <Pagination meta={posts.meta} hrefFor={hrefFor} />
     </section>

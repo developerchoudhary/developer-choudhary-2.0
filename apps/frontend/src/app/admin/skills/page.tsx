@@ -5,6 +5,7 @@ import { useState } from "react";
 import { ConfirmButton, StatusBadge } from "@/components/admin/bits";
 import { type Column, DataTable } from "@/components/admin/data-table";
 import { PageHeader } from "@/components/admin/page-header";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dialog } from "@/components/ui/dialog";
 import { Field, Input, Select, Switch } from "@/components/ui/field";
@@ -16,11 +17,6 @@ type Draft = Omit<Skill, "id"> & { id?: string };
 const blank: Draft = {
   name: "",
   category: "frontend",
-  proficiency: 80,
-  years: 1,
-  icon: "",
-  color: "",
-  description: "",
   isFeatured: false,
   isPublished: true,
   sortOrder: 0,
@@ -45,24 +41,16 @@ export default function SkillsPage() {
       render: (s) => <span className="text-fg-muted">{SKILL_CATEGORY_LABELS[s.category]}</span>,
     },
     {
-      key: "prof",
-      header: "Proficiency",
-      render: (s) => (
-        <div className="flex items-center gap-2">
-          <div className="h-1.5 w-24 overflow-hidden rounded-full bg-bg-muted">
-            <div className="h-full bg-accent" style={{ width: `${s.proficiency}%` }} />
-          </div>
-          <span className="font-mono text-xs text-fg-muted">{s.proficiency}</span>
-        </div>
-      ),
+      key: "order",
+      header: "Order",
+      render: (s) => <span className="tabular text-fg-muted">{s.sortOrder}</span>,
     },
-    { key: "years", header: "Years", render: (s) => <span className="text-fg-muted">{s.years}</span> },
     {
       key: "flags",
       header: "",
       render: (s) => (
         <div className="flex gap-1">
-          {s.isFeatured && <StatusBadge value="high" />}
+          {s.isFeatured && <Badge tone="accent">Highlighted</Badge>}
           {!s.isPublished && <StatusBadge value="draft" />}
         </div>
       ),
@@ -73,7 +61,7 @@ export default function SkillsPage() {
     <>
       <PageHeader
         title="Skills"
-        description="Grouped by category on the site and in the resume. Featured skills scroll across the home page."
+        description="Grouped by category on the About page and in the resume. Highlighted skills stand out on the About page."
         actions={
           <Button onClick={() => setDraft(blank)}>
             <Plus className="size-4" /> New skill
@@ -122,33 +110,7 @@ export default function SkillsPage() {
                   ))}
                 </Select>
               </Field>
-              <Field label={`Proficiency · ${draft.proficiency}%`}>
-                <input
-                  type="range"
-                  min={0}
-                  max={100}
-                  value={draft.proficiency}
-                  onChange={(e) => setDraft({ ...draft, proficiency: Number(e.target.value) })}
-                  className="w-full accent-[var(--accent)]"
-                />
-              </Field>
-              <Field label="Years">
-                <Input
-                  type="number"
-                  step="0.5"
-                  min={0}
-                  value={draft.years}
-                  onChange={(e) => setDraft({ ...draft, years: Number(e.target.value) })}
-                />
-              </Field>
-              <Field label="Icon slug" hint="simple-icons">
-                <Input
-                  value={draft.icon}
-                  onChange={(e) => setDraft({ ...draft, icon: e.target.value })}
-                  placeholder="nextdotjs"
-                />
-              </Field>
-              <Field label="Sort order">
+              <Field label="Sort order" hint="lower comes first">
                 <Input
                   type="number"
                   value={draft.sortOrder}
@@ -156,17 +118,11 @@ export default function SkillsPage() {
                 />
               </Field>
             </div>
-            <Field label="Description" hint="optional">
-              <Input
-                value={draft.description}
-                onChange={(e) => setDraft({ ...draft, description: e.target.value })}
-              />
-            </Field>
             <div className="flex gap-6">
               <Switch
                 checked={draft.isFeatured}
                 onChange={(v) => setDraft({ ...draft, isFeatured: v })}
-                label="Featured"
+                label="Highlighted"
               />
               <Switch
                 checked={draft.isPublished}

@@ -88,15 +88,9 @@ func apply(item *Certification, req *RequestDTO) error {
 	if err != nil {
 		return httputil.BadRequest("issuedAt: " + err.Error())
 	}
-	expires, err := dateparse.ParseOptional(req.ExpiresAt)
-	if err != nil {
-		return httputil.BadRequest("expiresAt: " + err.Error())
-	}
 	item.Name = strings.TrimSpace(req.Name)
 	item.Issuer = strings.TrimSpace(req.Issuer)
 	item.IssuedAt = issued
-	item.ExpiresAt = expires
-	item.CredentialID = strings.TrimSpace(req.CredentialID)
 	item.CredentialURL = strings.TrimSpace(req.CredentialURL)
 	item.SortOrder = req.SortOrder
 	if req.IsPublished != nil {

@@ -1,14 +1,19 @@
 import type { Metadata } from "next";
-import { DEFAULT_DESCRIPTION, SITE_NAME, SITE_URL } from "./site";
+import { versioned } from "./brand";
+import { getSite } from "./data";
+import { SITE_URL, siteSettings } from "./site";
 import type { Post, Profile, Project, ReviewSummary, Service } from "./types";
 import { absoluteUrl } from "./utils";
+
+/** The site-wide share card, drawn in the active theme (src/app/og-image.png/route.ts). */
+export const DEFAULT_SHARE_IMAGE = "/og-image.png";
 
 interface PageMeta {
   title: string;
   description?: string;
   path: string;
   /**
-   * Share image. A URL uses that image; `undefined` falls back to the site-wide portrait composite;
+   * Share image. A URL uses that image; `undefined` falls back to the site-wide share card;
    * `null` sets nothing so the segment's own opengraph-image route is used (projects, posts).
    */
   image?: string | null;
@@ -16,25 +21,30 @@ interface PageMeta {
   publishedTime?: string;
   modifiedTime?: string;
   noIndex?: boolean;
+  /** Use the title as-is instead of applying the "%s · Site name" template. */
+  absoluteTitle?: boolean;
 }
 
-export function pageMetadata(meta: PageMeta): Metadata {
+/** Page metadata with canonical URL, Open Graph and Twitter cards, using the site name set in the admin. */
+export async function pageMetadata(meta: PageMeta): Promise<Metadata> {
+  const site = await getSite();
+  const settings = siteSettings(site);
   const url = `${SITE_URL}${meta.path}`;
-  const description = meta.description || DEFAULT_DESCRIPTION;
+  const description = meta.description || settings.seoDescription;
   const images =
     meta.image === null
       ? undefined
       : [
           {
-            url: absoluteUrl(meta.image || "/og-image.png", SITE_URL),
+            // The version changes with the theme, so networks fetch the new card instead of a cached one.
+            url: absoluteUrl(meta.image || versioned(DEFAULT_SHARE_IMAGE, site.theme), SITE_URL),
             width: 1200,
             height: 630,
             alt: meta.title,
           },
         ];
-  // `images` is omitted only when a page passes `image: null`, so its segment's opengraph-image route wins.
   return {
-    title: meta.title,
+    title: meta.absoluteTitle ? { absolute: meta.title } : meta.title,
     description,
     alternates: { canonical: url },
     robots: meta.noIndex ? { index: false, follow: false } : undefined,
@@ -42,7 +52,7 @@ export function pageMetadata(meta: PageMeta): Metadata {
       title: meta.title,
       description,
       url,
-      siteName: SITE_NAME,
+      siteName: settings.name,
       type: meta.type ?? "website",
       locale: "en_IN",
       ...(images ? { images } : {}),
@@ -53,47 +63,49 @@ export function pageMetadata(meta: PageMeta): Metadata {
       card: "summary_large_image",
       title: meta.title,
       description,
+      creator: settings.twitterHandle || undefined,
       ...(images ? { images: images.map((i) => i.url) } : {}),
     },
   };
 }
 
-export function personJsonLd(profile: Profile, summary?: ReviewSummary) {
+export function personJsonLd(profile: Profile, siteName: string, summary?: ReviewSummary) {
   const sameAs = profile.socials.map((s) => s.url);
-  const base: Record<string, unknown> = {
+  const address = {
+    "@type": "PostalAddress",
+    addressLocality: profile.locationCity,
+    addressRegion: profile.locationRegion,
+    addressCountry: profile.locationCountry,
+  };
+  const person: Record<string, unknown> = {
     "@context": "https://schema.org",
     "@type": "Person",
     "@id": `${SITE_URL}/#person`,
     name: profile.fullName,
     url: SITE_URL,
-    image: absoluteUrl(profile.avatarUrl || "/aman-choudhary.jpg", SITE_URL),
+    image: profile.avatarUrl ? absoluteUrl(profile.avatarUrl, SITE_URL) : undefined,
     jobTitle: profile.headline,
     description: profile.bioShort,
     email: profile.email ? `mailto:${profile.email}` : undefined,
     telephone: profile.phone || undefined,
-    address: {
-      "@type": "PostalAddress",
-      addressLocality: profile.locationCity,
-      addressRegion: profile.locationRegion,
-      addressCountry: profile.locationCountry,
-    },
+    address,
     sameAs,
   };
-  const service: Record<string, unknown> = {
+  const business: Record<string, unknown> = {
     "@context": "https://schema.org",
     "@type": "ProfessionalService",
     "@id": `${SITE_URL}/#business`,
-    name: SITE_NAME,
+    name: siteName,
     url: SITE_URL,
-    image: `${SITE_URL}/opengraph-image`,
+    image: `${SITE_URL}${DEFAULT_SHARE_IMAGE}`,
+    logo: `${SITE_URL}/brand/icon-512.png`,
     founder: { "@id": `${SITE_URL}/#person` },
     areaServed: "Worldwide",
-    address: base.address,
+    address,
     sameAs,
-    priceRange: "₹₹",
   };
   if (summary && summary.count > 0) {
-    service.aggregateRating = {
+    business.aggregateRating = {
       "@type": "AggregateRating",
       ratingValue: summary.average,
       reviewCount: summary.count,
@@ -101,14 +113,14 @@ export function personJsonLd(profile: Profile, summary?: ReviewSummary) {
       worstRating: 1,
     };
   }
-  return [base, service];
+  return [person, business];
 }
 
-export function websiteJsonLd() {
+export function websiteJsonLd(siteName: string) {
   return {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    name: SITE_NAME,
+    name: siteName,
     url: SITE_URL,
     potentialAction: {
       "@type": "SearchAction",
@@ -137,16 +149,13 @@ export function articleJsonLd(post: Post, profile: Profile) {
     "@type": "BlogPosting",
     headline: post.title,
     description: post.seoDescription || post.excerpt,
-    image: post.coverUrl
-      ? [absoluteUrl(post.coverUrl, SITE_URL)]
-      : [`${SITE_URL}/blog/${post.slug}/opengraph-image`],
+    image: [absoluteUrl(post.coverUrl || DEFAULT_SHARE_IMAGE, SITE_URL)],
     datePublished: post.publishedAt,
     dateModified: post.updatedAt,
     author: { "@type": "Person", name: profile.fullName, url: SITE_URL },
     publisher: { "@type": "Person", name: profile.fullName, url: SITE_URL },
     mainEntityOfPage: `${SITE_URL}/blog/${post.slug}`,
     keywords: post.tags.map((t) => t.name).join(", "),
-    wordCount: undefined,
     timeRequired: `PT${post.readingTimeMinutes}M`,
   };
 }
@@ -187,7 +196,7 @@ export function projectJsonLd(project: Project, profile: Profile) {
     name: project.title,
     description: project.seoDescription || project.summary,
     url: `${SITE_URL}/work/${project.slug}`,
-    image: project.coverUrl ? absoluteUrl(project.coverUrl, SITE_URL) : undefined,
+    image: absoluteUrl(project.coverUrl || DEFAULT_SHARE_IMAGE, SITE_URL),
     creator: { "@type": "Person", name: profile.fullName, url: SITE_URL },
     dateCreated: project.startedAt ?? undefined,
     keywords: project.technologies.join(", "),

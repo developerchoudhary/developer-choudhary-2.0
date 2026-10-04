@@ -17,8 +17,6 @@ type Draft = {
   name: string;
   issuer: string;
   issuedAt: string;
-  expiresAt: string;
-  credentialId: string;
   credentialUrl: string;
   sortOrder: number;
   isPublished: boolean;
@@ -27,8 +25,6 @@ const blank: Draft = {
   name: "",
   issuer: "",
   issuedAt: "",
-  expiresAt: "",
-  credentialId: "",
   credentialUrl: "",
   sortOrder: 0,
   isPublished: true,
@@ -82,9 +78,7 @@ export default function CertificationsPage() {
         rows={data}
         loading={isLoading}
         rowKey={(c) => c.id}
-        onRowClick={(c) =>
-          setDraft({ ...blank, ...c, issuedAt: c.issuedAt ?? "", expiresAt: c.expiresAt ?? "" })
-        }
+        onRowClick={(c) => setDraft({ ...blank, ...c, issuedAt: c.issuedAt ?? "" })}
         empty="No certifications yet. Add any courses or credentials you want on the resume."
       />
       <Dialog
@@ -97,7 +91,7 @@ export default function CertificationsPage() {
             onSubmit={(e) => {
               e.preventDefault();
               const { id: _id, ...body } = draft;
-              save.mutate({ ...body, issuedAt: body.issuedAt || null, expiresAt: body.expiresAt || null });
+              save.mutate({ ...body, issuedAt: body.issuedAt || null });
             }}
             className="space-y-4"
           >
@@ -111,14 +105,15 @@ export default function CertificationsPage() {
               <Field label="Issued">
                 <Input type="date" value={draft.issuedAt} onChange={set("issuedAt")} />
               </Field>
-              <Field label="Expires">
-                <Input type="date" value={draft.expiresAt} onChange={set("expiresAt")} />
-              </Field>
-              <Field label="Credential ID">
-                <Input value={draft.credentialId} onChange={set("credentialId")} />
-              </Field>
               <Field label="Credential URL">
                 <Input value={draft.credentialUrl} onChange={set("credentialUrl")} placeholder="https://" />
+              </Field>
+              <Field label="Sort order" hint="lower comes first">
+                <Input
+                  type="number"
+                  value={draft.sortOrder}
+                  onChange={(e) => setDraft({ ...draft, sortOrder: Number(e.target.value) })}
+                />
               </Field>
             </div>
             <Switch

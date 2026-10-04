@@ -24,13 +24,11 @@ type Review struct {
 	AuthorRole         string     `bun:"author_role"`
 	AuthorCompany      string     `bun:"author_company"`
 	AuthorEmail        string     `bun:"author_email"`
-	AuthorWebsite      string     `bun:"author_website"`
 	AuthorAvatarFileID *string    `bun:"author_avatar_file_id"`
 	AuthorAvatarURL    string     `bun:"author_avatar_url"`
 	Rating             int16      `bun:"rating,notnull"`
 	Title              string     `bun:"title"`
 	Body               string     `bun:"body,notnull"`
-	ProjectID          *uuid.UUID `bun:"project_id"`
 	ServiceSlug        string     `bun:"service_slug"`
 	Source             string     `bun:"source,notnull"`
 	Status             string     `bun:"status,notnull"`

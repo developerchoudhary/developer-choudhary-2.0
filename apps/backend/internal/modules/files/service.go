@@ -126,14 +126,6 @@ func (s *Service) CreateFile(ctx context.Context, in UploadInput) (*File, error)
 	return model, nil
 }
 
-func (s *Service) Get(ctx context.Context, id string) (*ResponseDTO, error) {
-	file, err := s.repo.Get(ctx, id)
-	if err != nil {
-		return nil, err
-	}
-	return ToResponse(file), nil
-}
-
 func (s *Service) GetFile(ctx context.Context, id string) (*File, error) {
 	return s.repo.Get(ctx, id)
 }

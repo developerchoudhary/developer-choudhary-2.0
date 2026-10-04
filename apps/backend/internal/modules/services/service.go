@@ -96,14 +96,6 @@ func (s *Svc) Delete(ctx context.Context, id uuid.UUID, actor uuid.UUID) error {
 	return nil
 }
 
-func (s *Svc) Reorder(ctx context.Context, ids []uuid.UUID, actor uuid.UUID) error {
-	if err := s.repo.Reorder(ctx, ids, actor); err != nil {
-		return err
-	}
-	s.reval.Async("services", "site")
-	return nil
-}
-
 func (s *Svc) apply(ctx context.Context, item *Service, req *RequestDTO, actor uuid.UUID) error {
 	desc, _, err := shared.ValidateBlocks(req.Description)
 	if err != nil {

@@ -82,6 +82,9 @@ func (s *Service) build(ctx context.Context, template, accent string, opts rende
 	}
 	if opts.IncludePhoto && p.AvatarURL != "" {
 		r.Profile.AvatarSrc = s.avatarDataURI(ctx, p.AvatarFileID)
+		// The same studio backdrop the site paints behind the photo, in the active theme's colours.
+		t := s.Themes.Active(ctx).Tokens.Light
+		r.PhotoBackground = "linear-gradient(to bottom left, " + t.PhotoFrom + ", " + t.PhotoTo + ")"
 	}
 	for i, x := range xps {
 		if opts.MaxExperience > 0 && i >= opts.MaxExperience {

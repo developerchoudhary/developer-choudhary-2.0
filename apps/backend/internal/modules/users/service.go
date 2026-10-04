@@ -30,14 +30,6 @@ func (s *Service) List(ctx context.Context) ([]*ResponseDTO, error) {
 	return ToListResponse(items), nil
 }
 
-func (s *Service) Get(ctx context.Context, id uuid.UUID) (*ResponseDTO, error) {
-	u, err := s.repo.Get(ctx, id)
-	if err != nil {
-		return nil, err
-	}
-	return ToResponse(u), nil
-}
-
 func (s *Service) Create(ctx context.Context, req *CreateRequest, actor uuid.UUID) (*ResponseDTO, error) {
 	if err := utils.ValidatePasswordStrength(req.Password); err != nil {
 		return nil, httputil.BadRequest(err.Error())

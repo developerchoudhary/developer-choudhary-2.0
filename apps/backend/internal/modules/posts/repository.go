@@ -16,6 +16,7 @@ import (
 
 type ListFilter struct {
 	PublishedOnly bool
+	PinFeatured   bool // featured ("pinned") posts first, before the requested sort
 	CategorySlug  string
 	TagSlug       string
 }
@@ -25,7 +26,7 @@ type Repository interface {
 	Get(ctx context.Context, id uuid.UUID) (*Post, error)
 	GetBySlug(ctx context.Context, slug string, publishedOnly bool) (*Post, error)
 	List(ctx context.Context, query *pagination.ListQuery, filter ListFilter) ([]*Post, int, error)
-	Recent(ctx context.Context, limit int, exclude uuid.UUID) ([]*Post, error)
+	Related(ctx context.Context, exclude uuid.UUID, categoryID *uuid.UUID, limit int) ([]*Post, error)
 	Update(ctx context.Context, item *Post, tagIDs []uuid.UUID) error
 	SoftDelete(ctx context.Context, id, deletedBy uuid.UUID) error
 	UniqueSlug(ctx context.Context, base string, excludeID uuid.UUID) (string, error)
@@ -129,6 +130,9 @@ func (r *repo) List(ctx context.Context, query *pagination.ListQuery, filter Lis
 		return nil, 0, err
 	}
 
+	if filter.PinFeatured {
+		q = q.OrderExpr("posts.is_featured DESC")
+	}
 	q = r.withRelations(query.ApplySort(q, ListSchema)).OrderExpr("posts.created_at DESC").Limit(query.Limit()).Offset(query.Offset())
 	if err := q.Scan(ctx); err != nil {
 		return nil, 0, err
@@ -136,16 +140,18 @@ func (r *repo) List(ctx context.Context, query *pagination.ListQuery, filter Lis
 	return items, count, nil
 }
 
-func (r *repo) Recent(ctx context.Context, limit int, exclude uuid.UUID) ([]*Post, error) {
+// Related returns other published posts, same category first, then the newest.
+func (r *repo) Related(ctx context.Context, exclude uuid.UUID, categoryID *uuid.UUID, limit int) ([]*Post, error) {
 	var items []*Post
 	q := r.withRelations(r.db.NewSelect().Model(&items)).
 		Where("?TableAlias.deleted_at IS NULL").
 		Where("?TableAlias.status = ?", StatusPublished).
-		Where("?TableAlias.published_at <= NOW()")
-	if exclude != uuid.Nil {
-		q = q.Where("?TableAlias.id <> ?", exclude)
+		Where("?TableAlias.published_at <= NOW()").
+		Where("?TableAlias.id <> ?", exclude)
+	if categoryID != nil {
+		q = q.OrderExpr("(posts.category_id = ?) DESC", *categoryID)
 	}
-	err := q.OrderExpr("posts.is_featured DESC, posts.published_at DESC").Limit(limit).Scan(ctx)
+	err := q.OrderExpr("posts.published_at DESC").Limit(limit).Scan(ctx)
 	return items, err
 }
 

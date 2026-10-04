@@ -2,11 +2,12 @@
 
 import { useEffect, useState } from "react";
 
-export function LocalTime({ timezone, city }: { timezone: string; city: string }) {
+/** The current time in the given time zone, refreshed every 30 seconds. */
+export function LocalTime({ timezone }: { timezone: string }) {
   const [time, setTime] = useState("");
   useEffect(() => {
     const fmt = new Intl.DateTimeFormat("en-IN", {
-      hour: "2-digit",
+      hour: "numeric",
       minute: "2-digit",
       timeZone: timezone || "Asia/Kolkata",
     });
@@ -15,9 +16,5 @@ export function LocalTime({ timezone, city }: { timezone: string; city: string }
     const id = setInterval(tick, 30_000);
     return () => clearInterval(id);
   }, [timezone]);
-  return (
-    <span className="font-mono text-xs text-fg-subtle">
-      {city} · {time || "--:--"}
-    </span>
-  );
+  return <span className="tabular">{time || "–"}</span>;
 }

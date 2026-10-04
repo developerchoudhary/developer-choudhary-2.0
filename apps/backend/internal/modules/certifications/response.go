@@ -11,8 +11,6 @@ type ResponseDTO struct {
 	Name          string  `json:"name"`
 	Issuer        string  `json:"issuer"`
 	IssuedAt      *string `json:"issuedAt"`
-	ExpiresAt     *string `json:"expiresAt"`
-	CredentialID  string  `json:"credentialId"`
 	CredentialURL string  `json:"credentialUrl"`
 	SortOrder     int     `json:"sortOrder"`
 	IsPublished   bool    `json:"isPublished"`
@@ -29,8 +27,6 @@ func ToResponse(c *Certification) *ResponseDTO {
 		Name:          c.Name,
 		Issuer:        c.Issuer,
 		IssuedAt:      shared.FormatDate(c.IssuedAt),
-		ExpiresAt:     shared.FormatDate(c.ExpiresAt),
-		CredentialID:  c.CredentialID,
 		CredentialURL: c.CredentialURL,
 		SortOrder:     c.SortOrder,
 		IsPublished:   c.IsPublished,

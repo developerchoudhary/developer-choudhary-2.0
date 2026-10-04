@@ -52,6 +52,15 @@ func (h *Handler) PublicFeatured(c *gin.Context) {
 	httputil.WriteSuccess(c, http.StatusOK, "Featured projects fetched successfully", items)
 }
 
+func (h *Handler) PublicFacets(c *gin.Context) {
+	data, err := h.service.Facets(c.Request.Context())
+	if err != nil {
+		httputil.WriteError(c, err)
+		return
+	}
+	httputil.WriteSuccess(c, http.StatusOK, "Project facets fetched successfully", data)
+}
+
 func (h *Handler) PublicGet(c *gin.Context) {
 	item, err := h.service.PublicGetBySlug(c.Request.Context(), c.Param("slug"))
 	if err != nil {
@@ -134,22 +143,4 @@ func (h *Handler) Delete(c *gin.Context) {
 		return
 	}
 	httputil.WriteSuccess(c, http.StatusOK, "Project deleted successfully", nil)
-}
-
-func (h *Handler) Reorder(c *gin.Context) {
-	actor, err := uuid.Parse(c.GetString("user_id"))
-	if err != nil {
-		httputil.WriteBadRequest(c, err)
-		return
-	}
-	req := &ReorderRequest{}
-	if err := c.ShouldBindJSON(req); err != nil {
-		httputil.WriteValidationError(c, err)
-		return
-	}
-	if err := h.service.Reorder(c.Request.Context(), req.IDs, actor); err != nil {
-		httputil.WriteError(c, err)
-		return
-	}
-	httputil.WriteSuccess(c, http.StatusOK, "Projects reordered", nil)
 }

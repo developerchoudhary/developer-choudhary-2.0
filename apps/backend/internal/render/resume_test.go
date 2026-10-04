@@ -41,3 +41,18 @@ func TestAllTemplatesRender(t *testing.T) {
 		t.Fatal("unknown template must fail")
 	}
 }
+
+func TestPhotoBackgroundIsPainted(t *testing.T) {
+	r := sample()
+	r.Template = "modern"
+	r.Options.IncludePhoto = true
+	r.Profile.AvatarSrc = "data:image/png;base64,AAAA"
+	r.PhotoBackground = "linear-gradient(to bottom left, #eef7fc, #c4e4f6)"
+	html, err := ResumeHTML(r)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(html, "background:linear-gradient(to bottom left, #eef7fc, #c4e4f6)") {
+		t.Fatalf("photo background missing from the modern template")
+	}
+}

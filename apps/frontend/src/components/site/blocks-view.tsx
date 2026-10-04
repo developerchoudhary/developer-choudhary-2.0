@@ -19,6 +19,7 @@ import {
   type TableData,
   youtubeId,
 } from "@/lib/blocks";
+import { buttonClass } from "./ui";
 
 export function Inline({ text }: { text: string }) {
   return (
@@ -81,9 +82,9 @@ function Figure({ item, priority }: { item: ImageData; priority?: boolean }) {
 
 const calloutIcon = { info: Info, tip: Lightbulb, warning: TriangleAlert };
 const calloutTone = {
-  info: "border-accent/40 bg-accent-soft",
-  tip: "border-highlight/50 bg-highlight/10",
-  warning: "border-danger/40 bg-danger/10",
+  info: "border-accent/25 bg-accent-soft",
+  tip: "border-highlight/30 bg-highlight/10",
+  warning: "border-danger/25 bg-danger/10",
 };
 
 export type CodeRenderer = (props: { code: string; language: string; filename?: string }) => ReactNode;
@@ -129,7 +130,9 @@ export function renderBlock(block: Block, Code: CodeRenderer): ReactNode {
       return (
         <blockquote>
           {d.text}
-          {d.cite && <footer className="mt-2 font-sans text-sm not-italic text-fg-muted">— {d.cite}</footer>}
+          {d.cite && (
+            <footer className="mt-3 text-sm font-normal not-italic text-fg-muted">— {d.cite}</footer>
+          )}
         </blockquote>
       );
     }
@@ -217,10 +220,10 @@ export function renderBlock(block: Block, Code: CodeRenderer): ReactNode {
       const d = block.data as unknown as CtaData;
       return (
         <div className="card flex flex-col gap-4 p-6 sm:flex-row sm:items-center sm:justify-between">
-          {d.text && <p className="text-fg">{d.text}</p>}
+          {d.text && <p className="font-medium text-fg">{d.text}</p>}
           <Link
             href={d.href || "/contact"}
-            className="inline-flex h-11 shrink-0 items-center gap-2 rounded-full bg-fg px-5 text-sm font-medium text-bg no-underline"
+            className={buttonClass("primary", "md", "h-11 shrink-0 px-5 no-underline")}
           >
             {d.label} <ArrowUpRight className="size-4" />
           </Link>
@@ -233,7 +236,7 @@ export function renderBlock(block: Block, Code: CodeRenderer): ReactNode {
         <div className="grid gap-4 sm:grid-cols-3">
           {d.items.map((s) => (
             <div key={`${s.label}-${s.value}`} className="card p-5">
-              <p className="display text-4xl">{s.value}</p>
+              <p className="text-3xl font-semibold tracking-tight text-fg">{s.value}</p>
               <p className="mt-1 text-sm text-fg-muted">{s.label}</p>
             </div>
           ))}

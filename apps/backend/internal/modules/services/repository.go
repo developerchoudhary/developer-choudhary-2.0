@@ -17,7 +17,6 @@ type Repository interface {
 	Update(ctx context.Context, item *Service) error
 	SoftDelete(ctx context.Context, id, deletedBy uuid.UUID) error
 	UniqueSlug(ctx context.Context, base string, excludeID uuid.UUID) (string, error)
-	Reorder(ctx context.Context, ids []uuid.UUID, userID uuid.UUID) error
 }
 
 type repo struct {
@@ -63,8 +62,4 @@ func (r *repo) SoftDelete(ctx context.Context, id, deletedBy uuid.UUID) error {
 
 func (r *repo) UniqueSlug(ctx context.Context, base string, excludeID uuid.UUID) (string, error) {
 	return shared.UniqueSlug[Service](ctx, r.db, base, excludeID)
-}
-
-func (r *repo) Reorder(ctx context.Context, ids []uuid.UUID, userID uuid.UUID) error {
-	return shared.Reorder[Service](ctx, r.db, ids, userID)
 }

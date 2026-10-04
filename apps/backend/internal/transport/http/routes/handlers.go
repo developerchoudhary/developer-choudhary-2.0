@@ -18,7 +18,7 @@ import (
 	"portfolio-backend/internal/modules/settings"
 	"portfolio-backend/internal/modules/site"
 	"portfolio-backend/internal/modules/skills"
-	"portfolio-backend/internal/modules/taglines"
+	"portfolio-backend/internal/modules/themes"
 	"portfolio-backend/internal/modules/users"
 	"portfolio-backend/internal/modules/visits"
 	"portfolio-backend/internal/objectstore"
@@ -41,7 +41,7 @@ type Handlers struct {
 	Files          *files.Handler
 	Profile        *profile.Handler
 	Settings       *settings.Handler
-	Taglines       *taglines.Handler
+	Themes         *themes.Handler
 	Services       *services.Handler
 	Skills         *skills.Handler
 	Projects       *projects.Handler
@@ -65,11 +65,11 @@ func Build(in Infra) *Handlers {
 	userSvc := users.NewService(userRepo, db)
 	authSvc := auth.NewService(userRepo, auth.NewSessionRepository(db), db)
 	fileSvc := files.NewService(files.NewRepository(db), in.Store)
-	notifySvc := notifications.NewService(db)
+	settingsSvc := settings.NewService(settings.NewRepository(db), db, rv)
+	themeSvc := themes.NewService(themes.NewRepository(db), db, rv, settingsSvc)
+	notifySvc := notifications.NewService(db, settingsSvc, themeSvc)
 
 	profileSvc := profile.NewService(profile.NewRepository(db), db, rv)
-	settingsSvc := settings.NewService(settings.NewRepository(db), db, rv)
-	taglineSvc := taglines.NewService(taglines.NewRepository(db), db, rv)
 	serviceSvc := services.NewService(services.NewRepository(db), db, rv)
 	skillSvc := skills.NewService(skills.NewRepository(db), db, rv)
 	projectSvc := projects.NewService(projects.NewRepository(db), db, rv)
@@ -77,15 +77,15 @@ func Build(in Infra) *Handlers {
 	educationSvc := education.NewService(education.NewRepository(db), db, rv)
 	certSvc := certifications.NewService(certifications.NewRepository(db), db, rv)
 	postSvc := posts.NewService(posts.NewRepository(db), db, rv)
-	reviewSvc := reviews.NewService(reviews.NewRepository(db), db, rv, notifySvc)
+	reviewSvc := reviews.NewService(reviews.NewRepository(db), db, rv, notifySvc, settingsSvc)
 	leadSvc := leads.NewService(leads.NewRepository(db), db, notifySvc)
 	visitSvc := visits.NewService(db)
 	resumeSvc := resumes.NewService(db, resumes.Deps{
 		Profile: profileSvc, Experience: experienceSvc, Education: educationSvc, Certifications: certSvc,
-		Skills: skillSvc, Projects: projectSvc, Files: fileSvc, PDF: in.PDF, Revalidator: rv,
+		Skills: skillSvc, Projects: projectSvc, Files: fileSvc, PDF: in.PDF, Revalidator: rv, Themes: themeSvc,
 	})
 	dashboardSvc := dashboard.NewService(db, leadSvc, reviewSvc, visitSvc, notifySvc)
-	siteSvc := site.NewService(profileSvc, settingsSvc, taglineSvc, skillSvc, reviewSvc, projectSvc, postSvc, serviceSvc, resumeSvc)
+	siteSvc := site.NewService(profileSvc, settingsSvc, themeSvc, skillSvc, reviewSvc, projectSvc, postSvc, serviceSvc, resumeSvc)
 
 	return &Handlers{
 		Auth:           auth.NewHandler(authSvc),
@@ -93,7 +93,7 @@ func Build(in Infra) *Handlers {
 		Files:          files.NewHandler(fileSvc),
 		Profile:        profile.NewHandler(profileSvc),
 		Settings:       settings.NewHandler(settingsSvc),
-		Taglines:       taglines.NewHandler(taglineSvc),
+		Themes:         themes.NewHandler(themeSvc),
 		Services:       services.NewHandler(serviceSvc),
 		Skills:         skills.NewHandler(skillSvc),
 		Projects:       projects.NewHandler(projectSvc),

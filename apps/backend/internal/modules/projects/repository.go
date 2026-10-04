@@ -17,10 +17,10 @@ type Repository interface {
 	List(ctx context.Context, query *pagination.ListQuery, publishedOnly bool) ([]*Project, int, error)
 	ListPublished(ctx context.Context, featuredOnly bool, limit int) ([]*Project, error)
 	Related(ctx context.Context, exclude uuid.UUID, projectType string, limit int) ([]*Project, error)
+	TypeCounts(ctx context.Context) ([]FacetCount, error)
 	Update(ctx context.Context, item *Project) error
 	SoftDelete(ctx context.Context, id, deletedBy uuid.UUID) error
 	UniqueSlug(ctx context.Context, base string, excludeID uuid.UUID) (string, error)
-	Reorder(ctx context.Context, ids []uuid.UUID, userID uuid.UUID) error
 }
 
 type repo struct {
@@ -106,6 +106,15 @@ func (r *repo) UniqueSlug(ctx context.Context, base string, excludeID uuid.UUID)
 	return shared.UniqueSlug[Project](ctx, r.db, base, excludeID)
 }
 
-func (r *repo) Reorder(ctx context.Context, ids []uuid.UUID, userID uuid.UUID) error {
-	return shared.Reorder[Project](ctx, r.db, ids, userID)
+// TypeCounts counts published projects per project type, largest first.
+func (r *repo) TypeCounts(ctx context.Context) ([]FacetCount, error) {
+	out := []FacetCount{}
+	err := r.db.NewSelect().Model((*Project)(nil)).
+		ColumnExpr("project_type AS value, COUNT(*) AS count").
+		Where("deleted_at IS NULL").
+		Where("is_published = TRUE").
+		GroupExpr("project_type").
+		OrderExpr("count DESC, value ASC").
+		Scan(ctx, &out)
+	return out, err
 }

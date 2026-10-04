@@ -1,8 +1,8 @@
 {{template "head" .}}
 <h1 style="margin:0 0 6px;font-size:22px;letter-spacing:-0.02em;">New review awaiting approval</h1>
-<p style="margin:0 0 16px;color:#6b7078;">{{.Review.AuthorName}}{{if .Review.Company}} · {{.Review.Company}}{{end}}</p>
-<p style="margin:0 0 12px;font-size:20px;color:#f2b33d;letter-spacing:2px;">{{stars .Review.Rating}}</p>
+<p style="margin:0 0 16px;color:#64748b;">{{.Review.AuthorName}}{{if .Review.Company}} · {{.Review.Company}}{{end}}</p>
+<p style="margin:0 0 12px;font-size:20px;color:#f59e0b;letter-spacing:2px;">{{stars .Review.Rating}}</p>
 {{if .Review.Title}}<p style="margin:0 0 8px;font-weight:600;">{{.Review.Title}}</p>{{end}}
-<div style="margin:0 0 20px;padding:16px 18px;background:#f6f4ef;border-radius:8px;white-space:pre-wrap;">{{.Review.Body}}</div>
-<a href="{{.AdminURL}}/reviews" style="display:inline-block;padding:12px 18px;background:#14161a;color:#ffffff;border-radius:999px;text-decoration:none;font-weight:600;font-size:14px;">Moderate reviews</a>
+<div style="margin:0 0 20px;padding:16px 18px;background:#f8fafc;border-radius:8px;white-space:pre-wrap;">{{.Review.Body}}</div>
+<a href="{{.AdminURL}}/reviews" style="display:inline-block;padding:12px 18px;background:{{$.Accent}};color:{{$.AccentFg}};border-radius:10px;text-decoration:none;font-weight:600;font-size:14px;">Moderate reviews</a>
 {{template "foot" .}}

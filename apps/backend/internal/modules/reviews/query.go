@@ -14,7 +14,6 @@ var ListSchema = pagination.Schema{
 		"source":     {Column: "reviews.source", Type: pagination.TypeEnum, Multi: true},
 		"rating":     {Column: "reviews.rating", Type: pagination.TypeNumber, Multi: true},
 		"isFeatured": {Column: "reviews.is_featured", Type: pagination.TypeBool},
-		"projectId":  {Column: "reviews.project_id", Type: pagination.TypeUUID},
 	},
 	SearchCols: []string{"reviews.author_name", "reviews.author_company", "reviews.title", "reviews.body"},
 }

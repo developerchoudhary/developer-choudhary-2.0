@@ -1,24 +1,27 @@
-import { PageHero } from "@/components/site/section";
+import type { Metadata } from "next";
+import { PageHeader } from "@/components/site/ui";
 import { getSite } from "@/lib/data";
 import { pageMetadata } from "@/lib/seo";
 
-export const metadata = pageMetadata({
-  title: "Privacy policy",
-  description: "How developerchoudhary.com handles contact details, analytics and optional location sharing.",
-  path: "/privacy",
-});
+export function generateMetadata(): Promise<Metadata> {
+  return pageMetadata({
+    title: "Privacy policy",
+    description:
+      "How developerchoudhary.com handles contact details, analytics and optional location sharing.",
+    path: "/privacy",
+  });
+}
 
 export default async function PrivacyPage() {
   const site = await getSite();
   return (
     <>
-      <PageHero
-        eyebrow="Legal"
+      <PageHeader
         title="Privacy policy"
         lede="Short version: I collect only what I need to reply to you and understand how the site is used."
       />
-      <section className="container-dc pb-24">
-        <div className="rich max-w-3xl text-fg-muted">
+      <section className="container-dc pb-20">
+        <div className="rich max-w-[44rem]">
           <h2>What I collect</h2>
           <p>
             When you send the contact form I store the details you type (name, email, phone, company, message)
@@ -54,7 +57,7 @@ export default async function PrivacyPage() {
             Everything runs on infrastructure I operate. Data is not sold or shared with third parties beyond
             the email provider used to deliver notifications.
           </p>
-          <p className="text-sm">Last updated {new Date().getFullYear()}.</p>
+          <p className="text-sm text-fg-subtle">Last updated October 2026.</p>
         </div>
       </section>
     </>

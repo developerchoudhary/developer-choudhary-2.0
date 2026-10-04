@@ -1,19 +1,17 @@
-import { ArrowUpRight, Check, Clock, IndianRupee } from "lucide-react";
+import { Check } from "lucide-react";
 import type { Metadata } from "next";
-import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
-import { TechList } from "@/components/site/bits";
 import { BlockRenderer } from "@/components/site/block-renderer";
-import { Breadcrumbs } from "@/components/site/breadcrumbs";
-import { ProjectCard, ReviewCard } from "@/components/site/cards";
-import { CtaBand } from "@/components/site/cta-band";
+import { ProjectCard } from "@/components/site/cards";
+import { Cta } from "@/components/site/cta";
 import { Faq } from "@/components/site/faq";
 import { JsonLd } from "@/components/site/json-ld";
-import { Reveal } from "@/components/site/reveal";
-import { Section } from "@/components/site/section";
 import { ServiceIcon } from "@/components/site/service-icon";
-import { getFeaturedProjects, getReviews, getService, getServices, getSite } from "@/lib/data";
+import { BackLink, ButtonLink, TagList } from "@/components/site/ui";
+import { getProjects, getService, getSite } from "@/lib/data";
 import { breadcrumbJsonLd, faqJsonLd, pageMetadata, serviceJsonLd } from "@/lib/seo";
+import { siteSettings } from "@/lib/site";
 
 type Params = Promise<{ slug: string }>;
 
@@ -31,83 +29,92 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 
 export default async function ServicePage({ params }: { params: Params }) {
   const { slug } = await params;
-  const [service, site, all, projects, reviews] = await Promise.all([
+  const [service, site, related] = await Promise.all([
     getService(slug),
     getSite(),
-    getServices(),
-    getFeaturedProjects(12),
-    getReviews(false, 0),
+    getProjects({ service: slug, pageSize: 3 }).catch(() => null),
   ]);
   if (!service) notFound();
-
-  const related = projects.filter((p) => p.serviceSlugs.includes(service.slug)).slice(0, 3);
-  const serviceReviews = reviews.filter((r) => r.serviceSlug === service.slug).slice(0, 2);
-  const others = all.filter((s) => s.slug !== service.slug).slice(0, 5);
+  const settings = siteSettings(site);
   const crumbs = [
     { name: "Home", path: "/" },
     { name: "Services", path: "/services" },
     { name: service.title, path: `/services/${service.slug}` },
   ];
+  const contactHref = `/contact?service=${encodeURIComponent(service.title)}`;
+  const facts = [
+    { label: "Starting at", value: service.startingPriceLabel },
+    { label: "Typical timeline", value: service.timelineLabel },
+  ].filter((f) => f.value);
 
   return (
     <>
       <JsonLd
         data={[serviceJsonLd(service, site.profile), faqJsonLd(service.faqs), breadcrumbJsonLd(crumbs)]}
       />
-      <section className="relative overflow-hidden">
-        <div className="grid-bg pointer-events-none absolute inset-x-0 top-0 h-[420px]" aria-hidden="true" />
-        <div className="container-dc relative pt-10 pb-12 sm:pt-16 sm:pb-16">
-          <Breadcrumbs items={crumbs} />
-          <Reveal>
-            <div className="mt-8 grid gap-10 lg:grid-cols-[1.3fr_0.7fr] lg:items-end">
-              <div>
-                <span className="inline-flex size-12 items-center justify-center rounded-xl bg-accent-soft text-accent">
-                  <ServiceIcon name={service.icon} className="size-5" />
-                </span>
-                <h1 className="display mt-6 max-w-3xl text-balance text-4xl sm:text-6xl">{service.title}</h1>
-                <p className="mt-5 max-w-2xl text-pretty text-lg text-fg-muted sm:text-xl">
-                  {service.tagline}
-                </p>
-              </div>
-              <div className="card grid grid-cols-2 divide-x divide-line">
-                <div className="p-5">
-                  <p className="eyebrow inline-flex items-center gap-1.5">
-                    <IndianRupee className="size-3" /> Starting at
-                  </p>
-                  <p className="mt-2 text-xl font-semibold">{service.startingPriceLabel || "On request"}</p>
-                </div>
-                <div className="p-5">
-                  <p className="eyebrow inline-flex items-center gap-1.5">
-                    <Clock className="size-3" /> Timeline
-                  </p>
-                  <p className="mt-2 text-xl font-semibold">{service.timelineLabel || "Depends on scope"}</p>
-                </div>
-              </div>
-            </div>
-          </Reveal>
+      <header className="container-dc pt-12 sm:pt-16">
+        <BackLink href="/services">All services</BackLink>
+        <div className="rise mt-10 flex size-12 items-center justify-center rounded-xl bg-accent-soft text-accent">
+          <ServiceIcon name={service.icon} className="size-6" />
         </div>
-      </section>
+        <h1 className="display rise mt-6 max-w-3xl text-balance text-[2.4rem] sm:text-[3.25rem]">
+          {service.title}
+        </h1>
+        {service.tagline && (
+          <p className="rise mt-4 max-w-2xl text-pretty text-lg text-fg-muted sm:text-xl">
+            {service.tagline}
+          </p>
+        )}
+        <div className="rise mt-8 flex flex-col gap-6 sm:flex-row sm:items-center">
+          <ButtonLink href={contactHref}>Discuss your project</ButtonLink>
+          {facts.length > 0 && (
+            <dl className="flex gap-8">
+              {facts.map((f) => (
+                <div key={f.label}>
+                  <dt className="text-sm text-fg-subtle">{f.label}</dt>
+                  <dd className="font-semibold">{f.value}</dd>
+                </div>
+              ))}
+            </dl>
+          )}
+        </div>
+      </header>
 
-      <div className="container-dc grid gap-12 lg:grid-cols-[1.35fr_0.65fr]">
-        <div>
-          <p className="text-xl leading-relaxed text-fg">{service.summary}</p>
-          <div className="mt-8">
-            <BlockRenderer blocks={service.description} />
+      {service.coverUrl && (
+        <div className="container-dc mt-12">
+          <div className="relative aspect-[16/7] overflow-hidden rounded-2xl border border-line bg-bg-muted">
+            <Image
+              src={service.coverUrl}
+              alt={service.title}
+              fill
+              priority
+              sizes="(min-width: 1120px) 1056px, 100vw"
+              className="object-cover"
+            />
           </div>
+        </div>
+      )}
+
+      <div className="container-dc mt-14 grid gap-12 lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-16">
+        <div className="min-w-0 max-w-[68ch]">
+          {service.summary && (
+            <p className="text-pretty text-xl leading-relaxed text-fg">{service.summary}</p>
+          )}
+          <BlockRenderer blocks={service.description} className="rich mt-8" />
           {service.faqs.length > 0 && (
             <div className="mt-14">
-              <h2 className="display mb-6 text-3xl">Questions</h2>
+              <h2 className="display mb-4 text-2xl">Questions</h2>
               <Faq items={service.faqs} />
             </div>
           )}
         </div>
-        <aside className="space-y-6 lg:sticky lg:top-24 lg:self-start">
+        <aside className="space-y-10 lg:sticky lg:top-24 lg:self-start">
           {service.deliverables.length > 0 && (
             <div className="card p-6">
-              <p className="eyebrow mb-4">What you get</p>
-              <ul className="space-y-2.5 text-sm">
+              <h2 className="text-sm font-semibold">What you get</h2>
+              <ul className="mt-4 space-y-3 text-[0.95rem]">
                 {service.deliverables.map((d) => (
-                  <li key={d} className="flex gap-2.5 text-fg-muted">
+                  <li key={d} className="flex gap-3 text-fg-muted">
                     <Check className="mt-0.5 size-4 shrink-0 text-accent" />
                     {d}
                   </li>
@@ -116,12 +123,12 @@ export default async function ServicePage({ params }: { params: Params }) {
             </div>
           )}
           {service.idealFor.length > 0 && (
-            <div className="card p-6">
-              <p className="eyebrow mb-4">Ideal for</p>
-              <ul className="space-y-2 text-sm text-fg-muted">
+            <div>
+              <h2 className="text-sm font-semibold">A good fit for</h2>
+              <ul className="mt-3 space-y-2 text-[0.95rem] text-fg-muted">
                 {service.idealFor.map((d) => (
-                  <li key={d} className="flex gap-2.5">
-                    <span className="mt-2 size-1 shrink-0 rounded-full bg-accent" />
+                  <li key={d} className="flex gap-3">
+                    <span className="mt-2.5 size-1.5 shrink-0 rounded-full bg-accent" aria-hidden="true" />
                     {d}
                   </li>
                 ))}
@@ -129,61 +136,30 @@ export default async function ServicePage({ params }: { params: Params }) {
             </div>
           )}
           {service.techStack.length > 0 && (
-            <div className="card p-6">
-              <p className="eyebrow mb-4">Stack</p>
-              <TechList items={service.techStack} max={12} />
+            <div>
+              <h2 className="text-sm font-semibold">Tech stack</h2>
+              <TagList items={service.techStack} className="mt-3" />
             </div>
           )}
-          <Link
-            href={`/contact?service=${encodeURIComponent(service.title)}`}
-            className="flex h-12 items-center justify-center gap-2 rounded-xl bg-accent text-sm font-medium text-accent-fg shadow-glow transition hover:bg-accent-strong"
-          >
-            Discuss this service <ArrowUpRight className="size-4" />
-          </Link>
         </aside>
       </div>
 
-      {related.length > 0 && (
-        <Section eyebrow="Related work" title="Delivered with this service" size="tight">
-          <div className="grid gap-5 md:grid-cols-3">
-            {related.map((p) => (
+      {related && related.items.length > 0 && (
+        <section className="container-dc pt-20 pb-4">
+          <h2 className="display mb-8 text-2xl sm:text-[1.75rem]">Related work</h2>
+          <div className="grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+            {related.items.map((p) => (
               <ProjectCard key={p.id} project={p} />
-            ))}
-          </div>
-        </Section>
-      )}
-
-      {serviceReviews.length > 0 && (
-        <Section eyebrow="Reviews" title="From clients" size="tight">
-          <div className="grid gap-5 md:grid-cols-2">
-            {serviceReviews.map((r) => (
-              <ReviewCard key={r.id} review={r} />
-            ))}
-          </div>
-        </Section>
-      )}
-
-      {others.length > 0 && (
-        <section className="container-dc py-10">
-          <p className="eyebrow mb-4">Other services</p>
-          <div className="flex flex-wrap gap-2">
-            {others.map((s) => (
-              <Link
-                key={s.id}
-                href={`/services/${s.slug}`}
-                className="inline-flex items-center gap-2 rounded-full border border-line px-4 py-2 text-sm text-fg-muted transition hover:border-line-strong hover:text-fg"
-              >
-                <ServiceIcon name={s.icon} className="size-3.5" /> {s.title}
-              </Link>
             ))}
           </div>
         </section>
       )}
 
-      <CtaBand
-        text={`Ready to talk about ${service.title.toLowerCase()}? I reply within one working day.`}
+      <Cta
+        title={settings.ctaTitle}
+        text={`Tell me about your project and I will reply ${settings.responseTime} with next steps.`}
         whatsapp={site.profile.whatsapp}
-        email={site.profile.email}
+        primary={{ label: "Discuss your project", href: contactHref }}
       />
     </>
   );

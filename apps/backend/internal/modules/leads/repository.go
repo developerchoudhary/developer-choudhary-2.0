@@ -179,17 +179,8 @@ func (r *repo) Stats(ctx context.Context) (*StatsDTO, error) {
 		GroupExpr("1").OrderExpr("1 ASC").Scan(ctx, &out.Daily); err != nil {
 		return nil, err
 	}
-	if err = r.db.NewSelect().Model((*Lead)(nil)).
-		ColumnExpr("COALESCE(NULLIF(service_interest, ''), 'Not specified') AS label, COUNT(*) AS count").
-		Where("deleted_at IS NULL").
-		GroupExpr("1").OrderExpr("count DESC").Limit(8).Scan(ctx, &out.BySource); err != nil {
-		return nil, err
-	}
 	if out.Daily == nil {
 		out.Daily = []DayCountDTO{}
-	}
-	if out.BySource == nil {
-		out.BySource = []CountDTO{}
 	}
 	return out, nil
 }

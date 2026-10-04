@@ -19,9 +19,7 @@ type Lead struct {
 	Email            string          `bun:"email"`
 	Phone            string          `bun:"phone"`
 	Company          string          `bun:"company"`
-	Website          string          `bun:"website"`
 	ServiceInterest  string          `bun:"service_interest"`
-	ProjectType      string          `bun:"project_type"`
 	BudgetRange      string          `bun:"budget_range"`
 	Timeline         string          `bun:"timeline"`
 	Message          string          `bun:"message,notnull"`

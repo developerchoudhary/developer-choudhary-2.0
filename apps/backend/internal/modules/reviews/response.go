@@ -12,13 +12,11 @@ type ResponseDTO struct {
 	AuthorRole         string  `json:"authorRole"`
 	AuthorCompany      string  `json:"authorCompany"`
 	AuthorEmail        string  `json:"authorEmail,omitempty"`
-	AuthorWebsite      string  `json:"authorWebsite"`
 	AuthorAvatarFileID *string `json:"authorAvatarFileId,omitempty"`
 	AuthorAvatarURL    string  `json:"authorAvatarUrl"`
 	Rating             int     `json:"rating"`
 	Title              string  `json:"title"`
 	Body               string  `json:"body"`
-	ProjectID          *string `json:"projectId"`
 	ServiceSlug        string  `json:"serviceSlug"`
 	Source             string  `json:"source"`
 	Status             string  `json:"status,omitempty"`
@@ -39,22 +37,15 @@ func ToResponse(r *Review, admin bool) *ResponseDTO {
 	if r == nil {
 		return nil
 	}
-	var projectID *string
-	if r.ProjectID != nil {
-		s := r.ProjectID.String()
-		projectID = &s
-	}
 	dto := &ResponseDTO{
 		ID:              r.ID.String(),
 		AuthorName:      r.AuthorName,
 		AuthorRole:      r.AuthorRole,
 		AuthorCompany:   r.AuthorCompany,
-		AuthorWebsite:   r.AuthorWebsite,
 		AuthorAvatarURL: r.AuthorAvatarURL,
 		Rating:          int(r.Rating),
 		Title:           r.Title,
 		Body:            r.Body,
-		ProjectID:       projectID,
 		ServiceSlug:     r.ServiceSlug,
 		Source:          r.Source,
 		IsFeatured:      r.IsFeatured,

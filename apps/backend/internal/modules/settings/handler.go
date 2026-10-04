@@ -18,7 +18,7 @@ func NewHandler(service *Service) *Handler {
 }
 
 func (h *Handler) List(c *gin.Context) {
-	items, err := h.service.List(c.Request.Context())
+	items, err := h.service.Groups(c.Request.Context())
 	if err != nil {
 		httputil.WriteError(c, err)
 		return

@@ -3,19 +3,14 @@ package skills
 import "time"
 
 type ResponseDTO struct {
-	ID          string  `json:"id"`
-	Name        string  `json:"name"`
-	Category    string  `json:"category"`
-	Proficiency int     `json:"proficiency"`
-	Years       float64 `json:"years"`
-	Icon        string  `json:"icon"`
-	Color       string  `json:"color"`
-	Description string  `json:"description"`
-	IsFeatured  bool    `json:"isFeatured"`
-	IsPublished bool    `json:"isPublished"`
-	SortOrder   int     `json:"sortOrder"`
-	CreatedAt   string  `json:"createdAt"`
-	UpdatedAt   string  `json:"updatedAt"`
+	ID          string `json:"id"`
+	Name        string `json:"name"`
+	Category    string `json:"category"`
+	IsFeatured  bool   `json:"isFeatured"`
+	IsPublished bool   `json:"isPublished"`
+	SortOrder   int    `json:"sortOrder"`
+	CreatedAt   string `json:"createdAt"`
+	UpdatedAt   string `json:"updatedAt"`
 }
 
 type GroupDTO struct {
@@ -31,11 +26,6 @@ func ToResponse(s *Skill) *ResponseDTO {
 		ID:          s.ID.String(),
 		Name:        s.Name,
 		Category:    s.Category,
-		Proficiency: s.Proficiency,
-		Years:       s.Years,
-		Icon:        s.Icon,
-		Color:       s.Color,
-		Description: s.Description,
 		IsFeatured:  s.IsFeatured,
 		IsPublished: s.IsPublished,
 		SortOrder:   s.SortOrder,

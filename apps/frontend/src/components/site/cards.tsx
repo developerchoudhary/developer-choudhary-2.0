@@ -1,269 +1,246 @@
-import { ArrowUpRight, Clock, Hammer, Sparkles } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { PROJECT_STATUS_LABELS, PROJECT_TYPE_LABELS } from "@/lib/site";
+import { PROJECT_TYPE_LABELS } from "@/lib/site";
 import type { Post, Project, Review, Service } from "@/lib/types";
-import { cn, formatDate } from "@/lib/utils";
-import { Avatar, Stars } from "../ui/misc";
-import { TechList } from "./bits";
+import { cn, formatDate, initials } from "@/lib/utils";
 import { ServiceIcon } from "./service-icon";
+import { StatusBadge } from "./ui";
+
+const year = (p: Project) => (p.completedAt ?? p.startedAt ?? "").slice(0, 4);
+
+function CoverPlaceholder({ title, label }: { title: string; label: string }) {
+  return (
+    <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-br from-[var(--frame)] via-bg-muted to-bg-muted p-6">
+      <p className="text-xs font-semibold uppercase tracking-[0.08em] text-accent">{label}</p>
+      <p className="mt-1.5 max-w-[16ch] text-2xl font-semibold leading-tight tracking-tight text-fg">
+        {title}
+      </p>
+    </div>
+  );
+}
 
 export function ProjectCard({
   project,
-  large,
   priority,
-  compact,
+  sizes = "(min-width: 1024px) 360px, (min-width: 640px) 50vw, 100vw",
 }: {
   project: Project;
-  large?: boolean;
   priority?: boolean;
-  /** Shorter cover for cards stacked beside a large one. */
-  compact?: boolean;
+  sizes?: string;
 }) {
-  const inProgress = project.status === "in-progress";
-  const upcoming = project.status === "upcoming";
+  const type = PROJECT_TYPE_LABELS[project.projectType] ?? project.projectType;
+  const meta = [type, project.status === "completed" ? year(project) : ""].filter(Boolean).join(" · ");
   return (
-    <Link
-      href={`/work/${project.slug}`}
-      className="group card card-hover flex h-full flex-col overflow-hidden"
-    >
-      <div
-        className={cn(
-          "relative overflow-hidden border-b border-line bg-bg-muted",
-          large
-            ? "aspect-[16/9] lg:aspect-auto lg:min-h-[320px] lg:flex-1"
-            : compact
-              ? "aspect-[16/8]"
-              : "aspect-[16/10]",
-        )}
-      >
+    <Link href={`/work/${project.slug}`} className="group block">
+      <div className="relative aspect-[16/10] overflow-hidden rounded-2xl border border-line bg-bg-muted shadow-card transition-shadow duration-300 group-hover:shadow-lift">
         {project.coverUrl ? (
           <Image
             src={project.coverUrl}
             alt={project.title}
             fill
             priority={priority}
-            sizes={
-              large
-                ? "(min-width: 1024px) 66vw, 100vw"
-                : "(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-            }
-            className="object-cover object-top transition duration-700 ease-out group-hover:scale-[1.03]"
+            sizes={sizes}
+            className="object-cover object-top transition-transform duration-500 ease-out group-hover:scale-[1.025]"
           />
         ) : (
-          <div className="dot-bg flex h-full items-center justify-center">
-            <span className="display text-6xl text-fg-subtle/60">{project.title.slice(0, 1)}</span>
-          </div>
+          <CoverPlaceholder title={project.title} label={type} />
         )}
-        <div className="absolute top-3 left-3 flex gap-1.5">
-          <span className="rounded-full bg-bg/90 px-2.5 py-1 font-mono text-[0.65rem] uppercase tracking-wider text-fg backdrop-blur">
-            {PROJECT_TYPE_LABELS[project.projectType] ?? project.projectType}
-          </span>
-          {(inProgress || upcoming) && (
-            <span className="inline-flex items-center gap-1 rounded-full bg-accent px-2.5 py-1 font-mono text-[0.65rem] uppercase tracking-wider text-accent-fg">
-              {inProgress ? <Hammer className="size-3" /> : <Sparkles className="size-3" />}
-              {PROJECT_STATUS_LABELS[project.status]}
-            </span>
-          )}
-        </div>
+        {project.status !== "completed" && (
+          <StatusBadge
+            status={project.status}
+            className="absolute top-3 left-3 bg-bg-elevated/95 shadow-card"
+          />
+        )}
       </div>
-      <div className="flex flex-1 flex-col p-5 sm:p-6">
-        <div className="flex items-start justify-between gap-3">
-          <div>
-            <h3 className={cn("font-semibold tracking-tight", large ? "text-2xl" : "text-lg")}>
-              {project.title}
-            </h3>
-            {project.subtitle && <p className="mt-1 text-sm text-fg-muted">{project.subtitle}</p>}
-          </div>
-          <span className="mt-1 inline-flex size-8 shrink-0 items-center justify-center rounded-full border border-line text-fg-subtle transition group-hover:border-accent group-hover:bg-accent group-hover:text-accent-fg">
-            <ArrowUpRight className="size-4" />
-          </span>
+      <div className="mt-4 flex items-start justify-between gap-4">
+        <div className="min-w-0">
+          <h3 className="text-lg font-semibold tracking-tight transition-colors group-hover:text-accent">
+            {project.title}
+          </h3>
+          <p className="mt-1 line-clamp-2 text-[0.95rem] text-fg-muted">
+            {project.subtitle || project.summary}
+          </p>
+          <p className="mt-2 text-sm text-fg-subtle">{meta}</p>
         </div>
-        {large && project.summary && (
-          <p className="mt-3 line-clamp-2 text-sm leading-relaxed text-fg-muted">{project.summary}</p>
-        )}
-        <TechList items={project.technologies} max={large ? 6 : 4} className="mt-auto pt-5" />
+        <ArrowUpRight className="mt-1 size-5 shrink-0 text-fg-subtle transition-all duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-accent" />
       </div>
     </Link>
   );
 }
 
+/** Compact row for projects that are still in progress or upcoming. */
 export function ProjectRow({ project }: { project: Project }) {
   return (
     <Link
       href={`/work/${project.slug}`}
-      className="group flex items-center gap-4 rounded-2xl border border-line bg-bg-elevated p-3 pr-4 transition hover:border-line-strong"
+      className="group flex items-center gap-4 border-t border-line py-5 transition-colors first:border-t-0 sm:gap-6"
     >
-      <span className="relative size-14 shrink-0 overflow-hidden rounded-xl bg-bg-muted">
-        {project.coverUrl ? (
-          <Image src={project.coverUrl} alt="" fill sizes="56px" className="object-cover object-top" />
-        ) : (
-          <span className="display flex size-full items-center justify-center text-xl text-fg-subtle">
-            {project.title.slice(0, 1)}
-          </span>
-        )}
-      </span>
-      <span className="min-w-0 flex-1">
-        <span className="flex flex-wrap items-center gap-2">
-          <span className="font-medium">{project.title}</span>
-          <span
-            className={cn(
-              "shrink-0 rounded-full px-2 py-0.5 font-mono text-[0.6rem] uppercase tracking-wider",
-              project.status === "upcoming" ? "bg-bg-muted text-fg-muted" : "bg-accent-soft text-accent",
-            )}
-          >
-            {PROJECT_STATUS_LABELS[project.status]}
-          </span>
-        </span>
-        <span className="mt-0.5 block truncate text-sm text-fg-muted">
+      <div className="min-w-0 flex-1">
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
+          <h3 className="font-semibold tracking-tight transition-colors group-hover:text-accent">
+            {project.title}
+          </h3>
+          <StatusBadge status={project.status} />
+        </div>
+        <p className="mt-1 line-clamp-1 text-[0.95rem] text-fg-muted">
           {project.subtitle || project.summary}
-        </span>
-      </span>
-      <ArrowUpRight className="size-4 shrink-0 text-fg-subtle transition group-hover:text-accent" />
+        </p>
+      </div>
+      <ArrowUpRight className="size-5 shrink-0 text-fg-subtle transition-all group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-accent" />
     </Link>
   );
 }
 
-export function ServiceCard({ service, index }: { service: Service; index?: number }) {
+export function ServiceCard({ service, showPrice }: { service: Service; showPrice?: boolean }) {
   return (
     <Link
       href={`/services/${service.slug}`}
-      className="group card card-hover flex h-full flex-col p-6 sm:p-7"
+      className="group card flex h-full flex-col p-6 transition-[border-color,box-shadow] duration-300 hover:border-line-strong hover:shadow-lift sm:p-7"
     >
-      <div className="flex items-start justify-between">
-        <span className="inline-flex size-11 items-center justify-center rounded-xl bg-accent-soft text-accent">
-          <ServiceIcon name={service.icon} className="size-5" />
-        </span>
-        {index !== undefined && (
-          <span className="font-mono text-xs text-fg-subtle">{String(index + 1).padStart(2, "0")}</span>
-        )}
-      </div>
-      <h3 className="mt-6 text-xl font-semibold tracking-tight">{service.title}</h3>
-      <p className="mt-2 text-sm leading-relaxed text-fg-muted">{service.tagline}</p>
-      <div className="mt-auto flex items-center justify-between gap-3 pt-7 text-sm">
-        <span className="text-fg-muted">
-          {service.startingPriceLabel}
-          {service.timelineLabel && <span className="text-fg-subtle"> · {service.timelineLabel}</span>}
-        </span>
-        <ArrowUpRight className="size-4 text-fg-subtle transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-accent" />
-      </div>
+      <span className="inline-flex size-11 items-center justify-center rounded-xl bg-accent-soft text-accent">
+        <ServiceIcon name={service.icon} className="size-5" />
+      </span>
+      <h3 className="mt-5 flex items-center gap-1.5 text-lg font-semibold tracking-tight">
+        {service.title}
+        <ArrowUpRight className="size-4 text-fg-subtle opacity-0 transition-all group-hover:translate-x-0.5 group-hover:text-accent group-hover:opacity-100" />
+      </h3>
+      <p className="mt-2 text-[0.95rem] leading-relaxed text-fg-muted">
+        {service.tagline || service.summary}
+      </p>
+      {showPrice && (service.startingPriceLabel || service.timelineLabel) && (
+        <p className="mt-auto pt-6 text-sm">
+          <span className="font-semibold text-fg">{service.startingPriceLabel}</span>
+          {service.startingPriceLabel && service.timelineLabel && <span className="text-fg-subtle"> · </span>}
+          <span className="text-fg-muted">{service.timelineLabel}</span>
+        </p>
+      )}
     </Link>
   );
 }
 
-export function PostCard({ post, featured }: { post: Post; featured?: boolean }) {
+export function PostRow({ post }: { post: Post }) {
   return (
-    <Link
-      href={`/blog/${post.slug}`}
-      className={cn(
-        "group card card-hover flex h-full flex-col overflow-hidden",
-        featured && "md:grid md:grid-cols-2",
-      )}
-    >
+    <article className="group relative grid gap-3 border-t border-line py-8 sm:grid-cols-[150px_1fr] sm:gap-8 lg:grid-cols-[150px_1fr_176px]">
+      <div className="flex items-center gap-3 text-sm sm:block">
+        <time dateTime={post.publishedAt ?? undefined} className="text-fg-subtle tabular">
+          {formatDate(post.publishedAt)}
+        </time>
+        {post.category && (
+          <p className="inline-flex items-center gap-2 font-medium text-fg-muted sm:mt-1.5 sm:flex">
+            <CategoryDot color={post.category.color} />
+            {post.category.name}
+          </p>
+        )}
+      </div>
+      <div className="min-w-0">
+        <h3 className="text-xl font-semibold leading-snug tracking-tight text-balance">
+          <Link href={`/blog/${post.slug}`} className="transition-colors group-hover:text-accent">
+            <span className="absolute inset-0" aria-hidden="true" />
+            {post.title}
+          </Link>
+        </h3>
+        {post.excerpt && <p className="mt-2 line-clamp-2 text-fg-muted">{post.excerpt}</p>}
+        <p className="mt-3 text-sm text-fg-subtle">{post.readingTimeMinutes} min read</p>
+      </div>
       {post.coverUrl && (
-        <div
-          className={cn(
-            "relative overflow-hidden bg-bg-muted",
-            featured ? "aspect-[4/3] md:aspect-auto md:min-h-[320px]" : "aspect-[16/9]",
-          )}
-        >
+        <div className="relative hidden aspect-[4/3] overflow-hidden rounded-xl border border-line bg-bg-muted lg:block">
           <Image
             src={post.coverUrl}
             alt={post.coverAlt || post.title}
             fill
-            sizes={
-              featured
-                ? "(min-width: 768px) 50vw, 100vw"
-                : "(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-            }
-            className="object-cover transition duration-700 group-hover:scale-[1.03]"
+            sizes="176px"
+            className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
           />
         </div>
       )}
-      <div className="flex flex-1 flex-col p-5 sm:p-6">
-        <div className="flex items-center gap-2 text-xs text-fg-muted">
-          {post.category && (
-            <span className="inline-flex items-center gap-1.5 font-medium text-fg">
-              <span
-                className="size-1.5 rounded-full"
-                style={{ background: post.category.color || "var(--accent)" }}
-              />
-              {post.category.name}
-            </span>
-          )}
-          {post.category && <span className="text-fg-subtle">·</span>}
-          <span>{formatDate(post.publishedAt)}</span>
-        </div>
-        <h3
-          className={cn(
-            "mt-3 font-semibold tracking-tight text-balance",
-            featured ? "text-2xl sm:text-3xl" : "text-lg",
-          )}
-        >
-          {post.title}
-        </h3>
-        {post.excerpt && (
-          <p
-            className={cn(
-              "mt-2 text-sm leading-relaxed text-fg-muted",
-              featured ? "line-clamp-4" : "line-clamp-2",
-            )}
-          >
-            {post.excerpt}
-          </p>
-        )}
-        <div className="mt-auto flex items-center justify-between pt-5 text-xs text-fg-subtle">
-          <span className="inline-flex items-center gap-1">
-            <Clock className="size-3" /> {post.readingTimeMinutes} min read
-          </span>
-          <span className="inline-flex items-center gap-1 font-medium text-fg transition group-hover:text-accent">
-            Read <ArrowUpRight className="size-3.5" />
-          </span>
-        </div>
-      </div>
-    </Link>
+    </article>
   );
 }
 
-export function ReviewCard({ review, className }: { review: Review; className?: string }) {
+/** The category's colour from the admin, as a small dot before its name. */
+export function CategoryDot({ color }: { color: string }) {
   return (
-    <figure className={cn("card flex h-full flex-col p-6 sm:p-7", className)}>
-      <Stars rating={review.rating} size="size-3.5" />
-      <blockquote className="mt-4 flex-1 text-[0.95rem] leading-relaxed text-fg">
-        {review.title && <p className="mb-2 font-semibold">{review.title}</p>}
-        <p className="text-fg-muted">“{review.body}”</p>
+    <span
+      aria-hidden="true"
+      className="size-2 shrink-0 rounded-full bg-accent"
+      style={color ? { backgroundColor: color } : undefined}
+    />
+  );
+}
+
+export function Stars({ rating, className }: { rating: number; className?: string }) {
+  return (
+    <span role="img" aria-label={`${rating} out of 5 stars`} className={cn("inline-flex gap-0.5", className)}>
+      {[1, 2, 3, 4, 5].map((n) => (
+        <svg
+          key={n}
+          viewBox="0 0 20 20"
+          className={cn("size-4", n <= rating ? "fill-highlight" : "fill-line-strong")}
+          aria-hidden="true"
+        >
+          <path d="M10 1.5l2.6 5.4 5.9.8-4.3 4.1 1.1 5.9L10 14.9l-5.3 2.8 1.1-5.9L1.5 7.7l5.9-.8z" />
+        </svg>
+      ))}
+    </span>
+  );
+}
+
+function ReviewAuthor({ review, serviceTitle }: { review: Review; serviceTitle?: string }) {
+  const role = [review.authorRole, review.authorCompany].filter(Boolean).join(", ");
+  return (
+    <figcaption className="flex items-center gap-3">
+      {review.authorAvatarUrl ? (
+        // biome-ignore lint/performance/noImgElement: small remote avatar with unknown dimensions
+        <img
+          src={review.authorAvatarUrl}
+          alt=""
+          className="size-10 shrink-0 rounded-full object-cover"
+          loading="lazy"
+        />
+      ) : (
+        <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-accent-soft text-sm font-semibold text-accent">
+          {initials(review.authorName)}
+        </span>
+      )}
+      <span className="min-w-0 text-left">
+        <span className="block font-semibold text-fg">{review.authorName}</span>
+        {(role || serviceTitle) && (
+          <span className="block truncate text-sm text-fg-muted">
+            {[role, serviceTitle].filter(Boolean).join(" · ")}
+          </span>
+        )}
+      </span>
+    </figcaption>
+  );
+}
+
+export function ReviewCard({ review, serviceTitle }: { review: Review; serviceTitle?: string }) {
+  return (
+    <figure className="card flex h-full flex-col p-6">
+      <Stars rating={review.rating} />
+      {review.title && <p className="mt-4 font-semibold tracking-tight">{review.title}</p>}
+      <blockquote className={cn("leading-relaxed text-fg-muted", review.title ? "mt-2" : "mt-4")}>
+        {review.body}
       </blockquote>
-      <figcaption className="mt-6 flex items-center gap-3">
-        <Avatar src={review.authorAvatarUrl} name={review.authorName} className="size-9" />
-        <div className="min-w-0 text-sm">
-          <p className="truncate font-medium">{review.authorName}</p>
-          <p className="truncate text-xs text-fg-muted">
-            {[review.authorRole, review.authorCompany].filter(Boolean).join(", ")}
-          </p>
-        </div>
-      </figcaption>
+      <div className="mt-auto pt-6">
+        <ReviewAuthor review={review} serviceTitle={serviceTitle} />
+      </div>
     </figure>
   );
 }
 
-export function StatTile({
-  value,
-  label,
-  suffix,
-  className,
-}: {
-  value: string | number;
-  label: string;
-  suffix?: string;
-  className?: string;
-}) {
+/** One large quote, used on the home page. */
+export function Testimonial({ review }: { review: Review }) {
   return (
-    <div className={cn("rounded-2xl border border-line bg-bg-elevated/60 p-5", className)}>
-      <p className="display text-4xl sm:text-5xl">
-        {value}
-        {suffix && <span className="text-accent">{suffix}</span>}
-      </p>
-      <p className="mt-2 text-sm text-fg-muted">{label}</p>
-    </div>
+    <figure className="mx-auto flex max-w-3xl flex-col items-center text-center">
+      <Stars rating={review.rating} />
+      <blockquote className="mt-6 text-balance text-[1.35rem] font-medium leading-relaxed tracking-tight text-fg sm:text-[1.6rem]">
+        “{review.body}”
+      </blockquote>
+      <div className="mt-8">
+        <ReviewAuthor review={review} />
+      </div>
+    </figure>
   );
 }

@@ -1,64 +1,22 @@
-import { ImageResponse } from "next/og";
-import { getProject } from "@/lib/data";
-import { PROJECT_TYPE_LABELS, SITE_NAME } from "@/lib/site";
+import { getProject, getSite } from "@/lib/data";
+import { clip, OG_SIZE, shareCard } from "@/lib/og";
+import { PROJECT_TYPE_LABELS, siteSettings } from "@/lib/site";
 
 export const alt = "Project";
-export const size = { width: 1200, height: 630 };
+export const size = OG_SIZE;
 export const contentType = "image/png";
 
 export default async function Image({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const project = await getProject(slug).catch(() => null);
-  const title = project?.title ?? "Project";
-  const subtitle = (project?.subtitle || project?.summary || "").slice(0, 140);
-  const type = project ? (PROJECT_TYPE_LABELS[project.projectType] ?? project.projectType) : "";
-  return new ImageResponse(
-    <div
-      style={{
-        width: "100%",
-        height: "100%",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-between",
-        padding: 72,
-        background: "#09090b",
-        color: "#f4f4f2",
-        fontFamily: "sans-serif",
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          fontFamily: "sans-serif",
-          fontSize: 24,
-          color: "#a0a0a8",
-        }}
-      >
-        <span style={{ display: "flex", alignItems: "center", gap: 14 }}>
-          <svg width="40" height="40" viewBox="0 0 64 64">
-            <rect width="64" height="64" rx="16" fill="#f97316" />
-            <path d="M18 14h9a18 18 0 0 1 0 36h-9z" fill="#0b0b0d" />
-            <path
-              d="M38.36 27.4a6 6 0 1 0 0 9.2"
-              fill="none"
-              stroke="#f97316"
-              strokeWidth="5"
-              strokeLinecap="round"
-            />
-          </svg>
-          {`${SITE_NAME} · Work`}
-        </span>
-        <span style={{ textTransform: "uppercase", letterSpacing: 4, color: "#f97316" }}>{type}</span>
-      </div>
-      <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-        <div style={{ fontSize: 80, lineHeight: 1, letterSpacing: -2 }}>{title}</div>
-        <div style={{ fontFamily: "sans-serif", fontSize: 30, color: "#a0a0a8", maxWidth: 950 }}>
-          {subtitle}
-        </div>
-      </div>
-      <div style={{ fontFamily: "sans-serif", fontSize: 22, color: "#6a6a73" }}>developerchoudhary.com</div>
-    </div>,
-    size,
-  );
+  const [project, site] = await Promise.all([getProject(slug).catch(() => null), getSite()]);
+  return shareCard({
+    theme: site.theme,
+    siteName: siteSettings(site).name,
+    kicker: project
+      ? `Case study · ${PROJECT_TYPE_LABELS[project.projectType] ?? project.projectType}`
+      : "Case study",
+    title: project?.title ?? "Project",
+    subtitle: clip(project?.subtitle || project?.summary || "", 120),
+    footer: `${site.profile.fullName} · ${site.profile.headline}`,
+  });
 }

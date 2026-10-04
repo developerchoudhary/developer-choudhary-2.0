@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, Link2, Share2 } from "lucide-react";
+import { Check, Link2, Linkedin, MessageCircle, Twitter } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 export function ShareButtons({ url, title }: { url: string; title: string }) {
@@ -15,47 +15,50 @@ export function ShareButtons({ url, title }: { url: string; title: string }) {
       timer.current = window.setTimeout(() => setCopied(false), 1800);
     } catch {}
   };
-  const share = async () => {
-    if (navigator.share) {
-      try {
-        await navigator.share({ url, title });
-      } catch {}
-    } else copy();
-  };
-  const cls =
-    "inline-flex h-9 items-center gap-1.5 rounded-full border border-line px-3.5 text-sm text-fg-muted transition hover:border-line-strong hover:text-fg";
+  const icon =
+    "inline-flex size-9 items-center justify-center rounded-full border border-line text-fg-muted transition-colors hover:border-line-strong hover:text-fg";
+  const u = encodeURIComponent(url);
+  const t = encodeURIComponent(title);
   return (
-    <div className="flex flex-wrap gap-2">
-      <button type="button" onClick={copy} className={cls}>
-        {copied ? <Check className="size-4 text-success" /> : <Link2 className="size-4" />}{" "}
-        {copied ? "Copied" : "Copy link"}
-      </button>
-      <button type="button" onClick={share} className={cls}>
-        <Share2 className="size-4" /> Share
+    <div className="flex items-center gap-2">
+      <button
+        type="button"
+        onClick={copy}
+        className={icon}
+        aria-label={copied ? "Link copied" : "Copy link"}
+        title="Copy link"
+      >
+        {copied ? <Check className="size-4 text-success" /> : <Link2 className="size-4" />}
       </button>
       <a
-        className={cls}
-        href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(url)}`}
+        className={icon}
+        href={`https://www.linkedin.com/sharing/share-offsite/?url=${u}`}
         target="_blank"
         rel="noopener noreferrer"
+        aria-label="Share on LinkedIn"
+        title="LinkedIn"
       >
-        X
+        <Linkedin className="size-4" />
       </a>
       <a
-        className={cls}
-        href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`}
+        className={icon}
+        href={`https://twitter.com/intent/tweet?text=${t}&url=${u}`}
         target="_blank"
         rel="noopener noreferrer"
+        aria-label="Share on X"
+        title="X"
       >
-        LinkedIn
+        <Twitter className="size-4" />
       </a>
       <a
-        className={cls}
+        className={icon}
         href={`https://wa.me/?text=${encodeURIComponent(`${title} ${url}`)}`}
         target="_blank"
         rel="noopener noreferrer"
+        aria-label="Share on WhatsApp"
+        title="WhatsApp"
       >
-        WhatsApp
+        <MessageCircle className="size-4" />
       </a>
     </div>
   );

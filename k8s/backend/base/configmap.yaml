@@ -21,4 +21,5 @@ data:
   REFRESH_TOKEN_TTL_DAYS: "30"
   COOKIE_SECURE: "true"
   PUBLIC_WRITE_RATE_PER_MINUTE: "10"
+  PUBLIC_TRACK_RATE_PER_MINUTE: "120"
   FRONTEND_REVALIDATE_URL: "http://portfolio-frontend:3000/api/revalidate"

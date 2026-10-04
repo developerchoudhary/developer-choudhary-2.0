@@ -4,10 +4,11 @@ import (
 	"strconv"
 	"strings"
 
+	"portfolio-backend/pkg/dateparse"
+
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
-	"portfolio-backend/pkg/dateparse"
 )
 
 // ////////////////////////////////////////////////////////////
@@ -32,10 +33,11 @@ const (
 // it is never derived from user input, which keeps filtering safe from
 // SQL injection. All user-supplied values are passed as bind params.
 type FilterDef struct {
-	Column string    // qualified column, e.g. "invoice.office_id"
-	Type   FieldType // value type used for parsing/binding
-	Multi  bool      // allow CSV / repeated params -> SQL IN
-	Range  bool      // allow <param>From / <param>To range filtering
+	Column   string    // qualified column, e.g. "invoice.office_id"
+	Type     FieldType // value type used for parsing/binding
+	Multi    bool      // allow CSV / repeated params -> SQL IN
+	Range    bool      // allow <param>From / <param>To range filtering
+	Contains bool      // Column is a text[]: match rows whose array holds the value (any of the values when Multi)
 }
 
 // Join is an explicit LEFT JOIN used to enable search/filter on related
@@ -164,9 +166,14 @@ func (lq *ListQuery) ApplyFilters(q *bun.SelectQuery, schema Schema) *bun.Select
 			continue
 		}
 
-		if def.Multi && len(converted) > 1 {
+		switch {
+		case def.Contains && def.Multi && len(converted) > 1:
+			q = q.Where(def.Column+" && ARRAY[?]::text[]", bun.In(converted))
+		case def.Contains:
+			q = q.Where("? = ANY("+def.Column+")", converted[0])
+		case def.Multi && len(converted) > 1:
 			q = q.Where(def.Column+" IN (?)", bun.In(converted))
-		} else {
+		default:
 			q = q.Where(def.Column+" = ?", converted[0])
 		}
 	}

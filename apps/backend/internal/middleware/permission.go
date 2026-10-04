@@ -32,28 +32,3 @@ func RequirePermission(permission string) gin.HandlerFunc {
 		c.Next()
 	}
 }
-
-// RequireAnyPermission allows the request when any listed permission is present.
-// Must run after AuthMiddleware.
-func RequireAnyPermission(permissions ...string) gin.HandlerFunc {
-	return func(c *gin.Context) {
-		auth, ok := GetAuth(c)
-		if !ok {
-			c.JSON(http.StatusUnauthorized, gin.H{
-				"success": false,
-				"message": "Authorization required",
-			})
-			c.Abort()
-			return
-		}
-		if err := authz.AssertAnyPermission(auth, permissions...); err != nil {
-			c.JSON(http.StatusForbidden, gin.H{
-				"success": false,
-				"message": err.Error(),
-			})
-			c.Abort()
-			return
-		}
-		c.Next()
-	}
-}

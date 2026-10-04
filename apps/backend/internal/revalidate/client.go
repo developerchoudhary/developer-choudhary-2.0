@@ -44,11 +44,6 @@ func (c *Client) Tags(ctx context.Context, tags ...string) error {
 	return c.send(ctx, payload{Tags: tags})
 }
 
-// Paths revalidates concrete paths synchronously.
-func (c *Client) Paths(ctx context.Context, paths ...string) error {
-	return c.send(ctx, payload{Paths: paths})
-}
-
 // Async fires a tag revalidation in the background.
 func (c *Client) Async(tags ...string) {
 	if !c.Enabled() || len(tags) == 0 {

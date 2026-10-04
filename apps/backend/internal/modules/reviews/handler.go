@@ -44,15 +44,6 @@ func (h *Handler) PublicList(c *gin.Context) {
 	httputil.WriteSuccess(c, http.StatusOK, "Reviews fetched successfully", items)
 }
 
-func (h *Handler) PublicSummary(c *gin.Context) {
-	summary, err := h.service.Summary(c.Request.Context())
-	if err != nil {
-		httputil.WriteError(c, err)
-		return
-	}
-	httputil.WriteSuccess(c, http.StatusOK, "Review summary fetched successfully", summary)
-}
-
 func (h *Handler) Submit(c *gin.Context) {
 	req := &SubmitRequest{}
 	if err := c.ShouldBindJSON(req); err != nil {
@@ -65,20 +56,6 @@ func (h *Handler) Submit(c *gin.Context) {
 		return
 	}
 	httputil.WriteSuccess(c, http.StatusCreated, "Thank you! Your review will appear once approved.", item)
-}
-
-func (h *Handler) Get(c *gin.Context) {
-	id, err := uuid.Parse(c.Param("id"))
-	if err != nil {
-		httputil.WriteBadRequest(c, err)
-		return
-	}
-	item, err := h.service.Get(c.Request.Context(), id)
-	if err != nil {
-		httputil.WriteError(c, err)
-		return
-	}
-	httputil.WriteSuccess(c, http.StatusOK, "Review fetched successfully", item)
 }
 
 func (h *Handler) Create(c *gin.Context) {

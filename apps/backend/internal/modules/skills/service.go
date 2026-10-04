@@ -77,22 +77,9 @@ func (s *Service) Delete(ctx context.Context, id uuid.UUID, actor uuid.UUID) err
 	return nil
 }
 
-func (s *Service) Reorder(ctx context.Context, ids []uuid.UUID, actor uuid.UUID) error {
-	if err := s.repo.Reorder(ctx, ids, actor); err != nil {
-		return err
-	}
-	s.reval.Async("skills", "site")
-	return nil
-}
-
 func (s *Service) apply(item *Skill, req *RequestDTO) {
 	item.Name = strings.TrimSpace(req.Name)
 	item.Category = req.Category
-	item.Proficiency = req.Proficiency
-	item.Years = req.Years
-	item.Icon = strings.TrimSpace(req.Icon)
-	item.Color = strings.TrimSpace(req.Color)
-	item.Description = strings.TrimSpace(req.Description)
 	item.SortOrder = req.SortOrder
 	if req.IsFeatured != nil {
 		item.IsFeatured = *req.IsFeatured

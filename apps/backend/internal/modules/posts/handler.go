@@ -2,7 +2,6 @@ package posts
 
 import (
 	"net/http"
-	"strconv"
 
 	"portfolio-backend/pkg/httputil"
 	"portfolio-backend/pkg/pagination"
@@ -37,19 +36,6 @@ func (h *Handler) PublicList(c *gin.Context) {
 		return
 	}
 	httputil.WritePaginated(c, "Posts fetched successfully", items, meta)
-}
-
-func (h *Handler) PublicRecent(c *gin.Context) {
-	limit, _ := strconv.Atoi(c.DefaultQuery("limit", "3"))
-	if limit <= 0 || limit > 12 {
-		limit = 3
-	}
-	items, err := h.service.Recent(c.Request.Context(), limit)
-	if err != nil {
-		httputil.WriteError(c, err)
-		return
-	}
-	httputil.WriteSuccess(c, http.StatusOK, "Recent posts fetched successfully", items)
 }
 
 func (h *Handler) PublicGet(c *gin.Context) {

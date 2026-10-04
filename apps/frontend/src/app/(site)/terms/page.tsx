@@ -1,22 +1,24 @@
-import { PageHero } from "@/components/site/section";
+import type { Metadata } from "next";
+import { PageHeader } from "@/components/site/ui";
 import { pageMetadata } from "@/lib/seo";
 
-export const metadata = pageMetadata({
-  title: "Terms of use",
-  description: "Terms for using developerchoudhary.com and engaging Developer Choudhary for services.",
-  path: "/terms",
-});
+export function generateMetadata(): Promise<Metadata> {
+  return pageMetadata({
+    title: "Terms of use",
+    description: "Terms for using developerchoudhary.com and engaging Developer Choudhary for services.",
+    path: "/terms",
+  });
+}
 
 export default function TermsPage() {
   return (
     <>
-      <PageHero
-        eyebrow="Legal"
+      <PageHeader
         title="Terms of use"
         lede="The plain-English rules for using this site and working together."
       />
-      <section className="container-dc pb-24">
-        <div className="rich max-w-3xl text-fg-muted">
+      <section className="container-dc pb-20">
+        <div className="rich max-w-[44rem]">
           <h2>Using this site</h2>
           <p>
             Content on this site is provided for information. Case studies describe real projects; figures are
