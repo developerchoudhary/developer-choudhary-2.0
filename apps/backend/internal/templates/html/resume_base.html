@@ -1,0 +1,38 @@
+{{define "resume_head"}}<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>{{.Profile.FullName}} · Resume</title>
+<style>
+@font-face{font-family:"Inter";src:url("Inter-Variable.ttf") format("truetype");font-weight:100 900;font-style:normal}
+:root{--accent:{{css .Accent}};--ink:#15171b;--muted:#5d636c;--line:#e3e0d9;--soft:#f6f4ef}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:"Inter",Helvetica,Arial,sans-serif;color:var(--ink);font-size:9.6pt;line-height:1.45;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+a{color:inherit;text-decoration:none}
+h1,h2,h3,p,ul{margin:0}
+ul{padding-left:1.1em}
+li{margin:0 0 2.5pt}
+.muted{color:var(--muted)}
+.chip{display:inline-block;padding:1.5pt 6pt;border:1px solid var(--line);border-radius:999px;font-size:8pt;margin:0 3pt 3pt 0;background:#fff}
+.avoid{break-inside:avoid}
+</style>
+</head>
+<body>{{end}}
+{{define "resume_tail"}}</body></html>{{end}}
+
+{{define "contact_line"}}{{with .Profile}}<span>{{.Email}}</span>{{if .Phone}} · <span>{{.Phone}}</span>{{end}}{{if .Website}} · <a href="{{.Website}}">{{.Website}}</a>{{end}}{{if .Location}} · <span>{{.Location}}</span>{{end}}{{end}}{{end}}
+
+{{define "experience_items"}}
+{{range .}}
+<div class="avoid xp">
+  <div class="xp-head">
+    <div><strong>{{.Role}}</strong> <span class="muted">· {{if .CompanyURL}}<a href="{{.CompanyURL}}">{{.Company}}</a>{{else}}{{.Company}}{{end}}</span></div>
+    <div class="muted xp-meta">{{.Period}}{{if .Location}} · {{.Location}}{{end}}</div>
+  </div>
+  {{if .Summary}}<p class="xp-summary">{{.Summary}}</p>{{end}}
+  {{if .Highlights}}<ul>{{range .Highlights}}<li>{{.}}</li>{{end}}</ul>{{end}}
+  {{if .Technologies}}<div class="xp-tech muted">{{join .Technologies " · "}}</div>{{end}}
+</div>
+{{end}}
+{{end}}

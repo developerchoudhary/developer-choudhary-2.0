@@ -1,0 +1,18 @@
+{{template "head" .}}
+<h1 style="margin:0 0 6px;font-size:22px;letter-spacing:-0.02em;">New lead from {{.Name}}</h1>
+<p style="margin:0 0 20px;color:#6b7078;">Someone just asked for a quote through the website.</p>
+<table role="presentation" cellspacing="0" cellpadding="0" style="width:100%;border-collapse:collapse;">
+{{with .Lead}}
+{{if .Email}}<tr><td style="padding:6px 0;color:#6b7078;font-size:13px;width:140px;">Email</td><td style="padding:6px 0;"><a href="mailto:{{.Email}}" style="color:#0e7c66;">{{.Email}}</a></td></tr>{{end}}
+{{if .Phone}}<tr><td style="padding:6px 0;color:#6b7078;font-size:13px;">Phone</td><td style="padding:6px 0;"><a href="tel:{{.Phone}}" style="color:#0e7c66;">{{.Phone}}</a></td></tr>{{end}}
+{{if .Company}}<tr><td style="padding:6px 0;color:#6b7078;font-size:13px;">Company</td><td style="padding:6px 0;">{{.Company}}</td></tr>{{end}}
+{{if .ServiceInterest}}<tr><td style="padding:6px 0;color:#6b7078;font-size:13px;">Looking for</td><td style="padding:6px 0;">{{.ServiceInterest}}</td></tr>{{end}}
+{{if .BudgetRange}}<tr><td style="padding:6px 0;color:#6b7078;font-size:13px;">Budget</td><td style="padding:6px 0;">{{.BudgetRange}}</td></tr>{{end}}
+{{if .Timeline}}<tr><td style="padding:6px 0;color:#6b7078;font-size:13px;">Timeline</td><td style="padding:6px 0;">{{.Timeline}}</td></tr>{{end}}
+{{if .Location}}<tr><td style="padding:6px 0;color:#6b7078;font-size:13px;">Location</td><td style="padding:6px 0;">{{.Location}}</td></tr>{{end}}
+{{if .SourcePage}}<tr><td style="padding:6px 0;color:#6b7078;font-size:13px;">Page</td><td style="padding:6px 0;">{{.SourcePage}}</td></tr>{{end}}
+{{end}}
+</table>
+<div style="margin:20px 0;padding:16px 18px;background:#f6f4ef;border-left:3px solid #0e7c66;border-radius:8px;white-space:pre-wrap;">{{.Lead.Message}}</div>
+<a href="{{.AdminURL}}/leads/{{.Lead.ID}}" style="display:inline-block;padding:12px 18px;background:#14161a;color:#ffffff;border-radius:999px;text-decoration:none;font-weight:600;font-size:14px;">Open in admin</a>
+{{template "foot" .}}

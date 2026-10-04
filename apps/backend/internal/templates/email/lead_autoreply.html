@@ -1,0 +1,9 @@
+{{template "head" .}}
+<h1 style="margin:0 0 6px;font-size:22px;letter-spacing:-0.02em;">Thanks, {{.Lead.FirstName}}. I got your message.</h1>
+<p style="margin:0 0 16px;">I read every enquiry personally and reply within one working day, usually much faster. If it's urgent, you can also reach me on WhatsApp from the website.</p>
+<p style="margin:0 0 8px;color:#6b7078;font-size:13px;">Here's what you sent:</p>
+<div style="margin:0 0 20px;padding:16px 18px;background:#f6f4ef;border-left:3px solid #0e7c66;border-radius:8px;white-space:pre-wrap;">{{.Lead.Message}}</div>
+<p style="margin:0 0 20px;">While you wait, you can browse recent work and read how I approach websites, ERPs and CRMs.</p>
+<a href="{{.SiteURL}}/work" style="display:inline-block;padding:12px 18px;background:#14161a;color:#ffffff;border-radius:999px;text-decoration:none;font-weight:600;font-size:14px;">See recent work</a>
+<p style="margin:24px 0 0;">Talk soon,<br>Aman Choudhary</p>
+{{template "foot" .}}

@@ -1,0 +1,14 @@
+.git
+.gitignore
+.env
+.env.*
+!.env.example
+*.md
+Dockerfile
+.dockerignore
+Makefile
+deployments/
+**/*_test.go
+**/testdata/
+.vscode/
+.idea/

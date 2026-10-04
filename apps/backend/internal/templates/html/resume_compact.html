@@ -1,0 +1,57 @@
+{{template "resume_head" .}}
+<style>
+body{font-size:8.9pt;line-height:1.38}
+.top{display:flex;justify-content:space-between;align-items:flex-end;gap:12pt;padding-bottom:8pt;border-bottom:3px solid var(--accent)}
+.name{font-size:20pt;font-weight:800;letter-spacing:-0.025em;line-height:1}
+.headline{font-size:9.6pt;font-weight:600;color:var(--accent);margin-top:3pt}
+.contact{font-size:8pt;color:var(--muted);text-align:right;line-height:1.5}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:0 16pt;margin-top:8pt}
+h2{font-size:8pt;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:10pt 0 5pt;font-weight:700}
+.xp{margin-bottom:6pt}
+.xp-head{display:flex;justify-content:space-between;gap:6pt}
+.xp-meta{font-size:7.8pt;white-space:nowrap}
+.xp-summary{margin:1pt 0;font-size:8.6pt}
+.xp-tech{font-size:7.8pt;margin-top:1pt}
+li{margin:0 0 1.5pt}
+.chip{font-size:7.4pt;padding:1pt 5pt}
+.proj{margin-bottom:5pt}
+.edu{margin-bottom:5pt;font-size:8.6pt}
+.summary{margin-top:7pt;font-size:9pt}
+</style>
+<div class="top">
+  <div>
+    <h1 class="name">{{.Profile.FullName}}</h1>
+    <div class="headline">{{if .Options.TargetRole}}{{.Options.TargetRole}}{{else}}{{.Profile.Headline}}{{end}}</div>
+  </div>
+  <div class="contact">{{with .Profile}}{{.Email}}{{if .Phone}}<br>{{.Phone}}{{end}}{{if .Website}}<br><a href="{{.Website}}">{{.Website}}</a>{{end}}{{if .Location}}<br>{{.Location}}{{end}}{{end}}</div>
+</div>
+{{if .Profile.Summary}}<p class="summary">{{.Profile.Summary}}</p>{{end}}
+
+<h2>Experience</h2>
+{{template "experience_items" .Experience}}
+
+<div class="cols">
+  <div>
+    <h2>Skills</h2>
+    {{range .SkillGroups}}<div class="avoid" style="margin-bottom:5pt"><div class="muted" style="font-size:7.8pt;font-weight:600;margin-bottom:2pt">{{.Category}}</div>{{range .Skills}}<span class="chip">{{.}}</span>{{end}}</div>{{end}}
+    {{if and .Options.IncludeEducation .Education}}
+    <h2>Education</h2>
+    {{range .Education}}<div class="edu avoid"><strong>{{.Degree}}</strong>{{if .Field}} · {{.Field}}{{end}}<br><span class="muted">{{.Institution}}{{if .Period}} · {{.Period}}{{end}}</span></div>{{end}}
+    {{end}}
+  </div>
+  <div>
+    {{if and .Options.IncludeProjects .Projects}}
+    <h2>Projects</h2>
+    {{range .Projects}}<div class="proj avoid"><strong>{{.Title}}</strong> <span class="muted">· {{.Type}}</span><div class="xp-summary">{{.Summary}}</div><div class="xp-tech muted">{{join .Technologies " · "}}</div></div>{{end}}
+    {{end}}
+    {{if and .Options.IncludeCertifications .Certifications}}
+    <h2>Certifications</h2>
+    {{range .Certifications}}<div class="edu avoid"><strong>{{.Name}}</strong> <span class="muted">· {{.Issuer}}{{if .Date}} · {{.Date}}{{end}}</span></div>{{end}}
+    {{end}}
+    {{if .Profile.Links}}
+    <h2>Links</h2>
+    {{range .Profile.Links}}<div class="edu"><a href="{{.URL}}">{{.URL}}</a></div>{{end}}
+    {{end}}
+  </div>
+</div>
+{{template "resume_tail" .}}

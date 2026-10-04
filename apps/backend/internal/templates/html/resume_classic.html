@@ -1,0 +1,60 @@
+{{template "resume_head" .}}
+<style>
+body{font-size:9.8pt}
+.head{text-align:center;padding-bottom:10pt;border-bottom:2px solid var(--ink)}
+.name{font-size:22pt;font-weight:800;letter-spacing:-0.02em}
+.headline{font-size:10.5pt;margin-top:2pt;font-weight:500}
+.contact{font-size:8.8pt;color:var(--muted);margin-top:5pt}
+h2{font-size:10pt;text-transform:uppercase;letter-spacing:.08em;margin:14pt 0 6pt;padding-bottom:2pt;border-bottom:1px solid var(--line)}
+.xp{margin-bottom:8pt}
+.xp-head{display:flex;justify-content:space-between;gap:8pt}
+.xp-meta{font-size:8.6pt;white-space:nowrap}
+.xp-summary{margin:2pt 0}
+.xp-tech{font-size:8.4pt;margin-top:2pt}
+.row{display:flex;justify-content:space-between;gap:8pt;margin-bottom:5pt}
+.skills p{margin:0 0 3pt}
+.skills b{display:inline-block;min-width:92pt}
+.summary{margin-top:10pt}
+</style>
+<div class="head">
+  <h1 class="name">{{.Profile.FullName}}</h1>
+  <div class="headline">{{if .Options.TargetRole}}{{.Options.TargetRole}}{{else}}{{.Profile.Headline}}{{end}}</div>
+  <div class="contact">{{template "contact_line" .}}</div>
+  {{if .Profile.Links}}<div class="contact">{{range $i, $l := .Profile.Links}}{{if $i}} · {{end}}<a href="{{$l.URL}}">{{$l.URL}}</a>{{end}}</div>{{end}}
+</div>
+
+{{if .Profile.Summary}}<h2>Summary</h2><p>{{.Profile.Summary}}</p>{{end}}
+
+<h2>Experience</h2>
+{{template "experience_items" .Experience}}
+
+<h2>Skills</h2>
+<div class="skills">{{range .SkillGroups}}<p><b>{{.Category}}</b> {{join .Skills ", "}}</p>{{end}}</div>
+
+{{if and .Options.IncludeProjects .Projects}}
+<h2>Projects</h2>
+{{range .Projects}}
+<div class="row avoid">
+  <div><strong>{{.Title}}</strong> <span class="muted">— {{.Summary}}</span>{{if .URL}} <a class="muted" href="{{.URL}}">{{.URL}}</a>{{end}}</div>
+  <div class="muted xp-meta">{{join .Technologies ", "}}</div>
+</div>
+{{end}}
+{{end}}
+
+{{if and .Options.IncludeEducation .Education}}
+<h2>Education</h2>
+{{range .Education}}
+<div class="row avoid">
+  <div><strong>{{.Degree}}</strong>{{if .Field}}, {{.Field}}{{end}} <span class="muted">— {{.Institution}}</span></div>
+  <div class="muted xp-meta">{{.Period}}{{if .Grade}} · {{.Grade}}{{end}}</div>
+</div>
+{{end}}
+{{end}}
+
+{{if and .Options.IncludeCertifications .Certifications}}
+<h2>Certifications</h2>
+{{range .Certifications}}
+<div class="row avoid"><div><strong>{{.Name}}</strong> <span class="muted">— {{.Issuer}}</span></div><div class="muted xp-meta">{{.Date}}</div></div>
+{{end}}
+{{end}}
+{{template "resume_tail" .}}

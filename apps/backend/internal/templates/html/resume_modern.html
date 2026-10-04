@@ -1,0 +1,93 @@
+{{template "resume_head" .}}
+<style>
+.page{display:grid;grid-template-columns:62% 1fr;gap:0 22pt}
+.main{padding-right:4pt}
+.side{border-left:1px solid var(--line);padding-left:18pt}
+.name{font-size:24pt;font-weight:800;letter-spacing:-0.025em;line-height:1.05}
+.headline{color:var(--accent);font-weight:600;font-size:11pt;margin-top:3pt}
+.summary{margin-top:9pt;font-size:9.8pt}
+.contact{margin-top:8pt;font-size:8.6pt;color:var(--muted)}
+h2{font-size:8.4pt;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:16pt 0 7pt;font-weight:700}
+.xp{margin-bottom:9pt;padding-bottom:9pt;border-bottom:1px dashed var(--line)}
+.xp:last-child{border-bottom:0}
+.xp-head{display:flex;justify-content:space-between;gap:8pt}
+.xp-meta{font-size:8.4pt;white-space:nowrap}
+.xp-summary{margin:3pt 0 3pt}
+.xp-tech{font-size:8pt;margin-top:3pt}
+.stat{display:flex;justify-content:space-between;padding:4pt 0;border-bottom:1px solid var(--line);font-size:9pt}
+.stat b{font-size:11pt;color:var(--accent)}
+.group{margin-bottom:8pt}
+.group .label{font-size:8.2pt;font-weight:600;color:var(--muted);margin-bottom:3pt}
+.proj{margin-bottom:8pt}
+.proj .t{font-weight:600}
+.proj .s{font-size:8.8pt;margin:1pt 0 2pt}
+.edu{margin-bottom:7pt}
+.links a{display:block;font-size:8.6pt;margin-bottom:2pt}
+.avatar{width:54pt;height:54pt;border-radius:14pt;object-fit:cover;margin-bottom:10pt}
+</style>
+<div class="page">
+  <div class="main">
+    {{if and .Options.IncludePhoto .Profile.AvatarSrc}}<img class="avatar" src="{{.Profile.AvatarSrc}}" alt="">{{end}}
+    <h1 class="name">{{.Profile.FullName}}</h1>
+    <div class="headline">{{if .Options.TargetRole}}{{.Options.TargetRole}}{{else}}{{.Profile.Headline}}{{end}}</div>
+    <div class="contact">{{template "contact_line" .}}</div>
+    {{if .Profile.Summary}}<p class="summary">{{.Profile.Summary}}</p>{{end}}
+
+    <h2>Experience</h2>
+    {{template "experience_items" .Experience}}
+
+    {{if and .Options.IncludeProjects .Projects}}
+    <h2>Selected projects</h2>
+    {{range .Projects}}
+    <div class="proj avoid">
+      <div class="t">{{.Title}} <span class="muted">· {{.Type}}</span></div>
+      <p class="s">{{.Summary}}</p>
+      <div class="muted" style="font-size:8pt">{{if .URL}}<a href="{{.URL}}">{{.URL}}</a> · {{end}}{{join .Technologies " · "}}</div>
+    </div>
+    {{end}}
+    {{end}}
+  </div>
+
+  <aside class="side">
+    {{if .Options.IncludeStats}}
+    <h2 style="margin-top:4pt">At a glance</h2>
+    <div class="stat"><span>Years building software</span><b>{{.Stats.YearsExperience}}+</b></div>
+    <div class="stat"><span>Projects delivered</span><b>{{.Stats.ProjectsCompleted}}+</b></div>
+    <div class="stat"><span>Clients served</span><b>{{.Stats.ClientsServed}}+</b></div>
+    {{end}}
+
+    <h2>Skills</h2>
+    {{range .SkillGroups}}
+    <div class="group avoid">
+      <div class="label">{{.Category}}</div>
+      <div>{{range .Skills}}<span class="chip">{{.}}</span>{{end}}</div>
+    </div>
+    {{end}}
+
+    {{if and .Options.IncludeEducation .Education}}
+    <h2>Education</h2>
+    {{range .Education}}
+    <div class="edu avoid">
+      <div><strong>{{.Degree}}</strong>{{if .Field}} <span class="muted">· {{.Field}}</span>{{end}}</div>
+      <div class="muted" style="font-size:8.6pt">{{.Institution}}{{if .Period}} · {{.Period}}{{end}}{{if .Grade}} · {{.Grade}}{{end}}</div>
+    </div>
+    {{end}}
+    {{end}}
+
+    {{if and .Options.IncludeCertifications .Certifications}}
+    <h2>Certifications</h2>
+    {{range .Certifications}}
+    <div class="edu avoid">
+      <div><strong>{{.Name}}</strong></div>
+      <div class="muted" style="font-size:8.6pt">{{.Issuer}}{{if .Date}} · {{.Date}}{{end}}</div>
+    </div>
+    {{end}}
+    {{end}}
+
+    {{if .Profile.Links}}
+    <h2>Links</h2>
+    <div class="links">{{range .Profile.Links}}<a href="{{.URL}}">{{.Label}}: {{.URL}}</a>{{end}}</div>
+    {{end}}
+  </aside>
+</div>
+{{template "resume_tail" .}}

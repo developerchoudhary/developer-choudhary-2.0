@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<style>
+@font-face{font-family:"Inter";src:url("Inter-Variable.ttf") format("truetype");font-weight:100 900}
+html,body{margin:0;padding:0}
+body{font-family:"Inter",Helvetica,Arial,sans-serif;font-size:7.4pt;color:#8a8f98}
+.f{margin:0 0.55in;display:flex;justify-content:space-between;width:calc(100% - 1.1in)}
+</style>
+</head>
+<body>
+<div class="f">
+  <span>{{.Profile.FullName}} · {{.SiteURL}}</span>
+  <span>Updated {{.GeneratedAt}} · Page <span class="pageNumber"></span> of <span class="totalPages"></span></span>
+</div>
+</body>
+</html>
