@@ -1,0 +1,218 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme inline {
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, "SF Mono", monospace;
+  --font-display: var(--font-display), "Instrument Serif", Georgia, serif;
+
+  --color-bg: var(--bg);
+  --color-bg-elevated: var(--bg-elevated);
+  --color-bg-muted: var(--bg-muted);
+  --color-fg: var(--fg);
+  --color-fg-muted: var(--fg-muted);
+  --color-fg-subtle: var(--fg-subtle);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-accent: var(--accent);
+  --color-accent-fg: var(--accent-fg);
+  --color-accent-soft: var(--accent-soft);
+  --color-highlight: var(--highlight);
+  --color-danger: var(--danger);
+  --color-success: var(--success);
+
+  --shadow-card: 0 1px 2px rgb(21 23 27 / 0.04), 0 8px 24px -12px rgb(21 23 27 / 0.12);
+  --shadow-lift: 0 2px 4px rgb(21 23 27 / 0.06), 0 24px 48px -16px rgb(21 23 27 / 0.22);
+
+  --animate-marquee: marquee 48s linear infinite;
+  --animate-pulse-soft: pulse-soft 2.4s ease-in-out infinite;
+
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+  @keyframes pulse-soft {
+    0%,
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.55;
+      transform: scale(0.85);
+    }
+  }
+}
+
+:root {
+  --bg: #f7f5f0;
+  --bg-elevated: #ffffff;
+  --bg-muted: #edeae2;
+  --fg: #15171b;
+  --fg-muted: #5b6069;
+  --fg-subtle: #8a8f98;
+  --line: rgb(21 23 27 / 0.1);
+  --line-strong: rgb(21 23 27 / 0.2);
+  --accent: #0e7c66;
+  --accent-fg: #ffffff;
+  --accent-soft: rgb(14 124 102 / 0.1);
+  --highlight: #f2b33d;
+  --danger: #c2410c;
+  --success: #15803d;
+  color-scheme: light;
+}
+
+.dark {
+  --bg: #0c0e12;
+  --bg-elevated: #14171d;
+  --bg-muted: #1b1f26;
+  --fg: #eceae4;
+  --fg-muted: #9aa0aa;
+  --fg-subtle: #6b7079;
+  --line: rgb(236 234 228 / 0.1);
+  --line-strong: rgb(236 234 228 / 0.2);
+  --accent: #3cc9a8;
+  --accent-fg: #0c0e12;
+  --accent-soft: rgb(60 201 168 / 0.12);
+  --highlight: #f6c65b;
+  --danger: #fb923c;
+  --success: #4ade80;
+  color-scheme: dark;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-bg text-fg font-sans antialiased;
+    font-feature-settings: "ss01", "cv11";
+    text-rendering: optimizeLegibility;
+  }
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    pointer-events: none;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 160px 160px;
+  }
+  .dark body::before {
+    opacity: 0.05;
+  }
+  ::selection {
+    background: var(--highlight);
+    color: #15171b;
+  }
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    ::before,
+    ::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@utility container-dc {
+  @apply mx-auto w-full max-w-[1200px] px-5 sm:px-8;
+}
+
+@utility display {
+  @apply font-display font-normal tracking-[-0.02em] leading-[0.98];
+}
+
+@utility eyebrow {
+  @apply font-mono text-[0.7rem] uppercase tracking-[0.18em] text-fg-muted;
+}
+
+@utility hairline {
+  @apply border-line border-t;
+}
+
+@utility card {
+  @apply bg-bg-elevated border border-line rounded-2xl shadow-card;
+}
+
+@utility link-underline {
+  @apply underline decoration-line-strong underline-offset-[5px] hover:decoration-accent transition-colors;
+}
+
+@utility marquee-mask {
+  mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+}
+
+.rich {
+  @apply text-[1.0625rem] leading-[1.75] text-fg;
+}
+.rich > * + * {
+  @apply mt-6;
+}
+.rich h2 {
+  @apply display text-3xl sm:text-4xl mt-14 mb-2;
+}
+.rich h3 {
+  @apply text-xl font-semibold tracking-tight mt-10 mb-1;
+}
+.rich h4 {
+  @apply text-lg font-semibold mt-8;
+}
+.rich p a,
+.rich li a {
+  @apply link-underline text-fg;
+}
+.rich strong {
+  @apply font-semibold text-fg;
+}
+.rich code:not(pre code) {
+  @apply font-mono text-[0.9em] bg-bg-muted px-1.5 py-0.5 rounded-md;
+}
+.rich ul {
+  @apply list-disc pl-6 space-y-2;
+}
+.rich ol {
+  @apply list-decimal pl-6 space-y-2;
+}
+.rich blockquote {
+  @apply border-l-2 border-accent pl-5 py-1 text-xl display italic text-fg;
+}
+.rich figure figcaption {
+  @apply text-sm text-fg-muted mt-3 text-center;
+}
+.rich hr {
+  @apply border-line my-12;
+}
+.rich table {
+  @apply w-full text-sm border-collapse;
+}
+.rich th {
+  @apply text-left font-semibold border-b border-line-strong py-2 pr-4;
+}
+.rich td {
+  @apply border-b border-line py-2 pr-4 align-top;
+}
+.rich pre {
+  @apply font-mono text-[0.85rem] leading-relaxed rounded-xl border border-line overflow-x-auto p-4 bg-[#0c0e12] text-[#eceae4];
+}
+.rich pre code {
+  @apply bg-transparent p-0;
+}
+.shiki,
+.shiki span {
+  background-color: transparent !important;
+}
