@@ -32,23 +32,16 @@ k8s/
 
 ## Local development
 
-Requirements: Go 1.24+, Node 22, pnpm 10, Docker.
+Requirements: Go 1.24+, Node 22, pnpm 10 (via `corepack enable`), Docker.
 
 ```sh
-# infrastructure
-cd apps/backend && make docker-up
-
-# backend
-cp .env.example .env            # fill SMTP + admin credentials
-make migrate-up && make seed    # creates the admin user and starter content
-make run                        # http://localhost:8080
-
-# frontend
-cd ../frontend && cp .env.example .env
-pnpm install && pnpm dev        # http://localhost:3000 · admin at /admin
+scripts/dev.sh start    # containers, migrations, seed, API on :8080, web on :3000
+scripts/dev.sh stop     # stop everything, keep the data volumes
+scripts/dev.sh status   # see what is running
 ```
 
-The frontend proxies `/api/v1` and `/uploads` to `API_URL`, so the browser only ever talks to one origin.
+Admin: http://localhost:3000/admin with `ADMIN_EMAIL` / `ADMIN_PASSWORD` from `apps/backend/.env`.
+The full guide, the manual commands and troubleshooting are in [docs/LOCAL_DEVELOPMENT.md](docs/LOCAL_DEVELOPMENT.md).
 
 ## Deployment
 
