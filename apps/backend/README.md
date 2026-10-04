@@ -49,7 +49,8 @@ scoped to `/api/v1/admin/auth`. Refresh tokens rotate on every use. Roles: `admi
 ## Public write endpoints
 
 `POST /api/v1/public/leads`, `/reviews`, `/visits` and `/posts/:slug/view` are rate limited per IP, trim input,
-and use honeypot fields. Leads from the same IP are flagged as spam after five submissions an hour.
+and use honeypot fields. Leads from the same IP are flagged as spam after five submissions an hour. JSON bodies
+are capped at 256 KiB on public routes and 4 MiB on admin routes; uploads keep their own `MAX_UPLOAD_BYTES` limit.
 
 ## Files
 

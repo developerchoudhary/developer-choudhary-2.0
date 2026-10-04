@@ -1,15 +1,18 @@
 "use client";
 
 import { Check, Link2, Share2 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export function ShareButtons({ url, title }: { url: string; title: string }) {
   const [copied, setCopied] = useState(false);
+  const timer = useRef<number | undefined>(undefined);
+  useEffect(() => () => window.clearTimeout(timer.current), []);
   const copy = async () => {
     try {
       await navigator.clipboard.writeText(url);
       setCopied(true);
-      setTimeout(() => setCopied(false), 1800);
+      window.clearTimeout(timer.current);
+      timer.current = window.setTimeout(() => setCopied(false), 1800);
     } catch {}
   };
   const share = async () => {

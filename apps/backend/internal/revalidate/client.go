@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"strings"
@@ -81,6 +82,8 @@ func (c *Client) send(ctx context.Context, p payload) error {
 		return fmt.Errorf("revalidate request: %w", err)
 	}
 	defer resp.Body.Close()
+	// Drain a bounded amount so the keep-alive connection can be reused.
+	_, _ = io.Copy(io.Discard, io.LimitReader(resp.Body, 4096))
 	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
 		return fmt.Errorf("revalidate request failed (%d)", resp.StatusCode)
 	}

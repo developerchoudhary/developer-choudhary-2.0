@@ -1,7 +1,7 @@
 "use client";
 
 import { Check, Copy, ImageIcon, Trash2, Upload } from "lucide-react";
-import { type ChangeEvent, useRef, useState } from "react";
+import { type ChangeEvent, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Dialog } from "@/components/ui/dialog";
@@ -180,11 +180,14 @@ function MediaTile({
 }) {
   const [alt, setAlt] = useState(file.altText);
   const [copied, setCopied] = useState(false);
+  const timer = useRef<number | undefined>(undefined);
+  useEffect(() => () => window.clearTimeout(timer.current), []);
   const isImage = file.category === "images" || file.category === "gifs";
   const copy = async () => {
     await navigator.clipboard.writeText(file.url);
     setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
+    window.clearTimeout(timer.current);
+    timer.current = window.setTimeout(() => setCopied(false), 1500);
   };
   return (
     <div className="group card overflow-hidden">

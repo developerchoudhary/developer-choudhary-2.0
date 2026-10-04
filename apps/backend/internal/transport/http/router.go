@@ -27,9 +27,13 @@ func Use(engine *gin.Engine, deps *Dependencies) {
 	engine.GET("/uploads/:category/:year/:month/:day/:name", h.Files.Stream)
 
 	limiter := md.NewRateLimiter(config.GetEnvInt("PUBLIC_WRITE_RATE_PER_MINUTE", 10))
-	routes.RegisterPublic(engine.Group("/api/v1/public"), h, limiter)
+
+	// Public forms are small (a lead or a review); admin requests carry block content and settings.
+	public := engine.Group("/api/v1/public")
+	public.Use(md.BodyLimit(256 << 10))
+	routes.RegisterPublic(public, h, limiter)
 
 	admin := engine.Group("/api/v1/admin")
-	admin.Use(md.TrimJSONStrings())
+	admin.Use(md.BodyLimit(4<<20), md.TrimJSONStrings())
 	routes.RegisterAdmin(admin, h, limiter)
 }

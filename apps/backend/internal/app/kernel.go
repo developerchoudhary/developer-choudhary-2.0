@@ -57,11 +57,13 @@ func Listen(db *bun.DB) error {
 
 	address := fmt.Sprintf(":%s", config.GetEnv("PORT"))
 	server := &http.Server{
-		Addr:         address,
-		Handler:      engine,
-		ReadTimeout:  3 * time.Minute,
-		WriteTimeout: 3 * time.Minute,
-		IdleTimeout:  60 * time.Second,
+		Addr:              address,
+		Handler:           engine,
+		ReadHeaderTimeout: 10 * time.Second, // close slow-header connections instead of holding them
+		ReadTimeout:       3 * time.Minute,  // large uploads
+		WriteTimeout:      3 * time.Minute,  // resume generation, file streaming
+		IdleTimeout:       60 * time.Second,
+		MaxHeaderBytes:    64 << 10,
 	}
 
 	lc := NewLifecycle(db, server)

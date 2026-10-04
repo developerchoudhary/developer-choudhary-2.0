@@ -38,6 +38,7 @@ const socialIcons: Record<string, LucideIcon> = {
 export function Footer({ profile, services, resume, note, showBlog, showReviews }: FooterProps) {
   const explore = [
     ...NAV.filter((n) => (n.href === "/blog" ? showBlog : true)),
+    { href: "/contact", label: "Contact" },
     ...(showReviews ? [{ href: "/reviews", label: "Reviews" }] : []),
     ...(resume ? [{ href: "/resume", label: "Resume" }] : []),
   ];
