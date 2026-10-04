@@ -1,3 +1,4 @@
+import { Newspaper } from "lucide-react";
 import Link from "next/link";
 import type { Category, Paginated, Post } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -18,17 +19,16 @@ export function BlogList({ posts, categories, activeCategory, hrefFor, showFeatu
   const [first, ...rest] = posts.items;
   const featured = showFeatured && posts.meta.currentPage === 1 && first && first.coverUrl ? first : null;
   const grid = featured ? rest : posts.items;
+  const chip = (active: boolean) =>
+    cn(
+      "rounded-full border px-4 py-1.5 text-sm transition",
+      active ? "border-fg bg-fg text-bg" : "border-line text-fg-muted hover:border-line-strong hover:text-fg",
+    );
   return (
     <section className="container-dc pb-8">
-      {categories.length > 0 && (
-        <div className="mb-10 flex flex-wrap gap-2">
-          <Link
-            href="/blog"
-            className={cn(
-              "rounded-full border px-4 py-1.5 text-sm transition",
-              !activeCategory ? "border-fg bg-fg text-bg" : "border-line text-fg-muted hover:text-fg",
-            )}
-          >
+      {categories.some((c) => c.postCount > 0) && (
+        <div className="no-scrollbar -mx-5 mb-10 flex gap-2 overflow-x-auto px-5 sm:mx-0 sm:flex-wrap sm:px-0">
+          <Link href="/blog" className={chip(!activeCategory)}>
             All
           </Link>
           {categories
@@ -37,12 +37,7 @@ export function BlogList({ posts, categories, activeCategory, hrefFor, showFeatu
               <Link
                 key={c.id}
                 href={`/blog/category/${c.slug}`}
-                className={cn(
-                  "rounded-full border px-4 py-1.5 text-sm transition",
-                  activeCategory === c.slug
-                    ? "border-fg bg-fg text-bg"
-                    : "border-line text-fg-muted hover:text-fg",
-                )}
+                className={cn(chip(activeCategory === c.slug), "shrink-0")}
               >
                 {c.name} <span className="text-fg-subtle">{c.postCount}</span>
               </Link>
@@ -51,13 +46,14 @@ export function BlogList({ posts, categories, activeCategory, hrefFor, showFeatu
       )}
       {posts.items.length === 0 ? (
         <EmptyState
+          icon={<Newspaper className="size-5" />}
           title="Nothing published here yet"
           description="New articles land regularly. Check back soon or subscribe to the RSS feed."
         />
       ) : (
         <>
           {featured && (
-            <Reveal className="mb-8">
+            <Reveal className="mb-6">
               <PostCard post={featured} featured />
             </Reveal>
           )}

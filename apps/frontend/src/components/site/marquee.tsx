@@ -1,21 +1,26 @@
-export function Marquee({ items }: { items: string[] }) {
+import { cn } from "@/lib/utils";
+
+export function Marquee({ items, className }: { items: string[]; className?: string }) {
   if (!items.length) return null;
-  const list = [
-    ...items.map((label) => ({ key: `a-${label}`, label })),
-    ...items.map((label) => ({ key: `b-${label}`, label })),
-  ];
+  const unique = Array.from(new Set(items));
+  const Row = ({ suffix }: { suffix: string }) =>
+    unique.map((item) => (
+      <span
+        key={`${item}-${suffix}`}
+        className="inline-flex items-center gap-10 text-sm font-medium text-fg-muted"
+      >
+        {item}
+        <span className="size-1 rounded-full bg-accent/70" />
+      </span>
+    ));
   return (
-    <div className="marquee-mask overflow-hidden border-y border-line py-5">
-      <div className="flex w-max animate-marquee gap-10 pr-10 hover:[animation-play-state:paused]">
-        {list.map((item) => (
-          <span
-            key={item.key}
-            className="flex items-center gap-10 whitespace-nowrap font-mono text-sm uppercase tracking-[0.18em] text-fg-muted"
-          >
-            {item.label}
-            <span className="size-1.5 rounded-full bg-accent" />
-          </span>
-        ))}
+    <div
+      className={cn("marquee-mask overflow-hidden border-y border-line py-5", className)}
+      aria-hidden="true"
+    >
+      <div className="flex w-max animate-marquee gap-10 whitespace-nowrap">
+        <Row suffix="a" />
+        <Row suffix="b" />
       </div>
     </div>
   );

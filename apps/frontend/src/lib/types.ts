@@ -146,6 +146,8 @@ export interface Highlight {
   value: string;
 }
 
+export type ProjectStatus = "upcoming" | "in-progress" | "completed";
+
 export interface Project {
   id: string;
   slug: string;
@@ -156,6 +158,7 @@ export interface Project {
   clientName: string;
   clientIndustry: string;
   projectType: string;
+  status: ProjectStatus;
   liveUrl: string;
   repoUrl: string;
   coverFileId: string | null;
@@ -340,10 +343,18 @@ export interface Lead {
   updatedAt: string;
 }
 
+export interface DayCount {
+  day: string;
+  count: number;
+}
+
 export interface LeadStats {
   total: number;
   last7Days: number;
+  last30Days: number;
   byStatus: Record<string, number>;
+  bySource: CountItem[];
+  daily: DayCount[];
 }
 
 export interface Visit {
@@ -368,15 +379,22 @@ export interface CountItem {
 }
 
 export interface VisitStats {
-  views30d: number;
-  visitors30d: number;
+  rangeDays: number;
+  views: number;
+  visitors: number;
+  prevViews: number;
+  prevVisitors: number;
   viewsToday: number;
+  visitorsToday: number;
   consentRate: number;
+  avgDurationMs: number;
   topPages: CountItem[];
   topCountries: CountItem[];
+  topCities: CountItem[];
   topReferrers: CountItem[];
   devices: CountItem[];
   daily: Array<{ day: string; views: number; visitors: number }>;
+  hourly: Array<{ hour: number; views: number }>;
   locationPoints: Array<{
     latitude: number;
     longitude: number;

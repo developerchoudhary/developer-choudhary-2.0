@@ -6,11 +6,13 @@ import { Toaster } from "sonner";
 
 export function Providers({ children }: { children: ReactNode }) {
   return (
-    <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+    <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} disableTransitionOnChange>
       {children}
       <Toaster
         position="bottom-right"
-        toastOptions={{ className: "!rounded-xl !border !border-line !bg-bg-elevated !text-fg !shadow-lift" }}
+        toastOptions={{
+          className: "!rounded-xl !border !border-line !bg-bg-elevated !text-fg !shadow-lift !text-sm",
+        }}
       />
     </ThemeProvider>
   );

@@ -37,6 +37,12 @@ Environment: `API_URL`, `NEXT_PUBLIC_SITE_URL` (baked at build time), `REVALIDAT
 
 ## Design
 
-Tokens live in `src/styles/globals.css` (`--bg`, `--fg`, `--accent`, ...) and are exposed to Tailwind through
-`@theme inline`, so `bg-bg`, `text-fg-muted`, `border-line` and friends follow light and dark mode automatically.
-Type: Instrument Serif for display, Geist for text and mono.
+Tokens live in `src/styles/globals.css` (`--bg`, `--fg`, `--accent`, `--chart-1`, ...) and are exposed to Tailwind
+through `@theme inline`, so `bg-bg`, `text-fg-muted`, `border-line` and friends follow light and dark mode
+automatically. Dark is the default theme; the toggle in the header switches to the tuned light palette.
+Type: Bricolage Grotesque (variable, self-hosted) for headlines, Geist for text and Geist Mono for labels.
+
+The public site is mobile-first: every page is laid out for a 390px viewport first and widens up to the 1200px
+container. The admin at `/admin` is a fixed-width desktop console (`.admin-root`, min 1360px) and scrolls
+horizontally on smaller screens instead of reflowing. Its charts are small dependency-free SVG components in
+`src/components/admin/charts.tsx`.

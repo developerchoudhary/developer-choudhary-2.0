@@ -66,8 +66,14 @@ func (s *Service) List(ctx context.Context, query *pagination.ListQuery) ([]*Res
 	return ToListResponse(items), pagination.NewResponse(&query.Request, total), nil
 }
 
-func (s *Service) Stats(ctx context.Context) (*StatsDTO, error) {
-	return s.repo.Stats(ctx)
+// Stats returns traffic for the last `days` days (7, 30, 90 or 365; anything else falls back to 30).
+func (s *Service) Stats(ctx context.Context, days int) (*StatsDTO, error) {
+	switch days {
+	case 7, 14, 30, 90, 180, 365:
+	default:
+		days = 30
+	}
+	return s.repo.Stats(ctx, days)
 }
 
 func (s *Service) Prune(ctx context.Context) (int64, error) {

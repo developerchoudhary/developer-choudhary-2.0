@@ -276,7 +276,7 @@ var projectData = []projects.RequestDTO{
 	{
 		Title: "PME CRM portal", Subtitle: "Multi-office CRM with agreements, accounts and storage", ProjectType: "crm", ClientName: "PME Global", ClientIndustry: "Migration & education",
 		Summary: "Internal CRM for counsellors and sub-agents: leads, clients, agreements with PDF generation, invoices, commissions and file storage, deployed on k3s with GitOps.",
-		Role:    "Lead engineer: Go services, k8s, React", IsFeatured: ptr(true),
+		Role:    "Lead engineer: Go services, k8s, React", IsFeatured: ptr(true), Status: "in-progress",
 		Technologies: []string{"Go", "Spring Boot", "React", "GraphQL", "PostgreSQL", "MinIO", "Kubernetes", "ArgoCD"},
 		ServiceSlugs: []string{"crm-portals", "devops-and-self-hosting"},
 		Highlights:   []projects.Highlight{{Label: "Services", Value: "5 backends"}, {Label: "Offices", Value: "Multi-tenant"}},
@@ -314,6 +314,14 @@ var projectData = []projects.RequestDTO{
 		Technologies: []string{"Next.js", "Socket.io", "MongoDB", "JWT", "Tailwind CSS"},
 		ServiceSlugs: []string{"custom-web-applications"}, CompletedAt: date(2024, 3),
 	},
+}
+
+var upcomingProjectData = projects.RequestDTO{
+	Title: "Open-source ERP starter", Subtitle: "A Go + Next.js foundation for small-business ERPs", ProjectType: "erp", ClientIndustry: "Open source",
+	Summary: "Inventory, invoicing and accounts modules with role-based access, audit trails and a self-hosting guide. Built in public so clients can start from a proven base.",
+	Role:    "Author", Status: "upcoming",
+	Technologies: []string{"Go", "Next.js", "PostgreSQL", "Kubernetes"},
+	ServiceSlugs: []string{"erp-systems", "devops-and-self-hosting"},
 }
 
 var categoryData = []posts.CategoryRequest{

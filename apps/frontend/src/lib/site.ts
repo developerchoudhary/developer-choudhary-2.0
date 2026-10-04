@@ -5,11 +5,11 @@ export const DEFAULT_DESCRIPTION =
   "Aman Choudhary builds high-performance websites, ERP systems and CRM portals with Next.js, Go and PostgreSQL, self-hosted on Kubernetes.";
 
 export const NAV = [
-  { href: "/services", label: "Services" },
   { href: "/work", label: "Work" },
+  { href: "/services", label: "Services" },
   { href: "/about", label: "About" },
   { href: "/blog", label: "Blog" },
-  { href: "/reviews", label: "Reviews" },
+  { href: "/contact", label: "Contact" },
 ] as const;
 
 export const PROJECT_TYPE_LABELS: Record<string, string> = {
@@ -22,6 +22,12 @@ export const PROJECT_TYPE_LABELS: Record<string, string> = {
   mobile: "Mobile",
   devops: "DevOps",
   other: "Other",
+};
+
+export const PROJECT_STATUS_LABELS: Record<string, string> = {
+  upcoming: "Upcoming",
+  "in-progress": "In progress",
+  completed: "Completed",
 };
 
 export const SKILL_CATEGORY_LABELS: Record<string, string> = {

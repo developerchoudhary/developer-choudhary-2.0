@@ -50,10 +50,23 @@ type ResponseDTO struct {
 	UpdatedAt        string            `json:"updatedAt"`
 }
 
+type DayCountDTO struct {
+	Day   string `json:"day" bun:"day"`
+	Count int    `json:"count" bun:"count"`
+}
+
 type StatsDTO struct {
-	Total     int            `json:"total"`
-	Last7Days int            `json:"last7Days"`
-	ByStatus  map[string]int `json:"byStatus"`
+	Total      int            `json:"total"`
+	Last7Days  int            `json:"last7Days"`
+	Last30Days int            `json:"last30Days"`
+	ByStatus   map[string]int `json:"byStatus"`
+	BySource   []CountDTO     `json:"bySource"`
+	Daily      []DayCountDTO  `json:"daily"`
+}
+
+type CountDTO struct {
+	Label string `json:"label" bun:"label"`
+	Count int    `json:"count" bun:"count"`
 }
 
 func ToNote(n *Note) NoteDTO {

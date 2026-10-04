@@ -46,8 +46,8 @@ export function LocationConsent({ enabled }: { enabled: boolean }) {
   };
 
   return (
-    <div className="fixed inset-x-4 bottom-4 z-40 sm:inset-x-auto sm:right-6 sm:bottom-6 sm:w-96">
-      <div className="card relative p-5 shadow-lift">
+    <div className="fixed inset-x-4 bottom-4 z-40 sm:inset-x-auto sm:right-6 sm:bottom-6 sm:w-[380px]">
+      <div className="relative rounded-2xl border border-line bg-bg-elevated/95 p-5 shadow-lift backdrop-blur-xl">
         <button
           type="button"
           onClick={decline}
@@ -57,28 +57,28 @@ export function LocationConsent({ enabled }: { enabled: boolean }) {
           <X className="size-4" />
         </button>
         <div className="flex gap-3">
-          <span className="mt-0.5 inline-flex size-9 shrink-0 items-center justify-center rounded-full bg-accent-soft text-accent">
+          <span className="mt-0.5 inline-flex size-9 shrink-0 items-center justify-center rounded-xl bg-accent-soft text-accent">
             <MapPin className="size-4" />
           </span>
           <div>
             <p className="text-sm font-medium">Share your location?</p>
             <p className="mt-1 text-sm text-fg-muted">
-              It helps me understand where visitors come from and reply in your time zone. Nothing is shared
-              with third parties, and you can skip.
+              It helps me see where visitors come from and reply in your time zone. Nothing is shared with
+              third parties.
             </p>
             <div className="mt-4 flex gap-2">
               <button
                 type="button"
                 onClick={accept}
                 disabled={busy}
-                className="inline-flex h-9 items-center rounded-full bg-fg px-4 text-sm font-medium text-bg disabled:opacity-60"
+                className="inline-flex h-9 items-center rounded-lg bg-fg px-4 text-sm font-medium text-bg disabled:opacity-60"
               >
                 {busy ? "Locating…" : "Share location"}
               </button>
               <button
                 type="button"
                 onClick={decline}
-                className="inline-flex h-9 items-center rounded-full px-3 text-sm text-fg-muted hover:text-fg"
+                className="inline-flex h-9 items-center rounded-lg px-3 text-sm text-fg-muted hover:text-fg"
               >
                 Not now
               </button>

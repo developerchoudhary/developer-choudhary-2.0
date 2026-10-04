@@ -3,7 +3,6 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ShareButtons } from "@/components/site/bits";
 import { BlockRenderer } from "@/components/site/block-renderer";
 import { Breadcrumbs } from "@/components/site/breadcrumbs";
 import { PostCard } from "@/components/site/cards";
@@ -11,6 +10,7 @@ import { CtaBand } from "@/components/site/cta-band";
 import { JsonLd } from "@/components/site/json-ld";
 import { PostView } from "@/components/site/post-view";
 import { Reveal } from "@/components/site/reveal";
+import { ShareButtons } from "@/components/site/share-buttons";
 import { Avatar } from "@/components/ui/misc";
 import { getPost, getSite } from "@/lib/data";
 import { articleJsonLd, breadcrumbJsonLd, pageMetadata } from "@/lib/seo";
@@ -66,8 +66,8 @@ export default async function PostPage({ params }: { params: Params }) {
                 <Clock className="size-3" /> {post.readingTimeMinutes} min read
               </span>
             </div>
-            <h1 className="display mt-5 text-4xl sm:text-5xl lg:text-6xl">{post.title}</h1>
-            {post.excerpt && <p className="mt-6 text-xl text-fg-muted">{post.excerpt}</p>}
+            <h1 className="display mt-5 text-balance text-4xl sm:text-5xl lg:text-6xl">{post.title}</h1>
+            {post.excerpt && <p className="mt-6 text-pretty text-xl text-fg-muted">{post.excerpt}</p>}
             <div className="mt-8 flex items-center justify-between gap-4 border-y border-line py-4">
               <div className="flex items-center gap-3">
                 <Avatar src={site.profile.avatarUrl} name={site.profile.fullName} className="size-9" />
@@ -101,7 +101,7 @@ export default async function PostPage({ params }: { params: Params }) {
                 <Link
                   key={t.id}
                   href={`/blog/tag/${t.slug}`}
-                  className="rounded-full border border-line px-3 py-1 text-sm text-fg-muted hover:text-fg"
+                  className="rounded-full border border-line px-3 py-1 text-sm text-fg-muted transition hover:border-line-strong hover:text-fg"
                 >
                   #{t.name}
                 </Link>
@@ -124,7 +124,11 @@ export default async function PostPage({ params }: { params: Params }) {
           </div>
         </section>
       )}
-      <CtaBand text="Working on something like this? I can help." whatsapp={site.profile.whatsapp} />
+      <CtaBand
+        text="Working on something like this? I can help."
+        whatsapp={site.profile.whatsapp}
+        email={site.profile.email}
+      />
     </>
   );
 }

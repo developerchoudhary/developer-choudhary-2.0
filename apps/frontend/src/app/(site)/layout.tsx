@@ -11,8 +11,8 @@ import { personJsonLd, websiteJsonLd } from "@/lib/seo";
 export default async function SiteLayout({ children }: { children: ReactNode }) {
   await connection();
   const [site, services] = await Promise.all([getSite(), getServices()]);
-  const cta =
-    site.taglines.find((t) => t.context === "cta")?.text ?? "Have an idea? Let's turn it into software.";
+  const showBlog = setting(site, "features.blog", true);
+  const showReviews = setting(site, "features.reviews", true);
 
   return (
     <>
@@ -22,18 +22,17 @@ export default async function SiteLayout({ children }: { children: ReactNode }) 
       >
         Skip to content
       </a>
-      <Header
-        availability={site.profile.availabilityStatus}
-        showBlog={setting(site, "features.blog", true)}
-        showReviews={setting(site, "features.reviews", true)}
-      />
-      <main id="main">{children}</main>
+      <Header availability={site.profile.availabilityStatus} showBlog={showBlog} />
+      <main id="main" className="min-h-[60vh]">
+        {children}
+      </main>
       <Footer
         profile={site.profile}
         services={services}
         resume={site.resume}
         note={setting(site, "footer.note", "")}
-        ctaTagline={cta}
+        showBlog={showBlog}
+        showReviews={showReviews}
       />
       <JsonLd data={[...personJsonLd(site.profile, site.reviews), websiteJsonLd()]} />
       <VisitTracker />

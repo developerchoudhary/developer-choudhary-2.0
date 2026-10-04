@@ -11,7 +11,7 @@ import { JsonLd } from "@/components/site/json-ld";
 import { Reveal } from "@/components/site/reveal";
 import { getProject, getSite } from "@/lib/data";
 import { breadcrumbJsonLd, pageMetadata, projectJsonLd } from "@/lib/seo";
-import { PROJECT_TYPE_LABELS } from "@/lib/site";
+import { PROJECT_STATUS_LABELS, PROJECT_TYPE_LABELS } from "@/lib/site";
 import { formatMonth } from "@/lib/utils";
 
 type Params = Promise<{ slug: string }>;
@@ -50,19 +50,30 @@ export default async function ProjectPage({ params }: { params: Params }) {
         <header className="container-dc pt-10 sm:pt-16">
           <Breadcrumbs items={crumbs} />
           <Reveal>
-            <p className="eyebrow mt-8 mb-4">
-              {PROJECT_TYPE_LABELS[project.projectType] ?? project.projectType}
-              {project.clientIndustry ? ` · ${project.clientIndustry}` : ""}
-            </p>
-            <h1 className="display max-w-4xl text-5xl sm:text-6xl lg:text-7xl">{project.title}</h1>
-            {project.subtitle && <p className="mt-5 max-w-2xl text-xl text-fg-muted">{project.subtitle}</p>}
+            <div className="mt-8 mb-4 flex flex-wrap items-center gap-3">
+              <p className="eyebrow">
+                {PROJECT_TYPE_LABELS[project.projectType] ?? project.projectType}
+                {project.clientIndustry ? ` · ${project.clientIndustry}` : ""}
+              </p>
+              {project.status !== "completed" && (
+                <span className="rounded-full bg-accent px-2.5 py-1 font-mono text-[0.65rem] uppercase tracking-wider text-accent-fg">
+                  {PROJECT_STATUS_LABELS[project.status]}
+                </span>
+              )}
+            </div>
+            <h1 className="display max-w-4xl text-balance text-4xl sm:text-6xl lg:text-7xl">
+              {project.title}
+            </h1>
+            {project.subtitle && (
+              <p className="mt-5 max-w-2xl text-pretty text-xl text-fg-muted">{project.subtitle}</p>
+            )}
             <div className="mt-8 flex flex-wrap gap-3">
               {project.liveUrl && (
                 <a
                   href={project.liveUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex h-11 items-center gap-2 rounded-full bg-fg px-5 text-sm font-medium text-bg hover:opacity-90"
+                  className="inline-flex h-11 items-center gap-2 rounded-xl bg-accent px-5 text-sm font-medium text-accent-fg shadow-glow transition hover:bg-accent-strong"
                 >
                   Visit live site <ArrowUpRight className="size-4" />
                 </a>
@@ -72,7 +83,7 @@ export default async function ProjectPage({ params }: { params: Params }) {
                   href={project.repoUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex h-11 items-center gap-2 rounded-full border border-line-strong px-5 text-sm font-medium hover:bg-bg-muted"
+                  className="inline-flex h-11 items-center gap-2 rounded-xl border border-line-strong px-5 text-sm font-medium transition hover:bg-bg-muted"
                 >
                   <Github className="size-4" /> Source code
                 </a>
@@ -108,7 +119,7 @@ export default async function ProjectPage({ params }: { params: Params }) {
                   {project.technologies.map((t) => (
                     <span
                       key={t}
-                      className="rounded-md border border-line px-2 py-0.5 font-mono text-[0.68rem] text-fg-muted"
+                      className="rounded-md border border-line bg-bg-muted/50 px-2 py-0.5 font-mono text-[0.68rem] text-fg-muted"
                     >
                       {t}
                     </span>
@@ -128,7 +139,7 @@ export default async function ProjectPage({ params }: { params: Params }) {
             )}
           </aside>
           <div>
-            <p className="rich text-xl text-fg">{project.summary}</p>
+            <p className="text-xl leading-relaxed text-fg">{project.summary}</p>
             <div className="mt-8">
               <BlockRenderer blocks={project.description} />
             </div>
@@ -171,7 +182,11 @@ export default async function ProjectPage({ params }: { params: Params }) {
           </div>
         </section>
       )}
-      <CtaBand text="Building something similar? Let's talk about it." whatsapp={site.profile.whatsapp} />
+      <CtaBand
+        text="Building something similar? Let's talk about it."
+        whatsapp={site.profile.whatsapp}
+        email={site.profile.email}
+      />
     </>
   );
 }

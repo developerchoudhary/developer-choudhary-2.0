@@ -21,9 +21,9 @@ export default async function Image({ params }: { params: Promise<{ slug: string
         flexDirection: "column",
         justifyContent: "space-between",
         padding: 72,
-        background: "#15171b",
-        color: "#eceae4",
-        fontFamily: "Georgia, serif",
+        background: "#09090b",
+        color: "#f4f4f2",
+        fontFamily: "sans-serif",
       }}
     >
       <div
@@ -32,19 +32,19 @@ export default async function Image({ params }: { params: Promise<{ slug: string
           justifyContent: "space-between",
           fontFamily: "sans-serif",
           fontSize: 24,
-          color: "#9aa0aa",
+          color: "#a0a0a8",
         }}
       >
         <span>{`${SITE_NAME} · Work`}</span>
-        <span style={{ textTransform: "uppercase", letterSpacing: 4, color: "#3cc9a8" }}>{type}</span>
+        <span style={{ textTransform: "uppercase", letterSpacing: 4, color: "#f97316" }}>{type}</span>
       </div>
       <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
         <div style={{ fontSize: 80, lineHeight: 1, letterSpacing: -2 }}>{title}</div>
-        <div style={{ fontFamily: "sans-serif", fontSize: 30, color: "#9aa0aa", maxWidth: 950 }}>
+        <div style={{ fontFamily: "sans-serif", fontSize: 30, color: "#a0a0a8", maxWidth: 950 }}>
           {subtitle}
         </div>
       </div>
-      <div style={{ fontFamily: "sans-serif", fontSize: 22, color: "#6b7079" }}>developerchoudhary.com</div>
+      <div style={{ fontFamily: "sans-serif", fontSize: 22, color: "#6a6a73" }}>developerchoudhary.com</div>
     </div>,
     size,
   );

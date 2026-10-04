@@ -1,23 +1,31 @@
+import { MessageSquareQuote } from "lucide-react";
 import { ReviewCard } from "@/components/site/cards";
-import { CtaBand } from "@/components/site/cta-band";
 import { JsonLd } from "@/components/site/json-ld";
 import { Reveal } from "@/components/site/reveal";
 import { ReviewForm } from "@/components/site/review-form";
-import { PageHero, Section } from "@/components/site/section";
+import { PageHero } from "@/components/site/section";
 import { EmptyState, Stars } from "@/components/ui/misc";
-import { getReviews, getServices, getSite } from "@/lib/data";
+import { getReviewSummary, getReviews, getServices, getSite, setting } from "@/lib/data";
 import { breadcrumbJsonLd, pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata({
-  title: "Client reviews & ratings",
+  title: "Client reviews",
   description:
-    "What clients say about working with Aman Choudhary on websites, ERP systems and CRM portals. Read verified reviews or leave your own.",
+    "What clients say about working with Developer Choudhary on websites, ERPs, CRMs and web platforms.",
   path: "/reviews",
 });
 
 export default async function ReviewsPage() {
-  const [site, reviews, services] = await Promise.all([getSite(), getReviews(false, 0), getServices()]);
-  const summary = site.reviews;
+  const [site, reviews, summary, services] = await Promise.all([
+    getSite(),
+    getReviews(false, 0),
+    getReviewSummary(),
+    getServices(),
+  ]);
+  const allowSubmit = setting(site, "features.reviews", true);
+  const distribution = [5, 4, 3, 2, 1].map((n) => ({ n, count: summary.distribution[String(n)] ?? 0 }));
+  const max = Math.max(1, ...distribution.map((d) => d.count));
+
   return (
     <>
       <JsonLd
@@ -30,45 +38,44 @@ export default async function ReviewsPage() {
         eyebrow="Reviews"
         title={
           <>
-            Honest words from <em className="text-accent">people I have built for.</em>
+            Kind words from <span className="text-accent">real clients.</span>
           </>
         }
-        lede="Every review is submitted by a real client and approved before it appears here."
+        lede="Every review is from someone I have built software for. Approved before publishing, never edited for sentiment."
       >
         {summary.count > 0 && (
-          <div className="flex flex-wrap items-center gap-6">
-            <div className="flex items-center gap-3">
-              <span className="display text-6xl">{summary.average.toFixed(1)}</span>
-              <div>
-                <Stars rating={Math.round(summary.average)} />
-                <p className="mt-1 text-sm text-fg-muted">
-                  from {summary.count} review{summary.count === 1 ? "" : "s"}
-                </p>
-              </div>
+          <div className="card inline-grid gap-6 p-6 sm:grid-cols-[auto_1fr] sm:items-center">
+            <div>
+              <p className="display text-6xl">{summary.average.toFixed(1)}</p>
+              <Stars rating={Math.round(summary.average)} className="mt-2" />
+              <p className="mt-2 text-sm text-fg-muted">
+                {summary.count} review{summary.count === 1 ? "" : "s"}
+              </p>
             </div>
-            <ul className="w-full max-w-xs space-y-1.5 text-xs">
-              {[5, 4, 3, 2, 1].map((n) => {
-                const count = summary.distribution[String(n)] ?? 0;
-                const pct = summary.count ? Math.round((count / summary.count) * 100) : 0;
-                return (
-                  <li key={n} className="flex items-center gap-2">
-                    <span className="w-3 font-mono text-fg-subtle">{n}</span>
-                    <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-bg-muted">
-                      <span className="block h-full rounded-full bg-highlight" style={{ width: `${pct}%` }} />
-                    </span>
-                    <span className="w-6 text-right font-mono text-fg-subtle">{count}</span>
-                  </li>
-                );
-              })}
+            <ul className="w-56 space-y-1.5">
+              {distribution.map((d) => (
+                <li key={d.n} className="flex items-center gap-3 text-xs text-fg-muted">
+                  <span className="w-3 tabular">{d.n}</span>
+                  <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-bg-muted">
+                    <span
+                      className="block h-full rounded-full bg-accent"
+                      style={{ width: `${(d.count / max) * 100}%` }}
+                    />
+                  </span>
+                  <span className="w-5 text-right tabular">{d.count}</span>
+                </li>
+              ))}
             </ul>
           </div>
         )}
       </PageHero>
+
       <section className="container-dc pb-8">
         {reviews.length === 0 ? (
           <EmptyState
-            title="No public reviews yet"
-            description="Worked with me? Be the first to share your experience below."
+            icon={<MessageSquareQuote className="size-5" />}
+            title="No reviews published yet"
+            description="Worked with me? Your review would mean a lot."
           />
         ) : (
           <div className="columns-1 gap-5 md:columns-2 lg:columns-3 [&>*]:mb-5 [&>*]:break-inside-avoid">
@@ -80,21 +87,21 @@ export default async function ReviewsPage() {
           </div>
         )}
       </section>
-      <Section
-        id="write"
-        eyebrow="Leave a review"
-        title={
-          <>
-            Worked with me? <em className="text-accent">Tell others how it went.</em>
-          </>
-        }
-        lede="Reviews are moderated to keep out spam. Your email is never published."
-      >
-        <div className="max-w-2xl">
-          <ReviewForm services={services} />
-        </div>
-      </Section>
-      <CtaBand text="Ready to be the next success story?" whatsapp={site.profile.whatsapp} />
+
+      {allowSubmit && (
+        <section className="container-dc py-16">
+          <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr]">
+            <div>
+              <p className="eyebrow mb-4">Worked together?</p>
+              <h2 className="display text-3xl sm:text-4xl">Leave a review</h2>
+              <p className="mt-4 text-fg-muted">
+                A few honest lines help the next business decide. Reviews are published after a quick check.
+              </p>
+            </div>
+            <ReviewForm services={services} />
+          </div>
+        </section>
+      )}
     </>
   );
 }

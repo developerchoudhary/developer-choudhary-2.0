@@ -12,7 +12,7 @@ import { Field, Input, Select, Switch, Textarea } from "@/components/ui/field";
 import { Skeleton } from "@/components/ui/misc";
 import { useAll, useItem, useRemove, useSave } from "@/lib/admin/hooks";
 import type { Block } from "@/lib/blocks";
-import { PROJECT_TYPE_LABELS } from "@/lib/site";
+import { PROJECT_STATUS_LABELS, PROJECT_TYPE_LABELS } from "@/lib/site";
 import type { GalleryItem, Highlight, Project, Service } from "@/lib/types";
 import { slugify } from "@/lib/utils";
 
@@ -25,6 +25,7 @@ interface FormValues {
   clientName: string;
   clientIndustry: string;
   projectType: string;
+  status: string;
   liveUrl: string;
   repoUrl: string;
   coverFileId: string | null;
@@ -52,6 +53,7 @@ const empty: FormValues = {
   clientName: "",
   clientIndustry: "",
   projectType: "website",
+  status: "completed",
   liveUrl: "",
   repoUrl: "",
   coverFileId: null,
@@ -159,6 +161,15 @@ export default function ProjectEditor() {
                 </Select>
               </Field>
             </div>
+            <Field label="Status" hint="upcoming and in-progress projects are highlighted on the site">
+              <Select {...register("status")}>
+                {Object.entries(PROJECT_STATUS_LABELS).map(([k, v]) => (
+                  <option key={k} value={k}>
+                    {v}
+                  </option>
+                ))}
+              </Select>
+            </Field>
             <Field label="Subtitle" hint="one line">
               <Input {...register("subtitle")} />
             </Field>

@@ -1,6 +1,6 @@
 services:
   postgres:
-    image: postgres:17
+    image: postgres:17-alpine
     container_name: portfolio-postgres
     restart: unless-stopped
     ports:
@@ -18,9 +18,11 @@ services:
       retries: 5
 
   minio:
-    image: quay.io/minio/minio:RELEASE.2025-09-07T16-13-09Z
-    container_name: portfolio-minio
     restart: unless-stopped
+    image: bitnamilegacy/minio:2025.4.22
+    user: "0:0"
+    entrypoint: ["minio"]
+    container_name: portfolio-minio
     command: server /data --console-address ":9001"
     ports:
       - "9000:9000"
@@ -30,6 +32,12 @@ services:
       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-minioadmin}
     volumes:
       - portfolio_minio_data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:9000/minio/health/live || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 5s
 
   gotenberg:
     image: gotenberg/gotenberg:8.34.0-chromium

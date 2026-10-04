@@ -24,8 +24,8 @@ export default async function Image({ params }: { params: Promise<{ slug: string
         justifyContent: "space-between",
         padding: 72,
         background: "#f7f5f0",
-        color: "#15171b",
-        fontFamily: "Georgia, serif",
+        color: "#09090b",
+        fontFamily: "sans-serif",
       }}
     >
       <div

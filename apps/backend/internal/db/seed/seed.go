@@ -208,7 +208,10 @@ func seedProjects(ctx context.Context, db *bun.DB, rv *revalidate.Client, actor 
 			return err
 		}
 	}
-	return nil
+	upcomingProjectData.SortOrder = len(projectData)
+	upcomingProjectData.Slug = slug.Make(upcomingProjectData.Title)
+	_, err = svc.Create(ctx, &upcomingProjectData, actor)
+	return err
 }
 
 func seedCategories(ctx context.Context, db *bun.DB, rv *revalidate.Client, actor uuid.UUID) error {

@@ -9,13 +9,27 @@ export function EmptyState({
   title,
   description,
   action,
+  icon,
+  className,
 }: {
   title: string;
   description?: string;
   action?: ReactNode;
+  icon?: ReactNode;
+  className?: string;
 }) {
   return (
-    <div className="card flex flex-col items-center justify-center gap-2 px-6 py-14 text-center">
+    <div
+      className={cn(
+        "card flex flex-col items-center justify-center gap-2 px-6 py-14 text-center dot-bg",
+        className,
+      )}
+    >
+      {icon && (
+        <span className="mb-2 inline-flex size-12 items-center justify-center rounded-2xl border border-line bg-bg-elevated text-fg-muted">
+          {icon}
+        </span>
+      )}
       <p className="font-medium text-fg">{title}</p>
       {description && <p className="max-w-sm text-sm text-fg-muted">{description}</p>}
       {action && <div className="mt-3">{action}</div>}
@@ -42,7 +56,7 @@ export function Stars({
         <svg
           key={n}
           viewBox="0 0 20 20"
-          className={cn(size, n <= rating ? "fill-highlight" : "fill-line-strong")}
+          className={cn(size, n <= rating ? "fill-accent" : "fill-line-strong")}
           aria-hidden="true"
         >
           <path d="M10 1.5l2.6 5.4 5.9.8-4.3 4.1 1.1 5.9L10 14.9l-5.3 2.8 1.1-5.9L1.5 7.7l5.9-.8z" />
@@ -70,5 +84,24 @@ export function Avatar({ src, name, className }: { src?: string | null; name: st
     >
       {letters}
     </span>
+  );
+}
+
+export function Spinner({ className }: { className?: string }) {
+  return (
+    <span
+      className={cn(
+        "inline-block size-5 animate-spin rounded-full border-2 border-fg-muted border-t-transparent",
+        className,
+      )}
+    />
+  );
+}
+
+export function Kbd({ children }: { children: ReactNode }) {
+  return (
+    <kbd className="rounded-md border border-line bg-bg-muted px-1.5 py-0.5 font-mono text-[0.65rem] text-fg-muted">
+      {children}
+    </kbd>
   );
 }

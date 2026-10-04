@@ -7,28 +7,34 @@ import { Button } from "@/components/ui/button";
 import { Field, Input, Textarea } from "@/components/ui/field";
 import { cn } from "@/lib/utils";
 
-const statusTone: Record<string, "neutral" | "accent" | "highlight" | "success" | "danger" | "muted"> = {
-  new: "accent",
-  contacted: "highlight",
-  qualified: "highlight",
-  proposal: "highlight",
-  won: "success",
-  lost: "muted",
-  spam: "danger",
-  pending: "highlight",
-  approved: "success",
-  rejected: "danger",
-  draft: "muted",
-  scheduled: "highlight",
-  published: "success",
-  archived: "muted",
-  high: "danger",
-  normal: "neutral",
-  low: "muted",
+const statusTone: Record<string, "neutral" | "accent" | "warning" | "success" | "danger" | "muted" | "info"> =
+  {
+    new: "accent",
+    contacted: "warning",
+    qualified: "warning",
+    proposal: "warning",
+    won: "success",
+    lost: "muted",
+    spam: "danger",
+    pending: "warning",
+    approved: "success",
+    rejected: "danger",
+    draft: "muted",
+    scheduled: "warning",
+    published: "success",
+    archived: "muted",
+    high: "danger",
+    normal: "neutral",
+    low: "muted",
+  };
+
+const statusLabel: Record<string, string> = {
+  "in-progress": "In progress",
+  "web-app": "Web app",
 };
 
 export function StatusBadge({ value }: { value: string }) {
-  return <Badge tone={statusTone[value] ?? "neutral"}>{value}</Badge>;
+  return <Badge tone={statusTone[value] ?? "neutral"}>{statusLabel[value] ?? value}</Badge>;
 }
 
 export function ConfirmButton({
@@ -277,12 +283,51 @@ export function FormCard({
   );
 }
 
-export function StatCard({ label, value, hint }: { label: string; value: ReactNode; hint?: string }) {
+export function StatCard({
+  label,
+  value,
+  hint,
+  delta,
+  trend,
+  icon,
+}: {
+  label: string;
+  value: ReactNode;
+  hint?: string;
+  /** Percentage change vs the previous period; undefined hides it, null shows "new". */
+  delta?: number | null;
+  trend?: ReactNode;
+  icon?: ReactNode;
+}) {
+  const up = typeof delta === "number" && delta > 0;
+  const down = typeof delta === "number" && delta < 0;
   return (
-    <div className="card p-5">
-      <p className="text-xs uppercase tracking-wider text-fg-subtle">{label}</p>
-      <p className="mt-2 text-3xl font-semibold tracking-tight">{value}</p>
-      {hint && <p className="mt-1 text-xs text-fg-muted">{hint}</p>}
+    <div className="card relative overflow-hidden p-5">
+      <div className="flex items-start justify-between gap-3">
+        <p className="text-xs font-medium uppercase tracking-wider text-fg-subtle">{label}</p>
+        {icon && <span className="text-fg-subtle">{icon}</span>}
+      </div>
+      <div className="mt-3 flex items-end justify-between gap-3">
+        <div>
+          <p className="text-3xl font-semibold tracking-tight">{value}</p>
+          <div className="mt-1 flex items-center gap-2 text-xs text-fg-muted">
+            {delta !== undefined && (
+              <span
+                className={cn(
+                  "inline-flex items-center gap-0.5 rounded-md px-1.5 py-0.5 font-medium tabular",
+                  up && "bg-success/12 text-success",
+                  down && "bg-danger/12 text-danger",
+                  !up && !down && "bg-bg-muted text-fg-muted",
+                )}
+              >
+                {delta === null ? "new" : `${delta > 0 ? "+" : ""}${Math.round(delta)}%`}
+              </span>
+            )}
+            {hint && <span>{hint}</span>}
+          </div>
+        </div>
+        {trend && <div className="h-10 w-28 shrink-0">{trend}</div>}
+      </div>
     </div>
   );
 }

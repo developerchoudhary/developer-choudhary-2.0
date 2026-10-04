@@ -17,6 +17,7 @@ type ResponseDTO struct {
 	ClientName     string          `json:"clientName"`
 	ClientIndustry string          `json:"clientIndustry"`
 	ProjectType    string          `json:"projectType"`
+	Status         string          `json:"status"`
 	LiveURL        string          `json:"liveUrl"`
 	RepoURL        string          `json:"repoUrl"`
 	CoverFileID    *string         `json:"coverFileId"`
@@ -59,6 +60,7 @@ func ToResponse(p *Project, full bool) *ResponseDTO {
 		ClientName:     p.ClientName,
 		ClientIndustry: p.ClientIndustry,
 		ProjectType:    p.ProjectType,
+		Status:         p.Status,
 		LiveURL:        p.LiveURL,
 		RepoURL:        p.RepoURL,
 		CoverFileID:    p.CoverFileID,

@@ -168,6 +168,29 @@ func (r *repo) Stats(ctx context.Context) (*StatsDTO, error) {
 		return nil, err
 	}
 	out.Last7Days = recent
+	since30 := time.Now().UTC().Add(-30 * 24 * time.Hour)
+	if out.Last30Days, err = r.db.NewSelect().Model((*Lead)(nil)).
+		Where("deleted_at IS NULL").Where("created_at > ?", since30).Count(ctx); err != nil {
+		return nil, err
+	}
+	if err = r.db.NewSelect().Model((*Lead)(nil)).
+		ColumnExpr("to_char(date_trunc('day', created_at), 'YYYY-MM-DD') AS day, COUNT(*) AS count").
+		Where("deleted_at IS NULL").Where("created_at > ?", since30).
+		GroupExpr("1").OrderExpr("1 ASC").Scan(ctx, &out.Daily); err != nil {
+		return nil, err
+	}
+	if err = r.db.NewSelect().Model((*Lead)(nil)).
+		ColumnExpr("COALESCE(NULLIF(service_interest, ''), 'Not specified') AS label, COUNT(*) AS count").
+		Where("deleted_at IS NULL").
+		GroupExpr("1").OrderExpr("count DESC").Limit(8).Scan(ctx, &out.BySource); err != nil {
+		return nil, err
+	}
+	if out.Daily == nil {
+		out.Daily = []DayCountDTO{}
+	}
+	if out.BySource == nil {
+		out.BySource = []CountDTO{}
+	}
 	return out, nil
 }
 

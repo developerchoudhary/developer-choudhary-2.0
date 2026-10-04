@@ -2,6 +2,7 @@ import { ArrowUpRight, Check, Clock, IndianRupee } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { TechList } from "@/components/site/bits";
 import { BlockRenderer } from "@/components/site/block-renderer";
 import { Breadcrumbs } from "@/components/site/breadcrumbs";
 import { ProjectCard, ReviewCard } from "@/components/site/cards";
@@ -9,6 +10,7 @@ import { CtaBand } from "@/components/site/cta-band";
 import { Faq } from "@/components/site/faq";
 import { JsonLd } from "@/components/site/json-ld";
 import { Reveal } from "@/components/site/reveal";
+import { Section } from "@/components/site/section";
 import { ServiceIcon } from "@/components/site/service-icon";
 import { getFeaturedProjects, getReviews, getService, getServices, getSite } from "@/lib/data";
 import { breadcrumbJsonLd, faqJsonLd, pageMetadata, serviceJsonLd } from "@/lib/seo";
@@ -39,8 +41,8 @@ export default async function ServicePage({ params }: { params: Params }) {
   if (!service) notFound();
 
   const related = projects.filter((p) => p.serviceSlugs.includes(service.slug)).slice(0, 3);
-  const serviceReviews = reviews.filter((r) => r.serviceSlug === service.slug).slice(0, 3);
-  const others = all.filter((s) => s.slug !== service.slug).slice(0, 4);
+  const serviceReviews = reviews.filter((r) => r.serviceSlug === service.slug).slice(0, 2);
+  const others = all.filter((s) => s.slug !== service.slug).slice(0, 5);
   const crumbs = [
     { name: "Home", path: "/" },
     { name: "Services", path: "/services" },
@@ -50,158 +52,138 @@ export default async function ServicePage({ params }: { params: Params }) {
   return (
     <>
       <JsonLd
-        data={[serviceJsonLd(service, site.profile), breadcrumbJsonLd(crumbs), faqJsonLd(service.faqs)]}
+        data={[serviceJsonLd(service, site.profile), faqJsonLd(service.faqs), breadcrumbJsonLd(crumbs)]}
       />
-      <section className="container-dc pt-10 pb-12 sm:pt-16">
-        <Breadcrumbs items={crumbs} />
-        <div className="mt-8 grid gap-10 lg:grid-cols-[1.3fr_0.7fr]">
+      <section className="relative overflow-hidden">
+        <div className="grid-bg pointer-events-none absolute inset-x-0 top-0 h-[420px]" aria-hidden="true" />
+        <div className="container-dc relative pt-10 pb-12 sm:pt-16 sm:pb-16">
+          <Breadcrumbs items={crumbs} />
           <Reveal>
-            <span className="inline-flex size-12 items-center justify-center rounded-2xl bg-accent-soft text-accent">
-              <ServiceIcon name={service.icon} className="size-6" />
-            </span>
-            <h1 className="display mt-6 text-5xl sm:text-6xl lg:text-7xl">{service.title}</h1>
-            <p className="mt-5 max-w-2xl text-xl text-fg-muted">{service.tagline}</p>
-            <p className="mt-4 max-w-2xl text-fg-muted">{service.summary}</p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link
-                href={`/contact?service=${encodeURIComponent(service.title)}`}
-                className="inline-flex h-12 items-center gap-2 rounded-full bg-fg px-6 text-sm font-medium text-bg hover:opacity-90"
-              >
-                Get a quote <ArrowUpRight className="size-4" />
-              </Link>
-              <Link
-                href="/work"
-                className="inline-flex h-12 items-center rounded-full border border-line-strong px-6 text-sm font-medium hover:bg-bg-muted"
-              >
-                See related work
-              </Link>
+            <div className="mt-8 grid gap-10 lg:grid-cols-[1.3fr_0.7fr] lg:items-end">
+              <div>
+                <span className="inline-flex size-12 items-center justify-center rounded-xl bg-accent-soft text-accent">
+                  <ServiceIcon name={service.icon} className="size-5" />
+                </span>
+                <h1 className="display mt-6 max-w-3xl text-balance text-4xl sm:text-6xl">{service.title}</h1>
+                <p className="mt-5 max-w-2xl text-pretty text-lg text-fg-muted sm:text-xl">
+                  {service.tagline}
+                </p>
+              </div>
+              <div className="card grid grid-cols-2 divide-x divide-line">
+                <div className="p-5">
+                  <p className="eyebrow inline-flex items-center gap-1.5">
+                    <IndianRupee className="size-3" /> Starting at
+                  </p>
+                  <p className="mt-2 text-xl font-semibold">{service.startingPriceLabel || "On request"}</p>
+                </div>
+                <div className="p-5">
+                  <p className="eyebrow inline-flex items-center gap-1.5">
+                    <Clock className="size-3" /> Timeline
+                  </p>
+                  <p className="mt-2 text-xl font-semibold">{service.timelineLabel || "Depends on scope"}</p>
+                </div>
+              </div>
             </div>
           </Reveal>
-          <Reveal delay={0.1}>
-            <aside className="card p-6 lg:sticky lg:top-24">
-              <dl className="space-y-5">
-                {service.startingPriceLabel && (
-                  <div className="flex items-start gap-3">
-                    <IndianRupee className="mt-0.5 size-4 text-accent" />
-                    <div>
-                      <dt className="eyebrow">Investment</dt>
-                      <dd className="mt-1 font-medium">{service.startingPriceLabel}</dd>
-                    </div>
-                  </div>
-                )}
-                {service.timelineLabel && (
-                  <div className="flex items-start gap-3">
-                    <Clock className="mt-0.5 size-4 text-accent" />
-                    <div>
-                      <dt className="eyebrow">Typical timeline</dt>
-                      <dd className="mt-1 font-medium">{service.timelineLabel}</dd>
-                    </div>
-                  </div>
-                )}
-                {service.idealFor.length > 0 && (
-                  <div>
-                    <dt className="eyebrow">Ideal for</dt>
-                    <dd className="mt-2 flex flex-wrap gap-1.5">
-                      {service.idealFor.map((i) => (
-                        <span
-                          key={i}
-                          className="rounded-full border border-line px-2.5 py-0.5 text-xs text-fg-muted"
-                        >
-                          {i}
-                        </span>
-                      ))}
-                    </dd>
-                  </div>
-                )}
-                {service.techStack.length > 0 && (
-                  <div>
-                    <dt className="eyebrow">Stack</dt>
-                    <dd className="mt-2 flex flex-wrap gap-1.5">
-                      {service.techStack.map((t) => (
-                        <span
-                          key={t}
-                          className="rounded-md border border-line px-2 py-0.5 font-mono text-[0.68rem] text-fg-muted"
-                        >
-                          {t}
-                        </span>
-                      ))}
-                    </dd>
-                  </div>
-                )}
-              </dl>
-            </aside>
-          </Reveal>
         </div>
       </section>
 
-      <section className="container-dc grid gap-12 pb-16 lg:grid-cols-[1.3fr_0.7fr]">
+      <div className="container-dc grid gap-12 lg:grid-cols-[1.35fr_0.65fr]">
         <div>
-          <BlockRenderer blocks={service.description} />
-        </div>
-        {service.deliverables.length > 0 && (
-          <div>
-            <p className="eyebrow mb-4">What you get</p>
-            <ul className="space-y-3">
-              {service.deliverables.map((d) => (
-                <li key={d} className="flex gap-3 text-fg-muted">
-                  <Check className="mt-1 size-4 shrink-0 text-accent" /> {d}
-                </li>
-              ))}
-            </ul>
+          <p className="text-xl leading-relaxed text-fg">{service.summary}</p>
+          <div className="mt-8">
+            <BlockRenderer blocks={service.description} />
           </div>
-        )}
-      </section>
+          {service.faqs.length > 0 && (
+            <div className="mt-14">
+              <h2 className="display mb-6 text-3xl">Questions</h2>
+              <Faq items={service.faqs} />
+            </div>
+          )}
+        </div>
+        <aside className="space-y-6 lg:sticky lg:top-24 lg:self-start">
+          {service.deliverables.length > 0 && (
+            <div className="card p-6">
+              <p className="eyebrow mb-4">What you get</p>
+              <ul className="space-y-2.5 text-sm">
+                {service.deliverables.map((d) => (
+                  <li key={d} className="flex gap-2.5 text-fg-muted">
+                    <Check className="mt-0.5 size-4 shrink-0 text-accent" />
+                    {d}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {service.idealFor.length > 0 && (
+            <div className="card p-6">
+              <p className="eyebrow mb-4">Ideal for</p>
+              <ul className="space-y-2 text-sm text-fg-muted">
+                {service.idealFor.map((d) => (
+                  <li key={d} className="flex gap-2.5">
+                    <span className="mt-2 size-1 shrink-0 rounded-full bg-accent" />
+                    {d}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {service.techStack.length > 0 && (
+            <div className="card p-6">
+              <p className="eyebrow mb-4">Stack</p>
+              <TechList items={service.techStack} max={12} />
+            </div>
+          )}
+          <Link
+            href={`/contact?service=${encodeURIComponent(service.title)}`}
+            className="flex h-12 items-center justify-center gap-2 rounded-xl bg-accent text-sm font-medium text-accent-fg shadow-glow transition hover:bg-accent-strong"
+          >
+            Discuss this service <ArrowUpRight className="size-4" />
+          </Link>
+        </aside>
+      </div>
 
       {related.length > 0 && (
-        <section className="container-dc pb-16">
-          <p className="eyebrow mb-6">Related work</p>
+        <Section eyebrow="Related work" title="Delivered with this service" size="tight">
           <div className="grid gap-5 md:grid-cols-3">
             {related.map((p) => (
               <ProjectCard key={p.id} project={p} />
             ))}
           </div>
-        </section>
+        </Section>
       )}
 
       {serviceReviews.length > 0 && (
-        <section className="container-dc pb-16">
-          <p className="eyebrow mb-6">Clients on this service</p>
-          <div className="grid gap-5 md:grid-cols-3">
+        <Section eyebrow="Reviews" title="From clients" size="tight">
+          <div className="grid gap-5 md:grid-cols-2">
             {serviceReviews.map((r) => (
               <ReviewCard key={r.id} review={r} />
             ))}
           </div>
-        </section>
-      )}
-
-      {service.faqs.length > 0 && (
-        <section className="container-dc pb-16">
-          <h2 className="display mb-6 text-3xl">Questions about {service.title.toLowerCase()}</h2>
-          <div className="max-w-3xl">
-            <Faq items={service.faqs} />
-          </div>
-        </section>
+        </Section>
       )}
 
       {others.length > 0 && (
-        <section className="container-dc pb-8">
+        <section className="container-dc py-10">
           <p className="eyebrow mb-4">Other services</p>
           <div className="flex flex-wrap gap-2">
             {others.map((s) => (
               <Link
                 key={s.id}
                 href={`/services/${s.slug}`}
-                className="rounded-full border border-line px-4 py-2 text-sm hover:bg-bg-muted"
+                className="inline-flex items-center gap-2 rounded-full border border-line px-4 py-2 text-sm text-fg-muted transition hover:border-line-strong hover:text-fg"
               >
-                {s.title}
+                <ServiceIcon name={s.icon} className="size-3.5" /> {s.title}
               </Link>
             ))}
           </div>
         </section>
       )}
+
       <CtaBand
-        text={`Need ${service.title.toLowerCase()}? Let's scope it this week.`}
+        text={`Ready to talk about ${service.title.toLowerCase()}? I reply within one working day.`}
         whatsapp={site.profile.whatsapp}
+        email={site.profile.email}
       />
     </>
   );

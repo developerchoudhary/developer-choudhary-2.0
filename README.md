@@ -17,11 +17,13 @@ k8s/
 
 ## What the site does
 
-- Public pages: home, services (one SEO page per service), work (case studies), about, experience, blog with
-  categories and tags, reviews, contact, resume, privacy and terms.
+- Public pages: home, work (case studies with completed / in-progress / upcoming status), services (one SEO page
+  per service), about (story, experience, skills, education), blog with categories and tags, reviews, contact,
+  resume, privacy and terms. Mobile-first, dark by default with a light theme.
 - Everything is editable from `/admin`: taglines, profile, services, projects, skills, experience, education,
   certifications, blog posts (block editor with preview and scheduling), reviews moderation, leads pipeline with
-  notes and CSV export, visitor analytics, media library and a resume generator.
+  notes and CSV export, an analytics dashboard (traffic over 7/30/90/365 days with period comparison, pages,
+  referrers, devices, countries, consented locations), media library and a resume generator.
 - Leads from the contact form are stored, the admin is emailed and the visitor receives an auto-reply.
 - Visitors may share their location; it is stored only with consent and shown per lead and in analytics.
 - The resume PDF is generated from live data through Gotenberg and versioned; `/resume` always serves the current one.

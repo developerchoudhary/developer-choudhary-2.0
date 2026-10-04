@@ -13,7 +13,7 @@ Base URL: `/api/v1`. Responses: `{ success, message, data }`; lists add `meta` w
 | GET | `/public/services`, `/public/services/:slug` | published services |
 | GET | `/public/skills` | grouped by category |
 | GET | `/public/experience`, `/public/education`, `/public/certifications` | |
-| GET | `/public/projects` | filters `projectType`, `search`; `/featured?limit=`; `/:slug` includes `related` |
+| GET | `/public/projects` | filters `projectType`, `status` (`upcoming`, `in-progress`, `completed`), `search`; `/featured?limit=`; `/:slug` includes `related` |
 | GET | `/public/posts` | filters `category`, `tag`, `search`; `/recent?limit=`; `/:slug` includes `related` |
 | GET | `/public/post-categories[/:slug]`, `/public/post-tags[/:slug]` | with published post counts |
 | GET | `/public/reviews?featured=&limit=`, `/public/reviews/summary` | approved only |
@@ -36,9 +36,12 @@ Base URL: `/api/v1`. Responses: `{ success, message, data }`; lists add `meta` w
 | Blog | `GET/POST /admin/posts`, `GET/PUT/DELETE /admin/posts/:id`, `GET /admin/posts/preview/:slug`, categories and tags under `/admin/post-categories`, `/admin/post-tags` |
 | Media | `GET/POST /admin/media` (multipart `file`, `folder`, `altText`, `visibility`), `GET /admin/media/folders`, `GET/PUT/DELETE /admin/media/:id` |
 | Reviews | `GET/POST /admin/reviews`, `GET/PUT/DELETE /admin/reviews/:id`, `PATCH /admin/reviews/:id/status` (`{ status, isFeatured }`) |
-| Leads | `GET /admin/leads` (filters `status`, `priority`, `country`, `createdAtFrom/To`), `GET /admin/leads/stats`, `GET /admin/leads/export` (CSV), `GET/PUT/DELETE /admin/leads/:id`, `POST /admin/leads/:id/notes` |
-| Visits | `GET /admin/visits`, `GET /admin/visits/stats` |
+| Leads | `GET /admin/leads` (filters `status`, `priority`, `country`, `createdAtFrom/To`), `GET /admin/leads/stats` (totals, by status, by service interest, 30-day daily counts), `GET /admin/leads/export` (CSV), `GET/PUT/DELETE /admin/leads/:id`, `POST /admin/leads/:id/notes` |
+| Visits | `GET /admin/visits`, `GET /admin/visits/stats?days=7|30|90|365` (views, visitors, previous-period totals, daily and hourly series, top pages/countries/cities/referrers, devices, consented locations) |
 | Resumes | `GET /admin/resumes`, `GET /admin/resumes/templates`, `POST /admin/resumes/preview` (HTML), `POST /admin/resumes` (generate), `GET/DELETE /admin/resumes/:id`, `POST /admin/resumes/:id/current` |
 
 Content fields (`description`, `content`) are arrays of blocks: `{ id, type, data }` with types `paragraph, heading,
 image, gallery, code, quote, list, callout, divider, embed, table, cta, stats`.
+
+Projects carry a `status` (`upcoming`, `in-progress`, `completed`; default `completed`) in addition to
+`isPublished`/`isFeatured`, so upcoming and in-progress work can be shown on the site before it ships.

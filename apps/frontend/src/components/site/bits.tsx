@@ -1,9 +1,7 @@
-"use client";
-
-import { Check, ChevronLeft, ChevronRight, Link2, Share2 } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
 import type { PageMeta } from "@/lib/types";
+import { cn } from "@/lib/utils";
 
 export function Pagination({ meta, hrefFor }: { meta: PageMeta; hrefFor: (page: number) => string }) {
   if (meta.totalPages <= 1) return null;
@@ -11,19 +9,25 @@ export function Pagination({ meta, hrefFor }: { meta: PageMeta; hrefFor: (page: 
     (p) => p === 1 || p === meta.totalPages || Math.abs(p - meta.currentPage) <= 1,
   );
   return (
-    <nav className="mt-12 flex items-center justify-center gap-2" aria-label="Pagination">
-      <PageLink href={hrefFor(meta.currentPage - 1)} disabled={meta.currentPage <= 1} label="Previous page">
-        <ChevronLeft className="size-4" />
+    <nav className="mt-12 flex items-center justify-center gap-1.5" aria-label="Pagination">
+      <PageLink href={meta.currentPage > 1 ? hrefFor(meta.currentPage - 1) : null} label="Previous page">
+        <ArrowLeft className="size-4" />
       </PageLink>
       {pages.map((p, i) => {
         const prev = pages[i - 1];
+        const gap = prev !== undefined && p - prev > 1;
         return (
-          <span key={p} className="flex items-center gap-2">
-            {prev !== undefined && p - prev > 1 && <span className="px-1 text-fg-subtle">…</span>}
+          <span key={p} className="flex items-center gap-1.5">
+            {gap && <span className="px-1 text-fg-subtle">…</span>}
             <Link
               href={hrefFor(p)}
               aria-current={p === meta.currentPage ? "page" : undefined}
-              className={`inline-flex size-9 items-center justify-center rounded-full text-sm ${p === meta.currentPage ? "bg-fg text-bg" : "border border-line text-fg-muted hover:text-fg"}`}
+              className={cn(
+                "inline-flex size-10 items-center justify-center rounded-xl border text-sm transition",
+                p === meta.currentPage
+                  ? "border-fg bg-fg text-bg"
+                  : "border-line text-fg-muted hover:border-line-strong hover:text-fg",
+              )}
             >
               {p}
             </Link>
@@ -31,11 +35,10 @@ export function Pagination({ meta, hrefFor }: { meta: PageMeta; hrefFor: (page: 
         );
       })}
       <PageLink
-        href={hrefFor(meta.currentPage + 1)}
-        disabled={meta.currentPage >= meta.totalPages}
+        href={meta.currentPage < meta.totalPages ? hrefFor(meta.currentPage + 1) : null}
         label="Next page"
       >
-        <ChevronRight className="size-4" />
+        <ArrowRight className="size-4" />
       </PageLink>
     </nav>
   );
@@ -43,83 +46,68 @@ export function Pagination({ meta, hrefFor }: { meta: PageMeta; hrefFor: (page: 
 
 function PageLink({
   href,
-  disabled,
   label,
   children,
 }: {
-  href: string;
-  disabled: boolean;
+  href: string | null;
   label: string;
   children: React.ReactNode;
 }) {
-  if (disabled)
-    return (
-      <span className="inline-flex size-9 items-center justify-center rounded-full border border-line text-fg-subtle opacity-50">
-        {children}
-      </span>
-    );
+  const cls = "inline-flex size-10 items-center justify-center rounded-xl border border-line text-fg-muted";
+  if (!href) return <span className={cn(cls, "opacity-40")}>{children}</span>;
   return (
-    <Link
-      href={href}
-      aria-label={label}
-      className="inline-flex size-9 items-center justify-center rounded-full border border-line text-fg-muted hover:text-fg"
-    >
+    <Link href={href} aria-label={label} className={cn(cls, "hover:border-line-strong hover:text-fg")}>
       {children}
     </Link>
   );
 }
 
-export function ShareButtons({ url, title }: { url: string; title: string }) {
-  const [copied, setCopied] = useState(false);
-  const copy = async () => {
-    try {
-      await navigator.clipboard.writeText(url);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1800);
-    } catch {}
-  };
-  const share = async () => {
-    if (navigator.share) {
-      try {
-        await navigator.share({ url, title });
-      } catch {}
-    } else copy();
-  };
-  const cls =
-    "inline-flex h-9 items-center gap-1.5 rounded-full border border-line px-3.5 text-sm text-fg-muted hover:text-fg";
+export function TechList({
+  items,
+  max = 4,
+  className,
+}: {
+  items: string[];
+  max?: number;
+  className?: string;
+}) {
+  if (!items.length) return null;
+  const shown = items.slice(0, max);
+  const rest = items.length - shown.length;
   return (
-    <div className="flex flex-wrap gap-2">
-      <button type="button" onClick={copy} className={cls}>
-        {copied ? <Check className="size-4 text-success" /> : <Link2 className="size-4" />}{" "}
-        {copied ? "Copied" : "Copy link"}
-      </button>
-      <button type="button" onClick={share} className={cls}>
-        <Share2 className="size-4" /> Share
-      </button>
-      <a
-        className={cls}
-        href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(url)}`}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        X
-      </a>
-      <a
-        className={cls}
-        href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        LinkedIn
-      </a>
-      <a
-        className={cls}
-        href={`https://wa.me/?text=${encodeURIComponent(`${title} ${url}`)}`}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        WhatsApp
-      </a>
-    </div>
+    <ul className={cn("flex flex-wrap gap-1.5", className)}>
+      {shown.map((t) => (
+        <li
+          key={t}
+          className="rounded-md border border-line bg-bg-muted/50 px-2 py-0.5 font-mono text-[0.68rem] text-fg-muted"
+        >
+          {t}
+        </li>
+      ))}
+      {rest > 0 && <li className="px-1 py-0.5 font-mono text-[0.68rem] text-fg-subtle">+{rest}</li>}
+    </ul>
+  );
+}
+
+export function ArrowLink({
+  href,
+  children,
+  className,
+}: {
+  href: string;
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <Link
+      href={href}
+      className={cn(
+        "group inline-flex items-center gap-1.5 text-sm font-medium text-fg transition-colors hover:text-accent",
+        className,
+      )}
+    >
+      {children}
+      <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
+    </Link>
   );
 }

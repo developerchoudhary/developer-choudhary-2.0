@@ -60,8 +60,18 @@ export const getService = (slug: string) =>
 
 export const getFeaturedProjects = (limit = 6) =>
   apiGetSafe<Project[]>("/projects/featured", [], { tags: ["projects"], query: { limit } });
-export const getProjects = (page: number, projectType?: string) =>
-  apiList<Project>("/projects", { tags: ["projects"], query: { page, pageSize: 12, projectType } });
+export const getProjects = (page: number, projectType?: string, status?: string[] | string, pageSize = 12) =>
+  apiList<Project>("/projects", {
+    tags: ["projects"],
+    query: {
+      page,
+      pageSize,
+      projectType,
+      status: Array.isArray(status) ? status.join(",") : status,
+      sortBy: "sortOrder",
+      sortOrder: "asc",
+    },
+  });
 export const getProject = (slug: string) =>
   apiGetOrNull<ProjectDetail>(`/projects/${slug}`, { tags: ["projects"] });
 

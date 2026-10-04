@@ -1,19 +1,16 @@
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
-export function Logo({ className, compact }: { className?: string; compact?: boolean }) {
+export function Logo({ compact, className }: { compact?: boolean; className?: string }) {
   return (
-    <Link
-      href="/"
-      className={cn("group inline-flex items-baseline gap-2 text-fg", className)}
-      aria-label="Developer Choudhary, home"
-    >
-      <span className="display text-2xl italic leading-none">
-        DC<span className="text-accent">.</span>
+    <Link href="/" className={cn("group inline-flex items-center gap-2.5", className)} aria-label="Home">
+      <span className="relative inline-flex size-8 items-center justify-center overflow-hidden rounded-lg bg-accent text-accent-fg shadow-glow">
+        <span className="font-display text-[0.95rem] font-bold tracking-tight">DC</span>
+        <span className="absolute inset-0 bg-gradient-to-br from-white/25 to-transparent" />
       </span>
       {!compact && (
-        <span className="hidden text-sm font-medium tracking-tight text-fg-muted group-hover:text-fg transition-colors sm:inline">
-          Developer Choudhary
+        <span className="font-display text-[1.05rem] font-semibold tracking-tight text-fg">
+          Developer <span className="text-fg-muted group-hover:text-fg transition-colors">Choudhary</span>
         </span>
       )}
     </Link>

@@ -37,16 +37,29 @@ type PointDTO struct {
 	Count     int     `json:"count" bun:"count"`
 }
 
+type HourDTO struct {
+	Hour  int `json:"hour" bun:"hour"`
+	Views int `json:"views" bun:"views"`
+}
+
+// StatsDTO summarises traffic for the requested window (RangeDays) and compares it with the window before it.
 type StatsDTO struct {
-	Views30d       int        `json:"views30d"`
-	Visitors30d    int        `json:"visitors30d"`
+	RangeDays      int        `json:"rangeDays"`
+	Views          int        `json:"views"`
+	Visitors       int        `json:"visitors"`
+	PrevViews      int        `json:"prevViews"`
+	PrevVisitors   int        `json:"prevVisitors"`
 	ViewsToday     int        `json:"viewsToday"`
+	VisitorsToday  int        `json:"visitorsToday"`
 	ConsentRate    float64    `json:"consentRate"`
+	AvgDurationMs  int        `json:"avgDurationMs"`
 	TopPages       []CountDTO `json:"topPages"`
 	TopCountries   []CountDTO `json:"topCountries"`
+	TopCities      []CountDTO `json:"topCities"`
 	TopReferrers   []CountDTO `json:"topReferrers"`
 	Devices        []CountDTO `json:"devices"`
 	Daily          []DayDTO   `json:"daily"`
+	Hourly         []HourDTO  `json:"hourly"`
 	LocationPoints []PointDTO `json:"locationPoints"`
 }
 

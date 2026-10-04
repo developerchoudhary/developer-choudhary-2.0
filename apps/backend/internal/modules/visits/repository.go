@@ -13,7 +13,7 @@ import (
 type Repository interface {
 	Create(ctx context.Context, item *Visit) error
 	List(ctx context.Context, query *pagination.ListQuery) ([]*Visit, int, error)
-	Stats(ctx context.Context) (*StatsDTO, error)
+	Stats(ctx context.Context, days int) (*StatsDTO, error)
 	DeleteOlderThan(ctx context.Context, cutoff time.Time) (int64, error)
 }
 
@@ -45,43 +45,73 @@ func (r *repo) List(ctx context.Context, query *pagination.ListQuery) ([]*Visit,
 	return items, count, nil
 }
 
-func (r *repo) Stats(ctx context.Context) (*StatsDTO, error) {
-	since := time.Now().UTC().Add(-30 * 24 * time.Hour)
-	today := time.Now().UTC().Truncate(24 * time.Hour)
-	out := &StatsDTO{}
+func (r *repo) Stats(ctx context.Context, days int) (*StatsDTO, error) {
+	if days <= 0 {
+		days = 30
+	}
+	now := time.Now().UTC()
+	since := now.Add(-time.Duration(days) * 24 * time.Hour)
+	prevSince := since.Add(-time.Duration(days) * 24 * time.Hour)
+	today := now.Truncate(24 * time.Hour)
+	out := &StatsDTO{RangeDays: days}
 	var err error
 
 	base := func() *bun.SelectQuery {
 		return r.db.NewSelect().Model((*Visit)(nil)).Where("created_at > ?", since)
 	}
-	if out.Views30d, err = base().Count(ctx); err != nil {
+	prev := func() *bun.SelectQuery {
+		return r.db.NewSelect().Model((*Visit)(nil)).Where("created_at > ?", prevSince).Where("created_at <= ?", since)
+	}
+	if out.Views, err = base().Count(ctx); err != nil {
 		return nil, err
 	}
-	if err = base().ColumnExpr("COUNT(DISTINCT visitor_id)").Scan(ctx, &out.Visitors30d); err != nil {
+	if err = base().ColumnExpr("COUNT(DISTINCT visitor_id)").Scan(ctx, &out.Visitors); err != nil {
 		return nil, err
 	}
-	if out.ViewsToday, err = r.db.NewSelect().Model((*Visit)(nil)).Where("created_at >= ?", today).Count(ctx); err != nil {
+	if out.PrevViews, err = prev().Count(ctx); err != nil {
+		return nil, err
+	}
+	if err = prev().ColumnExpr("COUNT(DISTINCT visitor_id)").Scan(ctx, &out.PrevVisitors); err != nil {
+		return nil, err
+	}
+	todayQ := func() *bun.SelectQuery {
+		return r.db.NewSelect().Model((*Visit)(nil)).Where("created_at >= ?", today)
+	}
+	if out.ViewsToday, err = todayQ().Count(ctx); err != nil {
+		return nil, err
+	}
+	if err = todayQ().ColumnExpr("COUNT(DISTINCT visitor_id)").Scan(ctx, &out.VisitorsToday); err != nil {
 		return nil, err
 	}
 	var consented int
 	if consented, err = base().Where("consent_location = TRUE").Count(ctx); err != nil {
 		return nil, err
 	}
-	if out.Views30d > 0 {
-		out.ConsentRate = float64(consented) / float64(out.Views30d)
+	if out.Views > 0 {
+		out.ConsentRate = float64(consented) / float64(out.Views)
+	}
+	var avg *float64
+	if err = base().ColumnExpr("AVG(duration_ms)").Where("duration_ms IS NOT NULL AND duration_ms > 0").Scan(ctx, &avg); err != nil {
+		return nil, err
+	}
+	if avg != nil {
+		out.AvgDurationMs = int(*avg)
 	}
 
 	top := func(col string, dest *[]CountDTO, limit int) error {
 		return base().ColumnExpr(col+" AS label, COUNT(*) AS count").
 			Where(col+" <> ''").GroupExpr(col).OrderExpr("count DESC").Limit(limit).Scan(ctx, dest)
 	}
-	if err = top("path", &out.TopPages, 8); err != nil {
+	if err = top("path", &out.TopPages, 10); err != nil {
 		return nil, err
 	}
-	if err = top("country", &out.TopCountries, 8); err != nil {
+	if err = top("country", &out.TopCountries, 10); err != nil {
 		return nil, err
 	}
-	if err = top("referrer", &out.TopReferrers, 8); err != nil {
+	if err = top("city", &out.TopCities, 10); err != nil {
+		return nil, err
+	}
+	if err = top("referrer", &out.TopReferrers, 10); err != nil {
 		return nil, err
 	}
 	if err = top("device", &out.Devices, 3); err != nil {
@@ -91,18 +121,25 @@ func (r *repo) Stats(ctx context.Context) (*StatsDTO, error) {
 		GroupExpr("1").OrderExpr("1 ASC").Scan(ctx, &out.Daily); err != nil {
 		return nil, err
 	}
+	if err = base().ColumnExpr("EXTRACT(HOUR FROM created_at)::int AS hour, COUNT(*) AS views").
+		GroupExpr("1").OrderExpr("1 ASC").Scan(ctx, &out.Hourly); err != nil {
+		return nil, err
+	}
 	if err = base().ColumnExpr("ROUND(latitude::numeric, 2)::float8 AS latitude, ROUND(longitude::numeric, 2)::float8 AS longitude, MIN(city) AS city, MIN(country) AS country, COUNT(*) AS count").
 		Where("consent_location = TRUE AND latitude IS NOT NULL AND longitude IS NOT NULL").
 		GroupExpr("1, 2").OrderExpr("count DESC").Limit(500).Scan(ctx, &out.LocationPoints); err != nil {
 		return nil, err
 	}
-	for _, s := range []*[]CountDTO{&out.TopPages, &out.TopCountries, &out.TopReferrers, &out.Devices} {
+	for _, s := range []*[]CountDTO{&out.TopPages, &out.TopCountries, &out.TopCities, &out.TopReferrers, &out.Devices} {
 		if *s == nil {
 			*s = []CountDTO{}
 		}
 	}
 	if out.Daily == nil {
 		out.Daily = []DayDTO{}
+	}
+	if out.Hourly == nil {
+		out.Hourly = []HourDTO{}
 	}
 	if out.LocationPoints == nil {
 		out.LocationPoints = []PointDTO{}

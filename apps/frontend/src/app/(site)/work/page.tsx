@@ -1,3 +1,4 @@
+import { FolderKanban } from "lucide-react";
 import Link from "next/link";
 import { Pagination } from "@/components/site/bits";
 import { ProjectCard } from "@/components/site/cards";
@@ -8,37 +9,49 @@ import { PageHero } from "@/components/site/section";
 import { EmptyState } from "@/components/ui/misc";
 import { getProjects, getSite } from "@/lib/data";
 import { breadcrumbJsonLd, pageMetadata } from "@/lib/seo";
-import { PROJECT_TYPE_LABELS } from "@/lib/site";
+import { PROJECT_STATUS_LABELS, PROJECT_TYPE_LABELS } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
 export const metadata = pageMetadata({
-  title: "Work · Websites, ERPs, CRMs and web apps in production",
+  title: "Work · Websites, ERPs, CRMs and platforms in production",
   description:
-    "Case studies of websites, ERP systems, CRM portals and web applications built by Aman Choudhary with Next.js, Go, PostgreSQL and Kubernetes.",
+    "Case studies from Developer Choudhary: property platforms, CRM portals, e-commerce, e-learning and business websites built with Next.js, Go and PostgreSQL.",
   path: "/work",
 });
 
-const filters = ["all", "website", "erp", "crm", "web-app", "ecommerce", "api", "devops"];
+const TYPES = ["website", "web-app", "erp", "crm", "ecommerce", "api", "devops"];
+const STATUSES = ["completed", "in-progress", "upcoming"];
 
 export default async function WorkPage({
   searchParams,
 }: {
-  searchParams: Promise<{ page?: string; type?: string }>;
+  searchParams: Promise<{ page?: string; type?: string; status?: string }>;
 }) {
   const sp = await searchParams;
   const page = Math.max(1, Number(sp.page ?? 1) || 1);
-  const type = sp.type && sp.type !== "all" ? sp.type : undefined;
-  const [site, projects] = await Promise.all([
-    getSite(),
-    getProjects(page, type).catch(() => ({
+  const type = TYPES.includes(sp.type ?? "") ? sp.type : undefined;
+  const status = STATUSES.includes(sp.status ?? "") ? sp.status : undefined;
+  const [projects, site] = await Promise.all([
+    getProjects(page, type, status).catch(() => ({
       items: [],
       meta: { currentPage: 1, pageSize: 12, totalItems: 0, totalPages: 0 },
     })),
+    getSite(),
   ]);
-  const hrefFor = (p: number) =>
-    `/work?${new URLSearchParams({ ...(type ? { type } : {}), ...(p > 1 ? { page: String(p) } : {}) }).toString()}`.replace(
-      /\?$/,
-      "",
+  const href = (patch: { type?: string; status?: string; page?: number }) => {
+    const q = new URLSearchParams();
+    const t = "type" in patch ? patch.type : type;
+    const s = "status" in patch ? patch.status : status;
+    if (t) q.set("type", t);
+    if (s) q.set("status", s);
+    if (patch.page && patch.page > 1) q.set("page", String(patch.page));
+    const qs = q.toString();
+    return qs ? `/work?${qs}` : "/work";
+  };
+  const chip = (active: boolean) =>
+    cn(
+      "shrink-0 rounded-full border px-4 py-1.5 text-sm transition",
+      active ? "border-fg bg-fg text-bg" : "border-line text-fg-muted hover:border-line-strong hover:text-fg",
     );
 
   return (
@@ -53,34 +66,44 @@ export default async function WorkPage({
         eyebrow="Work"
         title={
           <>
-            Products I have shipped, <em className="text-accent">and what they do.</em>
+            Products people <span className="text-accent">actually use.</span>
           </>
         }
-        lede="A selection of client and personal projects. Each one links to the live product where it is public."
-      >
-        <div className="flex flex-wrap gap-2">
-          {filters.map((f) => {
-            const active = (type ?? "all") === f;
-            return (
-              <Link
-                key={f}
-                href={f === "all" ? "/work" : `/work?type=${f}`}
-                className={cn(
-                  "rounded-full border px-4 py-1.5 text-sm transition",
-                  active ? "border-fg bg-fg text-bg" : "border-line text-fg-muted hover:text-fg",
-                )}
-              >
-                {f === "all" ? "All" : PROJECT_TYPE_LABELS[f]}
-              </Link>
-            );
-          })}
-        </div>
-      </PageHero>
+        lede="A selection of websites, platforms and internal tools I have shipped, plus what is on the workbench right now."
+      />
       <section className="container-dc pb-8">
+        <div className="mb-8 space-y-3">
+          <div className="no-scrollbar -mx-5 flex gap-2 overflow-x-auto px-5 sm:mx-0 sm:flex-wrap sm:px-0">
+            <Link href={href({ type: undefined })} className={chip(!type)}>
+              All types
+            </Link>
+            {TYPES.map((t) => (
+              <Link key={t} href={href({ type: t })} className={chip(type === t)}>
+                {PROJECT_TYPE_LABELS[t]}
+              </Link>
+            ))}
+          </div>
+          <div className="no-scrollbar -mx-5 flex gap-2 overflow-x-auto px-5 sm:mx-0 sm:flex-wrap sm:px-0">
+            <Link href={href({ status: undefined })} className={chip(!status)}>
+              Any status
+            </Link>
+            {STATUSES.map((s) => (
+              <Link key={s} href={href({ status: s })} className={chip(status === s)}>
+                {PROJECT_STATUS_LABELS[s]}
+              </Link>
+            ))}
+          </div>
+        </div>
         {projects.items.length === 0 ? (
           <EmptyState
-            title="No projects in this category yet"
-            description="Try another filter or browse everything."
+            icon={<FolderKanban className="size-5" />}
+            title="Nothing matches those filters"
+            description="Try another type or status, or browse everything."
+            action={
+              <Link href="/work" className="text-sm font-medium text-accent">
+                Clear filters
+              </Link>
+            }
           />
         ) : (
           <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
@@ -91,9 +114,13 @@ export default async function WorkPage({
             ))}
           </div>
         )}
-        <Pagination meta={projects.meta} hrefFor={hrefFor} />
+        <Pagination meta={projects.meta} hrefFor={(p) => href({ page: p })} />
       </section>
-      <CtaBand text="Want results like these for your business?" whatsapp={site.profile.whatsapp} />
+      <CtaBand
+        text="Want results like these for your business? Let's scope it together."
+        whatsapp={site.profile.whatsapp}
+        email={site.profile.email}
+      />
     </>
   );
 }

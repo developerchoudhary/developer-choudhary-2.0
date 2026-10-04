@@ -42,8 +42,9 @@ export function MediaGrid({ onPick, selectable, category }: MediaGridProps) {
   const folders = useAll<string>("/media/folders");
 
   const upload = useAction(
-    async (list: FileList) => {
-      for (const file of Array.from(list)) {
+    async (list: File[]) => {
+      if (list.length === 0) throw new Error("Choose at least one file");
+      for (const file of list) {
         const fd = new FormData();
         fd.append("file", file);
         fd.append("folder", uploadFolder);
@@ -63,8 +64,10 @@ export function MediaGrid({ onPick, selectable, category }: MediaGridProps) {
   );
 
   const onFiles = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files?.length) upload.mutate(e.target.files);
+    // Copy the FileList before clearing the input: the list is live and empties when value resets.
+    const files = Array.from(e.target.files ?? []);
     e.target.value = "";
+    if (files.length) upload.mutate(files);
   };
 
   return (

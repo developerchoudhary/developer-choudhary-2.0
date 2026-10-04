@@ -53,7 +53,7 @@ func (s *Service) Overview(ctx context.Context) (*DTO, error) {
 	if out.ReviewsPending, err = s.reviews.CountPending(ctx); err != nil {
 		return nil, err
 	}
-	if out.Visits, err = s.visits.Stats(ctx); err != nil {
+	if out.Visits, err = s.visits.Stats(ctx, 30); err != nil {
 		return nil, err
 	}
 	if out.Outbox, err = s.notifications.Stats(ctx); err != nil {

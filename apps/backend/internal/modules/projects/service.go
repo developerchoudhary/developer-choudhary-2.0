@@ -173,6 +173,10 @@ func (s *Service) apply(ctx context.Context, item *Project, req *RequestDTO) err
 	item.ClientName = strings.TrimSpace(req.ClientName)
 	item.ClientIndustry = strings.TrimSpace(req.ClientIndustry)
 	item.ProjectType = req.ProjectType
+	item.Status = req.Status
+	if item.Status == "" {
+		item.Status = StatusCompleted
+	}
 	item.LiveURL = strings.TrimSpace(req.LiveURL)
 	item.RepoURL = strings.TrimSpace(req.RepoURL)
 	item.CoverFileID = req.CoverFileID

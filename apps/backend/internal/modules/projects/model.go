@@ -11,6 +11,11 @@ import (
 
 var Types = []string{"website", "erp", "crm", "web-app", "ecommerce", "api", "mobile", "devops", "other"}
 
+// Statuses describe where a project is in its life: announced, being built, or shipped.
+var Statuses = []string{"upcoming", "in-progress", "completed"}
+
+const StatusCompleted = "completed"
+
 type Project struct {
 	bun.BaseModel `bun:"table:projects,alias:projects"`
 
@@ -24,6 +29,7 @@ type Project struct {
 	ClientName     string          `bun:"client_name"`
 	ClientIndustry string          `bun:"client_industry"`
 	ProjectType    string          `bun:"project_type,notnull"`
+	Status         string          `bun:"status,notnull"`
 	LiveURL        string          `bun:"live_url"`
 	RepoURL        string          `bun:"repo_url"`
 	CoverFileID    *string         `bun:"cover_file_id"`

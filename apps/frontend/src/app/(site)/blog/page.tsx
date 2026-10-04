@@ -44,7 +44,7 @@ export default async function BlogPage({
         eyebrow="Blog"
         title={
           <>
-            Notes from building <em className="text-accent">real software.</em>
+            Notes from building <span className="text-accent">real software.</span>
           </>
         }
         lede="Engineering write-ups, business software design and lessons from running production systems on my own cluster."
@@ -55,14 +55,14 @@ export default async function BlogPage({
             name="search"
             defaultValue={search}
             placeholder="Search articles"
-            className="h-11 w-full rounded-full border border-line bg-bg-elevated px-4 text-sm focus:border-accent focus:outline-none"
+            className="h-11 w-full rounded-xl border border-line bg-bg-elevated px-4 text-sm focus:border-accent focus:outline-none focus:ring-4 focus:ring-accent/15"
           />
-          <button type="submit" className="h-11 rounded-full bg-fg px-5 text-sm font-medium text-bg">
+          <button type="submit" className="h-11 rounded-xl bg-fg px-5 text-sm font-medium text-bg">
             Search
           </button>
           <a
             href="/feed.xml"
-            className="inline-flex size-11 shrink-0 items-center justify-center rounded-full border border-line text-fg-muted hover:text-fg"
+            className="inline-flex size-11 shrink-0 items-center justify-center rounded-xl border border-line text-fg-muted hover:text-fg"
             aria-label="RSS feed"
           >
             <Rss className="size-4" />

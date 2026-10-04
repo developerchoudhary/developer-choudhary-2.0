@@ -32,7 +32,14 @@ export default function ProjectsPage() {
       header: "Project",
       render: (p) => (
         <div className="flex items-center gap-3">
-          {p.coverUrl && <img src={p.coverUrl} alt="" className="size-10 rounded-md object-cover" />}
+          <span className="inline-flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-md bg-bg-muted font-mono text-xs text-fg-subtle">
+            {p.coverUrl ? (
+              // biome-ignore lint/performance/noImgElement: tiny admin thumbnail
+              <img src={p.coverUrl} alt="" loading="lazy" className="size-full object-cover" />
+            ) : (
+              p.title.slice(0, 1)
+            )}
+          </span>
           <div>
             <p className="font-medium">{p.title}</p>
             <p className="text-xs text-fg-muted">{p.clientName || p.subtitle}</p>
@@ -50,8 +57,9 @@ export default function ProjectsPage() {
       header: "Status",
       render: (p) => (
         <div className="flex gap-1">
+          <StatusBadge value={p.status} />
           <StatusBadge value={p.isPublished ? "published" : "draft"} />
-          {p.isFeatured && <StatusBadge value="high" />}
+          {p.isFeatured && <StatusBadge value="featured" />}
         </div>
       ),
     },

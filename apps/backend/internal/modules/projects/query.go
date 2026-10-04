@@ -13,6 +13,7 @@ var ListSchema = pagination.Schema{
 	DefaultSort: "projects.sort_order",
 	Filters: map[string]pagination.FilterDef{
 		"projectType": {Column: "projects.project_type", Type: pagination.TypeEnum, Multi: true},
+		"status":      {Column: "projects.status", Type: pagination.TypeEnum, Multi: true},
 		"isFeatured":  {Column: "projects.is_featured", Type: pagination.TypeBool},
 		"isPublished": {Column: "projects.is_published", Type: pagination.TypeBool},
 	},

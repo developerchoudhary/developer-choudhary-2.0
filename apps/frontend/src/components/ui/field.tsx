@@ -2,7 +2,7 @@ import type { InputHTMLAttributes, ReactNode, SelectHTMLAttributes, TextareaHTML
 import { cn } from "@/lib/utils";
 
 const control =
-  "w-full rounded-xl border border-line bg-bg-elevated px-3.5 py-2.5 text-sm text-fg placeholder:text-fg-subtle focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20 transition disabled:opacity-60";
+  "w-full rounded-xl border border-line bg-bg-elevated px-3.5 py-2.5 text-sm text-fg placeholder:text-fg-subtle transition focus:border-accent focus:outline-none focus:ring-4 focus:ring-accent/15 disabled:opacity-60 disabled:cursor-not-allowed";
 
 interface FieldProps {
   label?: string;
@@ -18,7 +18,7 @@ export function Field({ label, hint, error, required, children, className }: Fie
     // biome-ignore lint/a11y/noLabelWithoutControl: the control is passed as children inside the label
     <label className={cn("block", className)}>
       {label && (
-        <span className="mb-1.5 flex items-baseline justify-between text-sm font-medium text-fg">
+        <span className="mb-1.5 flex items-baseline justify-between gap-3 text-sm font-medium text-fg">
           <span>
             {label}
             {required && <span className="text-accent"> *</span>}
@@ -46,7 +46,7 @@ export function Select({ className, children, ...props }: SelectHTMLAttributes<H
       className={cn(control, "appearance-none bg-no-repeat bg-[right_0.9rem_center] pr-9", className)}
       style={{
         backgroundImage:
-          "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238a8f98' stroke-width='2.5'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E\")",
+          "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238c8c93' stroke-width='2.5'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E\")",
       }}
       {...props}
     >
@@ -67,8 +67,8 @@ export function Switch({ checked, onChange, label, description, disabled }: Swit
   return (
     <label
       className={cn(
-        "flex items-start gap-3 cursor-pointer select-none",
-        disabled && "opacity-60 pointer-events-none",
+        "flex cursor-pointer select-none items-start gap-3",
+        disabled && "pointer-events-none opacity-60",
       )}
     >
       <button
@@ -95,5 +95,36 @@ export function Switch({ checked, onChange, label, description, disabled }: Swit
         </span>
       )}
     </label>
+  );
+}
+
+/** Segmented control: a compact set of mutually exclusive options. */
+export function Segmented<T extends string>({
+  value,
+  onChange,
+  options,
+  className,
+}: {
+  value: T;
+  onChange: (v: T) => void;
+  options: Array<{ value: T; label: string }>;
+  className?: string;
+}) {
+  return (
+    <div className={cn("inline-flex rounded-xl border border-line bg-bg-muted p-1", className)}>
+      {options.map((o) => (
+        <button
+          key={o.value}
+          type="button"
+          onClick={() => onChange(o.value)}
+          className={cn(
+            "rounded-lg px-3 py-1.5 text-xs font-medium transition",
+            o.value === value ? "bg-bg-elevated text-fg shadow-card" : "text-fg-muted hover:text-fg",
+          )}
+        >
+          {o.label}
+        </button>
+      ))}
+    </div>
   );
 }

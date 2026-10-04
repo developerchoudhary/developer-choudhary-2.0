@@ -31,7 +31,7 @@ export default async function ResumePage() {
         eyebrow="Resume"
         title={
           <>
-            The résumé, always <em className="text-accent">up to date.</em>
+            The résumé, always <span className="text-accent">up to date.</span>
           </>
         }
         lede="Generated from the same data that powers this site, so it never goes stale."
@@ -52,7 +52,7 @@ export default async function ResumePage() {
             </div>
             <a
               href="/api/v1/public/resume/download"
-              className="inline-flex h-11 items-center gap-2 rounded-full bg-fg px-5 text-sm font-medium text-bg hover:opacity-90"
+              className="inline-flex h-11 items-center gap-2 rounded-xl bg-accent px-5 text-sm font-medium text-accent-fg shadow-glow transition hover:bg-accent-strong"
             >
               <Download className="size-4" /> Download PDF
             </a>

@@ -2,6 +2,7 @@ package visits
 
 import (
 	"net/http"
+	"strconv"
 
 	md "portfolio-backend/internal/middleware"
 	"portfolio-backend/pkg/httputil"
@@ -49,7 +50,8 @@ func (h *Handler) List(c *gin.Context) {
 }
 
 func (h *Handler) Stats(c *gin.Context) {
-	stats, err := h.service.Stats(c.Request.Context())
+	days, _ := strconv.Atoi(c.DefaultQuery("days", "30"))
+	stats, err := h.service.Stats(c.Request.Context(), days)
 	if err != nil {
 		httputil.WriteError(c, err)
 		return

@@ -8,17 +8,18 @@ import { PageHeader } from "@/components/admin/page-header";
 import { Button } from "@/components/ui/button";
 import { Field, Input, Select, Textarea } from "@/components/ui/field";
 import { Skeleton } from "@/components/ui/misc";
-import { useOne, useSave } from "@/lib/admin/hooks";
+import { useAction, useOne } from "@/lib/admin/hooks";
+import { admin } from "@/lib/api/admin";
 import type { Profile } from "@/lib/types";
 
 type FormValues = Omit<Profile, "updatedAt">;
 
 export default function ProfilePage() {
   const { data, isLoading } = useOne<Profile>("/profile");
-  const save = useSave<FormValues, Profile>({
-    path: "/profile",
-    id: "singleton",
-    successMessage: "Profile saved",
+  // The profile is a singleton: PUT /admin/profile, no id in the path.
+  const save = useAction((body: FormValues) => admin.put<Profile>("/profile", body), {
+    invalidate: ["/profile", "/dashboard"],
+    success: "Profile saved",
   });
   const form = useForm<FormValues>();
   const { register, control, handleSubmit, reset, watch } = form;

@@ -92,7 +92,7 @@ func (r *repo) Related(ctx context.Context, exclude uuid.UUID, projectType strin
 
 func (r *repo) Update(ctx context.Context, item *Project) error {
 	return shared.UpdateColumns(ctx, r.db, item, item.ID, "project not found",
-		"slug", "title", "subtitle", "summary", "description", "client_name", "client_industry", "project_type",
+		"slug", "title", "subtitle", "summary", "description", "client_name", "client_industry", "project_type", "status",
 		"live_url", "repo_url", "cover_file_id", "cover_url", "gallery", "technologies", "service_slugs", "highlights",
 		"role", "started_at", "completed_at", "is_featured", "is_published", "sort_order", "seo_title", "seo_description",
 		"updated_by", "updated_at")

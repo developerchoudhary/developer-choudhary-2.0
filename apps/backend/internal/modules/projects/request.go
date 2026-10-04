@@ -15,6 +15,7 @@ type RequestDTO struct {
 	ClientName     string          `json:"clientName" binding:"max=120"`
 	ClientIndustry string          `json:"clientIndustry" binding:"max=120"`
 	ProjectType    string          `json:"projectType" binding:"required,oneof=website erp crm web-app ecommerce api mobile devops other"`
+	Status         string          `json:"status" binding:"omitempty,oneof=upcoming in-progress completed"`
 	LiveURL        string          `json:"liveUrl" binding:"omitempty,url,max=400"`
 	RepoURL        string          `json:"repoUrl" binding:"omitempty,url,max=400"`
 	CoverFileID    *string         `json:"coverFileId"`
